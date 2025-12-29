@@ -1,0 +1,46 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llm-gateway-sdk"
+version = "0.1.0"
+description = "Python SDK for LLM Gateway - A unified API gateway for multiple LLM providers"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [
+    {name = "LLM Gateway Team"}
+]
+keywords = ["llm", "openai", "anthropic", "gateway", "ai", "sdk"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+requires-python = ">=3.9"
+dependencies = [
+    "httpx>=0.25.0",
+    "pydantic>=2.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-httpx>=0.22.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/your-org/llm-gateway"
+Documentation = "https://github.com/your-org/llm-gateway#readme"
+Repository = "https://github.com/your-org/llm-gateway"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["llm_gateway_sdk*"]

@@ -1,0 +1,82 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Claude Code
+.claude/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+.benchmarks/
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node (frontend)
+node_modules/
+.next/
+out/
+.turbo/
+
+# Database
+*.db
+*.sqlite3
+
+# Secrets (never commit)
+*.pem
+*.key
+secrets/
+credentials.json
+
+# Local test files
+*-local.js
+*-local.py
+test_*.local.py
+
+# Alembic
+alembic/versions/__pycache__/
+docs/SECURITY.md
+docs/ARCHITECTURE.md

@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
+  }
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+/* ============================================================================
+   Request Status Styles - Centralized styles for error, success, and blocked states
+   ============================================================================ */
+
+@layer components {
+  /* Error Row Styles */
+  .request-row-error {
+    @apply bg-red-50 border-red-200 transition-colors;
+  }
+
+  .request-row-error:hover {
+    @apply bg-red-100;
+  }
+
+  /* Success Row Styles */
+  .request-row-success {
+    @apply transition-colors;
+  }
+
+  .request-row-success:hover {
+    @apply bg-gray-50;
+  }
+
+  /* Blocked Row Styles */
+  .request-row-blocked {
+    @apply bg-orange-50 border-orange-200 transition-colors;
+  }
+
+  .request-row-blocked:hover {
+    @apply bg-orange-100;
+  }
+
+  /* Text Colors */
+  .request-text-error {
+    @apply text-red-700;
+  }
+
+  .request-text-success {
+    @apply text-gray-900;
+  }
+
+  .request-text-blocked {
+    @apply text-orange-700;
+  }
+
+  /* Secondary Text Colors */
+  .request-text-secondary-error {
+    @apply text-red-600;
+  }
+
+  .request-text-secondary-success {
+    @apply text-gray-500;
+  }
+
+  .request-text-secondary-blocked {
+    @apply text-orange-600;
+  }
+
+  /* Icon Colors */
+  .request-icon-error {
+    @apply text-red-400;
+  }
+
+  .request-icon-success {
+    @apply text-gray-400;
+  }
+
+  .request-icon-blocked {
+    @apply text-orange-400;
+  }
+
+  /* Code Badge Styles */
+  .request-code-error {
+    @apply bg-red-100 text-red-800;
+  }
+
+  .request-code-success {
+    @apply bg-gray-100 text-gray-900;
+  }
+
+  .request-code-blocked {
+    @apply bg-orange-100 text-orange-800;
+  }
+
+  /* Status Badge Styles */
+  .status-badge-error {
+    @apply inline-flex items-center px-2 py-1 text-xs bg-red-100 text-red-700 rounded;
+  }
+
+  .status-badge-success {
+    @apply inline-flex items-center px-2 py-1 text-xs bg-green-100 text-green-700 rounded;
+  }
+
+  .status-badge-blocked {
+    @apply inline-flex items-center px-2 py-1 text-xs bg-orange-100 text-orange-700 rounded;
+  }
+}
