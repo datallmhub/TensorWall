@@ -14,7 +14,7 @@
 //   k6 run tests/k6/budget-load-test.js
 //
 // Prerequisites:
-//   - LLM Gateway running on localhost:8000
+//   - TensorWall running on localhost:8000
 //   - LM Studio running with a model loaded
 //   - Admin user: admin@example.com / admin123
 // =============================================================================

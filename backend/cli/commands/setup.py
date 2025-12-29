@@ -37,7 +37,7 @@ def wizard(
     """Interactive first-time setup wizard."""
     console.print(
         Panel.fit(
-            "[bold cyan]LLM Gateway Setup Wizard[/bold cyan]\n"
+            "[bold cyan]TensorWall Setup Wizard[/bold cyan]\n"
             "This will configure your gateway for first use.",
             border_style="cyan",
         )

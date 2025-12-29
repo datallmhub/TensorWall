@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Generate test data for LLM Gateway dashboard.
+Generate test data for TensorWall dashboard.
 
 This script makes HTTP requests to the gateway to create sample traces
 in the database for testing the frontend.
@@ -145,7 +145,7 @@ def generate_risky_requests(count: int = 10):
 
 def main():
     print("=" * 70)
-    print("LLM Gateway Test Data Generator")
+    print("TensorWall Test Data Generator")
     print("=" * 70)
     print(f"Target: {BASE_URL}")
     print(f"Time: {datetime.now().isoformat()}")

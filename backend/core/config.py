@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     cors_origins: List[str] = ["http://localhost:3000", "http://localhost:5173"]
 
     # Database
-    database_url: str = "postgresql://postgres:postgres@localhost:5432/llm_gateway"
+    database_url: str = "postgresql://postgres:postgres@localhost:5432/tensorwall"
     redis_url: str = "redis://localhost:6379"
 
     # LLM Providers (for passthrough)
@@ -40,7 +40,7 @@ class Settings(BaseSettings):
     SMTP_PORT: int = 587
     SMTP_USER: str = ""
     SMTP_PASSWORD: str = ""
-    ALERT_FROM_EMAIL: str = "alerts@llm-gateway.io"
+    ALERT_FROM_EMAIL: str = "alerts@tensorwall.io"
 
     # JWT Authentication
     jwt_secret_key: str = "dev-secret-key-change-in-production"

@@ -1,11 +1,11 @@
-# LLM Gateway API Reference
+# TensorWall API Reference
 
 **Version:** 0.1.0
 **Base URL:** `https://api.your-domain.com`
 
 ## Overview
 
-The LLM Governance Gateway provides an OpenAI-compatible API with enterprise governance features including policy enforcement, budget control, multi-tenancy, and comprehensive audit logging.
+TensorWall provides an OpenAI-compatible API with built-in governance features including policy enforcement, budget control, and comprehensive audit logging.
 
 ## Authentication
 
@@ -554,11 +554,11 @@ Configure webhooks in organization settings to receive events:
 ### Python
 
 ```bash
-pip install llm-gateway-sdk
+pip install tensorwall-sdk
 ```
 
 ```python
-from llm_gateway import GatewayClient
+from tensorwall import GatewayClient
 
 client = GatewayClient(
     gateway_url="https://api.example.com",
@@ -576,11 +576,11 @@ response = client.chat.completions.create(
 ### JavaScript/TypeScript
 
 ```bash
-npm install @llm-gateway/sdk
+npm install @tensorwall/sdk
 ```
 
 ```typescript
-import { GatewayClient } from '@llm-gateway/sdk';
+import { GatewayClient } from '@tensorwall/sdk';
 
 const client = new GatewayClient({
   gatewayUrl: 'https://api.example.com',

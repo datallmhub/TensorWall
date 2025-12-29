@@ -7,7 +7,7 @@ services:
     entrypoint: ["/bin/bash", "/app/backend/scripts/docker-init.sh"]
     environment:
       - ENVIRONMENT=development
-      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/llm_gateway
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/tensorwall
       - REDIS_URL=redis://redis:6379
       - ADMIN_EMAIL=${ADMIN_EMAIL:-admin@example.com}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD:-}
@@ -26,9 +26,9 @@ services:
       - "8000:8000"
     environment:
       - ENVIRONMENT=development
-      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/llm_gateway
+      - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/tensorwall
       - REDIS_URL=redis://redis:6379
-      - CORS_ORIGINS=["http://localhost:3000","http://localhost:5173","https://frontend.llm-gateway.orb.local","http://frontend.llm-gateway.orb.local","https://gateway.llm-gateway.orb.local","http://gateway.llm-gateway.orb.local"]
+      - CORS_ORIGINS=["http://localhost:3000","http://localhost:5173","https://frontend.tensorwall.orb.local","http://frontend.tensorwall.orb.local","https://gateway.tensorwall.orb.local","http://gateway.tensorwall.orb.local"]
     depends_on:
       init:
         condition: service_completed_successfully
@@ -44,13 +44,13 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: llm_gateway
+      POSTGRES_DB: tensorwall
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d llm_gateway"]
+      test: ["CMD-SHELL", "pg_isready -U postgres -d tensorwall"]
       interval: 5s
       timeout: 5s
       retries: 5

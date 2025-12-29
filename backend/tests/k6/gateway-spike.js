@@ -49,7 +49,7 @@ export function setup() {
 export default function (data) {
   const startTime = Date.now();
 
-  // Simulate realistic LLM gateway usage
+  // Simulate realistic TensorWall usage
   const res = http.post(
     `${BASE_URL}/v1/chat/completions`,
     JSON.stringify({

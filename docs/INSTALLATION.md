@@ -1,6 +1,6 @@
 # Installation
 
-## What is LLM Gateway?
+## What is TensorWall?
 
 A self-hosted LLM API gateway.
 Drop-in compatible with OpenAI APIs. Route, control, and observe any LLM provider.
@@ -17,8 +17,8 @@ Drop-in compatible with OpenAI APIs. Route, control, and observe any LLM provide
 ## Quick Start
 
 ```bash
-git clone https://github.com/your-org/llm-gateway.git
-cd llm-gateway
+git clone https://github.com/datallmhub/TensorWall.git
+cd tensorwall
 docker compose up -d
 ```
 

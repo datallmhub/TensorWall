@@ -200,14 +200,14 @@ class BurstUser(HttpUser):
 @events.test_start.add_listener
 def on_test_start(environment, **kwargs):
     print("=" * 60)
-    print("LLM Gateway Load Test Starting")
+    print("TensorWall Load Test Starting")
     print("=" * 60)
 
 
 @events.test_stop.add_listener
 def on_test_stop(environment, **kwargs):
     print("=" * 60)
-    print("LLM Gateway Load Test Complete")
+    print("TensorWall Load Test Complete")
     print("=" * 60)
 
 

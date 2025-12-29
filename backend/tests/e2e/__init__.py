@@ -1,1 +1,1 @@
-"""End-to-end tests for LLM Gateway API."""
+"""End-to-end tests for TensorWall API."""

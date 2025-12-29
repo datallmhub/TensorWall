@@ -1,4 +1,4 @@
-"""LLM Gateway CLI - Main entry point."""
+"""TensorWall CLI - Main entry point."""
 
 import typer
 from rich.console import Console
@@ -8,8 +8,8 @@ from backend.cli.commands import setup, migrate, admin, seed, check
 console = Console()
 
 app = typer.Typer(
-    name="llm-gateway",
-    help="LLM Gateway CLI - Administration and setup tools.",
+    name="tensorwall",
+    help="TensorWall CLI - Administration and setup tools.",
     no_args_is_help=True,
 )
 
@@ -24,7 +24,7 @@ app.add_typer(check.app, name="check")
 @app.command()
 def version():
     """Show version information."""
-    console.print("[bold]LLM Gateway[/bold] v0.1.0")
+    console.print("[bold]TensorWall[/bold] v0.1.0")
 
 
 if __name__ == "__main__":

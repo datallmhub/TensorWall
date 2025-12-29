@@ -2,7 +2,7 @@ import http from 'k6/http';
 import { sleep } from 'k6';
 
 /**
- * Quick data generation script for LLM Gateway
+ * Quick data generation script for TensorWall
  *
  * Usage: k6 run tests/k6/generate-sample-data.js
  *

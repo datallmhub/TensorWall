@@ -1,4 +1,4 @@
-"""SQLAlchemy models for LLM Gateway."""
+"""SQLAlchemy models for TensorWall."""
 
 from datetime import datetime
 from typing import Optional

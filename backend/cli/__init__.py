@@ -1,1 +1,1 @@
-"""LLM Gateway CLI."""
+"""TensorWall CLI."""

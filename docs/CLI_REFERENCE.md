@@ -1,6 +1,6 @@
 # CLI Reference
 
-Command-line interface for LLM Gateway administration.
+Command-line interface for TensorWall administration.
 
 ---
 

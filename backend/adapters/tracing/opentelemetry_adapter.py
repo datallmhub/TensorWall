@@ -33,7 +33,7 @@ class OpenTelemetryTracingAdapter(RequestTracingPort):
 
     def __init__(
         self,
-        service_name: str = "llm-gateway",
+        service_name: str = "tensorwall",
         otlp_endpoint: str | None = None,
         jaeger_endpoint: str | None = None,
         enable_console_export: bool = False,

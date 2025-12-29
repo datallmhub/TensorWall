@@ -61,7 +61,7 @@ export default function Sidebar() {
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="flex items-center h-16 px-6 bg-gray-800">
-            <h1 className="text-xl font-bold text-white">LLM Gateway</h1>
+            <h1 className="text-xl font-bold text-white">TensorWall</h1>
           </div>
 
           {/* Navigation */}

@@ -1,4 +1,4 @@
-"""Database module for LLM Gateway."""
+"""Database module for TensorWall."""
 
 from backend.db.session import get_db, close_db, create_tables
 from backend.db.models import (

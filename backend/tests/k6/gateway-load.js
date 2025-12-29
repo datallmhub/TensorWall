@@ -1,5 +1,5 @@
 // =============================================================================
-// K6 Load Test: LLM Gateway Core Endpoints
+// K6 Load Test: TensorWall Core Endpoints
 // =============================================================================
 // Run: k6 run tests/k6/gateway-load.js
 // With env: k6 run -e BASE_URL=https://api.example.com -e API_KEY=xxx tests/k6/gateway-load.js

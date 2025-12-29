@@ -130,7 +130,7 @@ export default function Dashboard() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Dashboard</h1>
-          <p className="text-sm sm:text-base text-gray-500 mt-1">LLM Gateway</p>
+          <p className="text-sm sm:text-base text-gray-500 mt-1">TensorWall</p>
         </div>
         <div className="flex items-center space-x-2">
           <span className={`w-2 h-2 rounded-full ${health?.status === 'healthy' ? 'bg-green-500' : 'bg-red-500'}`} />

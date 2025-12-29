@@ -53,7 +53,7 @@ class AWSKMSEncryptionAdapter(EncryptionPort):
             cache_ttl_seconds: How long to cache data keys
             boto_client: Optional boto3 KMS client (for testing)
         """
-        self._kms_key_id = kms_key_id or os.environ.get("AWS_KMS_KEY_ID", "alias/llm-gateway")
+        self._kms_key_id = kms_key_id or os.environ.get("AWS_KMS_KEY_ID", "alias/tensorwall")
         self._region = region
         self._cache_ttl = cache_ttl_seconds
         self._kms_client = boto_client

@@ -1,5 +1,5 @@
 """
-Use-case / Feature Allowlisting - Feature control for LLM Gateway.
+Use-case / Feature Allowlisting - Feature control for TensorWall.
 
 Ce module implémente le contrôle STRICT des usages autorisés:
 - Chaque application doit déclarer ses features/use-cases

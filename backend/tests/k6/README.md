@@ -1,4 +1,4 @@
-# K6 Load Tests for LLM Gateway
+# K6 Load Tests for TensorWall
 
 Performance and load testing suite using [k6](https://k6.io/).
 

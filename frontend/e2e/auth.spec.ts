@@ -26,7 +26,7 @@ test.describe('Authentication Flow', () => {
     console.log('✓ Successfully redirected to /login');
 
     // Should see login form
-    await expect(page.getByRole('heading', { name: /LLM Gateway/i })).toBeVisible();
+    await expect(page.getByRole('heading', { name: /TensorWall/i })).toBeVisible();
     await expect(page.getByPlaceholder(/email/i)).toBeVisible();
     await expect(page.getByPlaceholder(/password/i)).toBeVisible();
     console.log('✓ Login form is visible');

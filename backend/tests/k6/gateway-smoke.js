@@ -140,9 +140,9 @@ export default function (data) {
   sleep(0.5);
 
   // ==========================================================================
-  // 4. LLM Gateway Endpoint
+  // 4. TensorWall Endpoint
   // ==========================================================================
-  group('4. LLM Gateway', () => {
+  group('4. TensorWall', () => {
     const chatRes = http.post(
       `${BASE_URL}/v1/chat/completions`,
       JSON.stringify({

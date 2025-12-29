@@ -5,7 +5,7 @@
 # Tests budget enforcement with real LLM requests
 #
 # Prerequisites:
-#   - LLM Gateway running on localhost:8000
+#   - TensorWall running on localhost:8000
 #   - LM Studio running with phi-2 or another model loaded
 #   - Admin credentials configured
 # =============================================================================
@@ -29,7 +29,7 @@ fi
 
 # Check if gateway is running
 if ! curl -s http://localhost:8000/health > /dev/null 2>&1; then
-    echo "ERROR: LLM Gateway is not running on localhost:8000"
+    echo "ERROR: TensorWall is not running on localhost:8000"
     echo "Start it with: docker-compose up -d"
     exit 1
 fi

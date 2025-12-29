@@ -1,5 +1,5 @@
 /**
- * TypeScript interfaces for LLM Gateway API responses
+ * TypeScript interfaces for TensorWall API responses
  *
  * Version: 2.0.0 (Security Update)
  * - Changed all `id: number` to `uuid: string`

@@ -1,11 +1,11 @@
-# LLM Gateway SDK
+# TensorWall SDK
 
-Python SDK for [LLM Gateway](https://github.com/your-org/llm-gateway) - A unified API gateway for multiple LLM providers.
+Python SDK for [TensorWall](https://github.com/datallmhub/TensorWall) - A unified API gateway for multiple LLM providers.
 
 ## Installation
 
 ```bash
-pip install llm-gateway-sdk
+pip install tensorwall-sdk
 ```
 
 ## Quick Start

@@ -34,7 +34,7 @@ export default function LoginPage() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-xl mb-4">
               <Shield className="w-8 h-8 text-white" />
             </div>
-            <h1 className="text-2xl font-bold text-white">LLM Gateway</h1>
+            <h1 className="text-2xl font-bold text-white">TensorWall</h1>
             <p className="text-gray-400 mt-2">Admin Dashboard</p>
           </div>
 
@@ -102,7 +102,7 @@ export default function LoginPage() {
           {/* Footer */}
           <div className="mt-8 pt-6 border-t border-gray-700 text-center">
             <p className="text-xs text-gray-500">
-              LLM Governance Gateway v0.1.0
+              TensorWall v0.1.0
             </p>
           </div>
         </div>

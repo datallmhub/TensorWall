@@ -1,1 +1,1 @@
-"""Unit tests for LLM Gateway."""
+"""Unit tests for TensorWall."""

@@ -1,4 +1,4 @@
-"""Role-Based Access Control (RBAC) for LLM Gateway.
+"""Role-Based Access Control (RBAC) for TensorWall.
 
 Defines roles, permissions, and access control logic.
 """

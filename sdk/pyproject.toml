@@ -3,13 +3,13 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "llm-gateway-sdk"
+name = "tensorwall-sdk"
 version = "0.1.0"
-description = "Python SDK for LLM Gateway - A unified API gateway for multiple LLM providers"
+description = "Python SDK for TensorWall - A unified API gateway for multiple LLM providers"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [
-    {name = "LLM Gateway Team"}
+    {name = "TensorWall Team"}
 ]
 keywords = ["llm", "openai", "anthropic", "gateway", "ai", "sdk"]
 classifiers = [
@@ -37,9 +37,9 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-org/llm-gateway"
-Documentation = "https://github.com/your-org/llm-gateway#readme"
-Repository = "https://github.com/your-org/llm-gateway"
+Homepage = "https://github.com/datallmhub/TensorWall"
+Documentation = "https://github.com/datallmhub/TensorWall#readme"
+Repository = "https://github.com/datallmhub/TensorWall"
 
 [tool.setuptools.packages.find]
 where = ["."]

@@ -1,4 +1,4 @@
-"""Database repositories for LLM Gateway."""
+"""Database repositories for TensorWall."""
 
 from backend.db.repositories.application import ApplicationRepository
 from backend.db.repositories.api_key import ApiKeyRepository

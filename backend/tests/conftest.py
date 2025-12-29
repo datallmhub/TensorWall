@@ -1,4 +1,4 @@
-"""Pytest fixtures for LLM Gateway tests."""
+"""Pytest fixtures for TensorWall tests."""
 
 import pytest
 import pytest_asyncio

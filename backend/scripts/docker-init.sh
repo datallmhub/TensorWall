@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "=== LLM Gateway Initialization ==="
+echo "=== TensorWall Initialization ==="
 echo ""
 
 # Wait for database

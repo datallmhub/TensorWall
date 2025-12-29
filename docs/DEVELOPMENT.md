@@ -1,4 +1,4 @@
-# LLM Gateway - Development Guide
+# TensorWall - Development Guide
 
 Guide for contributors and developers.
 
@@ -17,8 +17,8 @@ Guide for contributors and developers.
 
 ```bash
 # Clone
-git clone https://github.com/your-org/llm-gateway.git
-cd llm-gateway
+git clone https://github.com/datallmhub/TensorWall.git
+cd tensorwall
 
 # Start infrastructure
 docker-compose up db redis -d
@@ -47,7 +47,7 @@ npm run dev
 ## Project Structure
 
 ```
-llm-gateway/
+tensorwall/
 ├── backend/
 │   ├── adapters/          # External service adapters
 │   │   ├── cache/         # Redis adapter
@@ -271,7 +271,7 @@ docker-compose logs -f backend
 docker-compose exec backend bash
 
 # Database
-docker-compose exec db psql -U postgres -d llm_gateway
+docker-compose exec db psql -U postgres -d tensorwall
 ```
 
 ### Reset Everything
@@ -289,7 +289,7 @@ docker-compose up -d
 
 ```env
 # Required
-DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/llm_gateway
+DATABASE_URL=postgresql+asyncpg://postgres:postgres@localhost:5432/tensorwall
 REDIS_URL=redis://localhost:6379
 JWT_SECRET_KEY=dev-secret-key-change-in-production
 
@@ -428,7 +428,7 @@ curl -H "X-Debug: true" http://localhost:8000/v1/chat/completions ...
 
 ```bash
 # Ensure you're in the right directory
-cd llm-gateway
+cd tensorwall
 
 # Ensure PYTHONPATH
 export PYTHONPATH=$PWD

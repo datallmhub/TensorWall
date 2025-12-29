@@ -215,7 +215,7 @@ export default function PlaygroundPage() {
               <div className="h-full flex items-center justify-center text-gray-400">
                 <div className="text-center">
                   <p className="text-lg mb-2">Start a conversation</p>
-                  <p className="text-sm">Your messages will be sent through the LLM Gateway</p>
+                  <p className="text-sm">Your messages will be sent through TensorWall</p>
                   {modelsError && (
                     <div className="mt-4 p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-700 text-sm">
                       <AlertCircle className="w-4 h-4 inline mr-2" />

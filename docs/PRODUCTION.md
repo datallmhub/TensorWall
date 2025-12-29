@@ -1,6 +1,6 @@
 # Production Deployment
 
-This guide covers deploying LLM Gateway in production environments.
+This guide covers deploying TensorWall in production environments.
 
 ---
 
@@ -40,7 +40,7 @@ This guide covers deploying LLM Gateway in production environments.
 ENVIRONMENT=production
 DEBUG=false
 
-DATABASE_URL=postgresql+asyncpg://user:password@db-host:5432/llm_gateway
+DATABASE_URL=postgresql+asyncpg://user:password@db-host:5432/tensorwall
 REDIS_URL=redis://:password@redis-host:6379/0
 
 JWT_SECRET_KEY=<generate-with-openssl-rand-base64-64>
@@ -59,7 +59,7 @@ Create `docker-compose.prod.yml`:
 ```yaml
 services:
   backend:
-    image: llm-gateway-backend:latest
+    image: tensorwall-backend:latest
     environment:
       - ENVIRONMENT=production
       - DEBUG=false
@@ -105,10 +105,10 @@ python -m backend.cli migrate current
 
 ```bash
 # Backup
-pg_dump -h localhost -U postgres llm_gateway > backup.sql
+pg_dump -h localhost -U postgres tensorwall > backup.sql
 
 # Restore
-psql -h localhost -U postgres llm_gateway < backup.sql
+psql -h localhost -U postgres tensorwall < backup.sql
 ```
 
 ---

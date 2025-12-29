@@ -40,7 +40,7 @@ async def check_setup_state() -> bool:
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     # Startup
-    logger.info(f"LLM Gateway starting on {settings.environment} environment")
+    logger.info(f"TensorWall starting on {settings.environment} environment")
 
     # Check database connection (no auto-init)
     try:
@@ -68,13 +68,13 @@ async def lifespan(app: FastAPI):
     yield
 
     # Shutdown
-    logger.info("LLM Gateway shutting down")
+    logger.info("TensorWall shutting down")
     await close_db()
     await close_redis()
 
 
 DESCRIPTION = """
-## LLM Gateway
+## TensorWall
 
 **Developer-first API gateway for LLM services with built-in governance and security.**
 
@@ -192,7 +192,7 @@ Configure system-wide settings like token limits, latency thresholds, and audit 
 ]
 
 app = FastAPI(
-    title="LLM Gateway",
+    title="TensorWall",
     description=DESCRIPTION,
     version="0.1.0",
     lifespan=lifespan,
@@ -201,7 +201,7 @@ app = FastAPI(
     redoc_url="/redoc",
     openapi_url="/openapi.json",
     contact={
-        "name": "LLM Gateway Team",
+        "name": "TensorWall Team",
     },
     license_info={
         "name": "MIT",

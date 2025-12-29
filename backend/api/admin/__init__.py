@@ -1,4 +1,4 @@
-"""Admin API endpoints for LLM Gateway - ."""
+"""Admin API endpoints for TensorWall."""
 
 from backend.api.admin import (
     applications,

@@ -1,4 +1,4 @@
-# LLM Gateway
+# TensorWall
 
 **Developer-first API gateway for LLM services with built-in governance and security.**
 
@@ -24,8 +24,8 @@
 
 ```bash
 # Clone & start
-git clone https://github.com/your-org/llm-gateway.git
-cd llm-gateway
+git clone https://github.com/datallmhub/TensorWall.git
+cd tensorwall
 docker-compose up -d
 ```
 
@@ -81,7 +81,7 @@ curl -X POST http://localhost:8000/v1/chat/completions \
                               │
                               ▼
 ┌─────────────────────────────────────────────────────────────┐
-│                      LLM Gateway                            │
+│                       TensorWall                            │
 │  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌──────────┐    │
 │  │   Auth   │→ │  Policy  │→ │  Budget  │→ │  Audit   │    │
 │  │  Check   │  │  Engine  │  │  Check   │  │   Log    │    │
@@ -203,5 +203,5 @@ MIT License - see [LICENSE](LICENSE) for details.
 ## Support
 
 - [Documentation](docs/)
-- [Issues](https://github.com/your-org/llm-gateway/issues)
-- [Discussions](https://github.com/your-org/llm-gateway/discussions)
+- [Issues](https://github.com/datallmhub/TensorWall/issues)
+- [Discussions](https://github.com/datallmhub/TensorWall/discussions)
