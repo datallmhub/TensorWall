@@ -6,6 +6,22 @@
 
 ---
 
+## Screenshots
+
+### Dashboard
+![Dashboard](docs/screenshots/02-dashboard.png)
+
+### Applications
+![Applications](docs/screenshots/03-applications.png)
+
+### Budgets
+![Budgets](docs/screenshots/04-budgets.png)
+
+### Security
+![Security](docs/screenshots/05-security.png)
+
+---
+
 ## Features
 
 | Feature | Description |
