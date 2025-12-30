@@ -163,6 +163,74 @@ GET  /auth/me                 # Current user
 
 ---
 
+## SDKs
+
+TensorWall is **OpenAI API compatible**, so you can use the official OpenAI SDKs directly:
+
+### Python (using OpenAI SDK)
+
+```python
+from openai import OpenAI
+
+client = OpenAI(
+    base_url="http://localhost:8000/v1",
+    api_key="your-tensorwall-api-key"
+)
+
+response = client.chat.completions.create(
+    model="gpt-4o-mini",
+    messages=[{"role": "user", "content": "Hello!"}]
+)
+print(response.choices[0].message.content)
+```
+
+### JavaScript/TypeScript (using OpenAI SDK)
+
+```typescript
+import OpenAI from 'openai';
+
+const client = new OpenAI({
+    baseURL: 'http://localhost:8000/v1',
+    apiKey: 'your-tensorwall-api-key'
+});
+
+const response = await client.chat.completions.create({
+    model: 'gpt-4o-mini',
+    messages: [{ role: 'user', content: 'Hello!' }]
+});
+console.log(response.choices[0].message.content);
+```
+
+### Java SDK
+
+For Java applications, we provide a dedicated SDK with additional features:
+
+```xml
+<dependency>
+    <groupId>com.tensorwall</groupId>
+    <artifactId>tensorwall-sdk</artifactId>
+    <version>0.1.0</version>
+</dependency>
+```
+
+```java
+try (TensorWallClient client = TensorWallClient.builder()
+        .baseUrl("http://localhost:8000")
+        .apiKey("your-api-key")
+        .build()) {
+
+    ChatCompletionResponse response = client.chat(
+        List.of(ChatMessage.user("Hello!")),
+        "gpt-4o-mini"
+    );
+    System.out.println(response.getContent());
+}
+```
+
+See [Java SDK documentation](sdk-java/README.md) for full details.
+
+---
+
 ## Configuration
 
 ### Environment Variables

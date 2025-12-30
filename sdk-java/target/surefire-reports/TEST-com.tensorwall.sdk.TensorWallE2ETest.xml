@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report-3.0.xsd" version="3.0" name="com.tensorwall.sdk.TensorWallE2ETest" time="0.558" tests="9" errors="0" skipped="5" failures="0">
+  <properties>
+    <property name="java.specification.version" value="21"/>
+    <property name="sun.jnu.encoding" value="UTF-8"/>
+    <property name="java.class.path" value="/Users/asekka/Documents/workspace-python/llm-gateway/sdk-java/target/test-classes:/Users/asekka/Documents/workspace-python/llm-gateway/sdk-java/target/classes:/Users/asekka/.m2/repository/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.jar:/Users/asekka/.m2/repository/com/squareup/okio/okio/3.6.0/okio-3.6.0.jar:/Users/asekka/.m2/repository/com/squareup/okio/okio-jvm/3.6.0/okio-jvm-3.6.0.jar:/Users/asekka/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-common/1.9.10/kotlin-stdlib-common-1.9.10.jar:/Users/asekka/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk8/1.8.21/kotlin-stdlib-jdk8-1.8.21.jar:/Users/asekka/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib/1.8.21/kotlin-stdlib-1.8.21.jar:/Users/asekka/.m2/repository/org/jetbrains/annotations/13.0/annotations-13.0.jar:/Users/asekka/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk7/1.8.21/kotlin-stdlib-jdk7-1.8.21.jar:/Users/asekka/.m2/repository/com/squareup/okhttp3/okhttp-sse/4.12.0/okhttp-sse-4.12.0.jar:/Users/asekka/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.16.1/jackson-databind-2.16.1.jar:/Users/asekka/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.16.1/jackson-core-2.16.1.jar:/Users/asekka/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.16.1/jackson-annotations-2.16.1.jar:/Users/asekka/.m2/repository/org/junit/jupiter/junit-jupiter/5.10.1/junit-jupiter-5.10.1.jar:/Users/asekka/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.1/junit-jupiter-api-5.10.1.jar:/Users/asekka/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/asekka/.m2/repository/org/junit/platform/junit-platform-commons/1.10.1/junit-platform-commons-1.10.1.jar:/Users/asekka/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/asekka/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.10.1/junit-jupiter-params-5.10.1.jar:/Users/asekka/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.10.1/junit-jupiter-engine-5.10.1.jar:/Users/asekka/.m2/repository/org/junit/platform/junit-platform-engine/1.10.1/junit-platform-engine-1.10.1.jar:/Users/asekka/.m2/repository/com/squareup/okhttp3/mockwebserver/4.12.0/mockwebserver-4.12.0.jar:/Users/asekka/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/asekka/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:"/>
+    <property name="java.vm.vendor" value="Oracle Corporation"/>
+    <property name="sun.arch.data.model" value="64"/>
+    <property name="java.vendor.url" value="https://java.oracle.com/"/>
+    <property name="user.timezone" value="Europe/Paris"/>
+    <property name="os.name" value="Mac OS X"/>
+    <property name="java.vm.specification.version" value="21"/>
+    <property name="sun.java.launcher" value="SUN_STANDARD"/>
+    <property name="user.country" value="FR"/>
+    <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home/lib"/>
+    <property name="sun.java.command" value="/Users/asekka/Documents/workspace-python/llm-gateway/sdk-java/target/surefire/surefirebooter-20251230082555855_3.jar /Users/asekka/Documents/workspace-python/llm-gateway/sdk-java/target/surefire 2025-12-30T08-25-55_817-jvmRun1 surefire-20251230082555855_1tmp surefire_0-20251230082555855_2tmp"/>
+    <property name="http.nonProxyHosts" value="localhost|*.localhost|127.0.0.1|local|*.local"/>
+    <property name="jdk.debug" value="release"/>
+    <property name="surefire.test.class.path" value="/Users/asekka/Documents/workspace-python/llm-gateway/sdk-java/target/test-classes:/Users/asekka/Documents/workspace-python/llm-gateway/sdk-java/target/classes:/Users/asekka/.m2/repository/com/squareup/okhttp3/okhttp/4.12.0/okhttp-4.12.0.jar:/Users/asekka/.m2/repository/com/squareup/okio/okio/3.6.0/okio-3.6.0.jar:/Users/asekka/.m2/repository/com/squareup/okio/okio-jvm/3.6.0/okio-jvm-3.6.0.jar:/Users/asekka/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-common/1.9.10/kotlin-stdlib-common-1.9.10.jar:/Users/asekka/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk8/1.8.21/kotlin-stdlib-jdk8-1.8.21.jar:/Users/asekka/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib/1.8.21/kotlin-stdlib-1.8.21.jar:/Users/asekka/.m2/repository/org/jetbrains/annotations/13.0/annotations-13.0.jar:/Users/asekka/.m2/repository/org/jetbrains/kotlin/kotlin-stdlib-jdk7/1.8.21/kotlin-stdlib-jdk7-1.8.21.jar:/Users/asekka/.m2/repository/com/squareup/okhttp3/okhttp-sse/4.12.0/okhttp-sse-4.12.0.jar:/Users/asekka/.m2/repository/com/fasterxml/jackson/core/jackson-databind/2.16.1/jackson-databind-2.16.1.jar:/Users/asekka/.m2/repository/com/fasterxml/jackson/core/jackson-core/2.16.1/jackson-core-2.16.1.jar:/Users/asekka/.m2/repository/com/fasterxml/jackson/core/jackson-annotations/2.16.1/jackson-annotations-2.16.1.jar:/Users/asekka/.m2/repository/org/junit/jupiter/junit-jupiter/5.10.1/junit-jupiter-5.10.1.jar:/Users/asekka/.m2/repository/org/junit/jupiter/junit-jupiter-api/5.10.1/junit-jupiter-api-5.10.1.jar:/Users/asekka/.m2/repository/org/opentest4j/opentest4j/1.3.0/opentest4j-1.3.0.jar:/Users/asekka/.m2/repository/org/junit/platform/junit-platform-commons/1.10.1/junit-platform-commons-1.10.1.jar:/Users/asekka/.m2/repository/org/apiguardian/apiguardian-api/1.1.2/apiguardian-api-1.1.2.jar:/Users/asekka/.m2/repository/org/junit/jupiter/junit-jupiter-params/5.10.1/junit-jupiter-params-5.10.1.jar:/Users/asekka/.m2/repository/org/junit/jupiter/junit-jupiter-engine/5.10.1/junit-jupiter-engine-5.10.1.jar:/Users/asekka/.m2/repository/org/junit/platform/junit-platform-engine/1.10.1/junit-platform-engine-1.10.1.jar:/Users/asekka/.m2/repository/com/squareup/okhttp3/mockwebserver/4.12.0/mockwebserver-4.12.0.jar:/Users/asekka/.m2/repository/junit/junit/4.13.2/junit-4.13.2.jar:/Users/asekka/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:"/>
+    <property name="sun.cpu.endian" value="little"/>
+    <property name="user.home" value="/Users/asekka"/>
+    <property name="user.language" value="fr"/>
+    <property name="java.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.version.date" value="2024-01-16"/>
+    <property name="java.home" value="/Library/Java/JavaVirtualMachines/jdk-21.jdk/Contents/Home"/>
+    <property name="file.separator" value="/"/>
+    <property name="basedir" value="/Users/asekka/Documents/workspace-python/llm-gateway/sdk-java"/>
+    <property name="java.vm.compressedOopsMode" value="Zero based"/>
+    <property name="line.separator" value="&#10;"/>
+    <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
+    <property name="java.specification.name" value="Java Platform API Specification"/>
+    <property name="apple.awt.application.name" value="ForkedBooter"/>
+    <property name="surefire.real.class.path" value="/Users/asekka/Documents/workspace-python/llm-gateway/sdk-java/target/surefire/surefirebooter-20251230082555855_3.jar"/>
+    <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
+    <property name="ftp.nonProxyHosts" value="localhost|*.localhost|127.0.0.1|local|*.local"/>
+    <property name="java.runtime.version" value="21.0.2+13-LTS-58"/>
+    <property name="user.name" value="asekka"/>
+    <property name="stdout.encoding" value="UTF-8"/>
+    <property name="path.separator" value=":"/>
+    <property name="os.version" value="26.2"/>
+    <property name="java.runtime.name" value="Java(TM) SE Runtime Environment"/>
+    <property name="file.encoding" value="UTF-8"/>
+    <property name="java.vm.name" value="Java HotSpot(TM) 64-Bit Server VM"/>
+    <property name="localRepository" value="/Users/asekka/.m2/repository"/>
+    <property name="java.vendor.url.bug" value="https://bugreport.java.com/bugreport/"/>
+    <property name="java.io.tmpdir" value="/var/folders/fb/80czc4tn3xv5vx30dnb9mszm0000gn/T/"/>
+    <property name="java.version" value="21.0.2"/>
+    <property name="user.dir" value="/Users/asekka/Documents/workspace-python/llm-gateway/sdk-java"/>
+    <property name="os.arch" value="aarch64"/>
+    <property name="java.vm.specification.name" value="Java Virtual Machine Specification"/>
+    <property name="native.encoding" value="UTF-8"/>
+    <property name="java.library.path" value="/Users/asekka/Library/Java/Extensions:/Library/Java/Extensions:/Network/Library/Java/Extensions:/System/Library/Java/Extensions:/usr/lib/java:."/>
+    <property name="java.vm.info" value="mixed mode, sharing"/>
+    <property name="stderr.encoding" value="UTF-8"/>
+    <property name="java.vendor" value="Oracle Corporation"/>
+    <property name="java.vm.version" value="21.0.2+13-LTS-58"/>
+    <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
+    <property name="socksNonProxyHosts" value="localhost|*.localhost|127.0.0.1|local|*.local"/>
+    <property name="java.class.version" value="65.0"/>
+  </properties>
+  <testcase name="testHealth" classname="com.tensorwall.sdk.TensorWallE2ETest" time="0.01">
+    <system-out><![CDATA[✓ TensorWall server available at http://localhost:8000
+⚠ LLM provider not configured - skipping LLM tests
+✓ Health: healthy (v0.1.0)
+]]></system-out>
+  </testcase>
+  <testcase name="testListModels" classname="com.tensorwall.sdk.TensorWallE2ETest" time="0.003">
+    <system-out><![CDATA[⚠ List models not available: Not Found
+]]></system-out>
+  </testcase>
+  <testcase name="testSimpleChat" classname="com.tensorwall.sdk.TensorWallE2ETest" time="0.0">
+    <skipped type="org.opentest4j.TestAbortedException"><![CDATA[org.opentest4j.TestAbortedException: Assumption failed: LLM provider not configured
+	at org.junit.jupiter.api.Assumptions.throwAssumptionFailed(Assumptions.java:316)
+	at org.junit.jupiter.api.Assumptions.assumeTrue(Assumptions.java:115)
+	at com.tensorwall.sdk.TensorWallE2ETest.skipIfNoLLMProvider(TensorWallE2ETest.java:80)
+	at com.tensorwall.sdk.TensorWallE2ETest.testSimpleChat(TensorWallE2ETest.java:121)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></skipped>
+  </testcase>
+  <testcase name="testChatWithSystem" classname="com.tensorwall.sdk.TensorWallE2ETest" time="0.0">
+    <skipped type="org.opentest4j.TestAbortedException"><![CDATA[org.opentest4j.TestAbortedException: Assumption failed: LLM provider not configured
+	at org.junit.jupiter.api.Assumptions.throwAssumptionFailed(Assumptions.java:316)
+	at org.junit.jupiter.api.Assumptions.assumeTrue(Assumptions.java:115)
+	at com.tensorwall.sdk.TensorWallE2ETest.skipIfNoLLMProvider(TensorWallE2ETest.java:80)
+	at com.tensorwall.sdk.TensorWallE2ETest.testChatWithSystem(TensorWallE2ETest.java:150)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></skipped>
+  </testcase>
+  <testcase name="testChatWithBuilder" classname="com.tensorwall.sdk.TensorWallE2ETest" time="0.0">
+    <skipped type="org.opentest4j.TestAbortedException"><![CDATA[org.opentest4j.TestAbortedException: Assumption failed: LLM provider not configured
+	at org.junit.jupiter.api.Assumptions.throwAssumptionFailed(Assumptions.java:316)
+	at org.junit.jupiter.api.Assumptions.assumeTrue(Assumptions.java:115)
+	at com.tensorwall.sdk.TensorWallE2ETest.skipIfNoLLMProvider(TensorWallE2ETest.java:80)
+	at com.tensorwall.sdk.TensorWallE2ETest.testChatWithBuilder(TensorWallE2ETest.java:174)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></skipped>
+  </testcase>
+  <testcase name="testConversation" classname="com.tensorwall.sdk.TensorWallE2ETest" time="0.0">
+    <skipped type="org.opentest4j.TestAbortedException"><![CDATA[org.opentest4j.TestAbortedException: Assumption failed: LLM provider not configured
+	at org.junit.jupiter.api.Assumptions.throwAssumptionFailed(Assumptions.java:316)
+	at org.junit.jupiter.api.Assumptions.assumeTrue(Assumptions.java:115)
+	at com.tensorwall.sdk.TensorWallE2ETest.skipIfNoLLMProvider(TensorWallE2ETest.java:80)
+	at com.tensorwall.sdk.TensorWallE2ETest.testConversation(TensorWallE2ETest.java:201)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></skipped>
+  </testcase>
+  <testcase name="testDryRun" classname="com.tensorwall.sdk.TensorWallE2ETest" time="0.273">
+    <system-out><![CDATA[✓ Dry run executed (may have different response format)
+]]></system-out>
+  </testcase>
+  <testcase name="testResponseTime" classname="com.tensorwall.sdk.TensorWallE2ETest" time="0.0">
+    <skipped type="org.opentest4j.TestAbortedException"><![CDATA[org.opentest4j.TestAbortedException: Assumption failed: LLM provider not configured
+	at org.junit.jupiter.api.Assumptions.throwAssumptionFailed(Assumptions.java:316)
+	at org.junit.jupiter.api.Assumptions.assumeTrue(Assumptions.java:115)
+	at com.tensorwall.sdk.TensorWallE2ETest.skipIfNoLLMProvider(TensorWallE2ETest.java:80)
+	at com.tensorwall.sdk.TensorWallE2ETest.testResponseTime(TensorWallE2ETest.java:247)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+]]></skipped>
+  </testcase>
+  <testcase name="testSummary" classname="com.tensorwall.sdk.TensorWallE2ETest" time="0.001">
+    <system-out><![CDATA[
+==================================================
+  TensorWall Java SDK E2E Tests Complete
+==================================================
+  Server: http://localhost:8000
+  App ID: java-sdk-e2e-test
+==================================================
+]]></system-out>
+  </testcase>
+</testsuite>
