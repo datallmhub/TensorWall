@@ -2,7 +2,16 @@
 
 **Developer-first API gateway for LLM services with built-in governance and security.**
 
+[![Version](https://img.shields.io/badge/version-0.2.0-blue.svg)](https://github.com/datallmhub/TensorWall/releases)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/python-3.11+-green.svg)](https://www.python.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue.svg)](https://www.typescriptlang.org/)
+[![Java](https://img.shields.io/badge/Java-17+-orange.svg)](https://openjdk.org/)
+[![Docker](https://img.shields.io/badge/docker-ready-blue.svg)](https://hub.docker.com/)
+[![OpenAI Compatible](https://img.shields.io/badge/OpenAI-compatible-412991.svg)](https://platform.openai.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15+-336791.svg)](https://www.postgresql.org/)
+[![Redis](https://img.shields.io/badge/Redis-7+-DC382D.svg)](https://redis.io/)
+[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/datallmhub/TensorWall/pulls)
 
 ---
 
