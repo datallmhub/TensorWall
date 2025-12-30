@@ -209,7 +209,7 @@ For Java applications, we provide a dedicated SDK with additional features:
 <dependency>
     <groupId>com.tensorwall</groupId>
     <artifactId>tensorwall-sdk</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 

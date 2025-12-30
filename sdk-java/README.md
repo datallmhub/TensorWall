@@ -15,7 +15,7 @@ Java SDK for [TensorWall](https://github.com/datallmhub/TensorWall) - A unified 
 <dependency>
     <groupId>com.tensorwall</groupId>
     <artifactId>tensorwall-sdk</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0</version>
 </dependency>
 ```
 

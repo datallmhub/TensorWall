@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tensorwall-sdk"
-version = "0.1.0"
+version = "0.2.0"
 description = "Python SDK for TensorWall - A unified API gateway for multiple LLM providers"
 readme = "README.md"
 license = {text = "MIT"}
