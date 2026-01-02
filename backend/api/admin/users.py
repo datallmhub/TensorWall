@@ -64,7 +64,9 @@ class UserCreate(BaseModel):
 
     email: EmailStr
     name: str
-    password: Optional[str] = None  # If not provided, user must set via /auth/set-password
+    password: Optional[str] = (
+        None  # If not provided, user must set via /auth/set-password
+    )
 
 
 class UserUpdate(BaseModel):
@@ -104,7 +106,9 @@ async def list_users(
 
     # Get users
     offset = (page - 1) * page_size
-    query = select(User).order_by(User.created_at.desc()).offset(offset).limit(page_size)
+    query = (
+        select(User).order_by(User.created_at.desc()).offset(offset).limit(page_size)
+    )
     result = await db.execute(query)
     users = result.scalars().all()
 
@@ -188,7 +192,9 @@ async def get_user(
     user = result.scalar_one_or_none()
 
     if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
 
     return UserItem(
         id=user.id,
@@ -218,7 +224,9 @@ async def update_user(
     user = result.scalar_one_or_none()
 
     if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
 
     # Prevent self-deactivation
     if data.is_active is False and user_id == current_user_id:
@@ -267,7 +275,9 @@ async def delete_user(
     user = result.scalar_one_or_none()
 
     if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
 
     await db.delete(user)
     await db.commit()
@@ -287,14 +297,17 @@ async def reset_user_password(
     """
     if len(data.new_password) < 8:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Password must be at least 8 characters"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Password must be at least 8 characters",
         )
 
     result = await db.execute(select(User).where(User.id == user_id))
     user = result.scalar_one_or_none()
 
     if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+        )
 
     user.password_hash = hash_password(data.new_password)
     user.updated_at = datetime.utcnow()

@@ -12,7 +12,12 @@ from enum import Enum
 from collections import Counter
 from sqlalchemy import select
 
-from backend.core.decisions import Decision, DecisionStage, DecisionOutcome, DecisionCode
+from backend.core.decisions import (
+    Decision,
+    DecisionStage,
+    DecisionOutcome,
+    DecisionCode,
+)
 from backend.db.models import LLMRequestTrace, TraceDecision
 from backend.db.session import get_db_context
 
@@ -144,9 +149,11 @@ class DecisionIntelligenceService:
             request_id=request_id,
             decision="DENY" if decision.decision == DecisionOutcome.DENY else "ALLOW",
             decision_chain=decision_chain,
-            primary_reason=decision.primary_reason.message
-            if decision.primary_reason
-            else "No reason provided",
+            primary_reason=(
+                decision.primary_reason.message
+                if decision.primary_reason
+                else "No reason provided"
+            ),
             category=category,
             severity=severity,
             human_explanation=human_explanation,
@@ -159,7 +166,9 @@ class DecisionIntelligenceService:
             timestamp=datetime.now(timezone.utc),
         )
 
-    def _categorize_decision(self, decision: Decision) -> tuple[DecisionCategory, DecisionSeverity]:
+    def _categorize_decision(
+        self, decision: Decision
+    ) -> tuple[DecisionCategory, DecisionSeverity]:
         """Categorize a decision by type and severity."""
         if not decision.primary_reason:
             return DecisionCategory.AUTHORIZATION, DecisionSeverity.INFO
@@ -174,10 +183,16 @@ class DecisionIntelligenceService:
         ]:
             return DecisionCategory.AUTHENTICATION, DecisionSeverity.CRITICAL
 
-        if code in [DecisionCode.AUTHZ_PERMISSION_DENIED, DecisionCode.AUTHZ_RESOURCE_FORBIDDEN]:
+        if code in [
+            DecisionCode.AUTHZ_PERMISSION_DENIED,
+            DecisionCode.AUTHZ_RESOURCE_FORBIDDEN,
+        ]:
             return DecisionCategory.AUTHORIZATION, DecisionSeverity.HIGH
 
-        if code in [DecisionCode.BUDGET_HARD_LIMIT_EXCEEDED, DecisionCode.BUDGET_MONTHLY_EXHAUSTED]:
+        if code in [
+            DecisionCode.BUDGET_HARD_LIMIT_EXCEEDED,
+            DecisionCode.BUDGET_MONTHLY_EXHAUSTED,
+        ]:
             return DecisionCategory.BUDGET, DecisionSeverity.HIGH
 
         if code in [DecisionCode.BUDGET_SOFT_LIMIT_WARNING]:
@@ -186,7 +201,10 @@ class DecisionIntelligenceService:
         if code in [DecisionCode.RATE_LIMIT_EXCEEDED, DecisionCode.RATE_LIMIT_BURST]:
             return DecisionCategory.RATE_LIMIT, DecisionSeverity.MEDIUM
 
-        if code in [DecisionCode.SECURITY_INJECTION_DETECTED, DecisionCode.SECURITY_PII_DETECTED]:
+        if code in [
+            DecisionCode.SECURITY_INJECTION_DETECTED,
+            DecisionCode.SECURITY_PII_DETECTED,
+        ]:
             return DecisionCategory.SECURITY, DecisionSeverity.CRITICAL
 
         if code in [DecisionCode.FEATURE_UNKNOWN, DecisionCode.FEATURE_DISABLED]:
@@ -362,7 +380,11 @@ class DecisionIntelligenceService:
                     code=code,
                     reason=self._get_code_description(decision_code),
                     count=count,
-                    percentage=round((count / total_blocked) * 100, 2) if total_blocked > 0 else 0,
+                    percentage=(
+                        round((count / total_blocked) * 100, 2)
+                        if total_blocked > 0
+                        else 0
+                    ),
                     examples=code_examples[code],
                 )
             )
@@ -414,7 +436,9 @@ class DecisionIntelligenceService:
         # Build summaries
         return self._build_reason_summaries(reason_data, min_count, limit)
 
-    async def _fetch_blocked_traces(self, start_time: datetime) -> List[LLMRequestTrace]:
+    async def _fetch_blocked_traces(
+        self, start_time: datetime
+    ) -> List[LLMRequestTrace]:
         """Fetch blocked traces from database."""
         async with get_db_context() as db:
             stmt = select(LLMRequestTrace).where(
@@ -424,7 +448,9 @@ class DecisionIntelligenceService:
             result = await db.execute(stmt)
             return list(result.scalars().all())
 
-    def _aggregate_blocking_reasons(self, blocked_traces: List[LLMRequestTrace]) -> dict:
+    def _aggregate_blocking_reasons(
+        self, blocked_traces: List[LLMRequestTrace]
+    ) -> dict:
         """Aggregate blocking reasons from traces."""
         reason_counts = Counter()
         reason_examples = {}
@@ -468,7 +494,9 @@ class DecisionIntelligenceService:
                 continue
 
             category = reason_categories.get(reason, DecisionCategory.POLICY)
-            percentage = round((count / total_blocked) * 100, 2) if total_blocked > 0 else 0
+            percentage = (
+                round((count / total_blocked) * 100, 2) if total_blocked > 0 else 0
+            )
 
             summaries.append(
                 BlockingReasonSummary(
@@ -483,15 +511,25 @@ class DecisionIntelligenceService:
 
         return summaries
 
-    def _categorize_reason(self, reason: str, risk_categories: List[str]) -> DecisionCategory:
+    def _categorize_reason(
+        self, reason: str, risk_categories: List[str]
+    ) -> DecisionCategory:
         """Categorize a blocking reason."""
         reason_lower = reason.lower()
 
-        if "budget" in reason_lower or "limit" in reason_lower or "cost" in reason_lower:
+        if (
+            "budget" in reason_lower
+            or "limit" in reason_lower
+            or "cost" in reason_lower
+        ):
             return DecisionCategory.BUDGET
         elif "rate" in reason_lower or "throttle" in reason_lower:
             return DecisionCategory.RATE_LIMIT
-        elif "security" in reason_lower or "injection" in reason_lower or "pii" in reason_lower:
+        elif (
+            "security" in reason_lower
+            or "injection" in reason_lower
+            or "pii" in reason_lower
+        ):
             return DecisionCategory.SECURITY
         elif (
             "feature" in reason_lower

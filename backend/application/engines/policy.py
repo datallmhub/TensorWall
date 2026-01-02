@@ -112,14 +112,20 @@ class PolicyEngine(AsyncLoadableEntity[list[PolicyRule]]):
                 rule = PolicyRule(
                     name=p.name,
                     enabled=p.is_enabled,
-                    environments=[Environment(e) for e in conditions.get("environments", [])]
-                    if conditions.get("environments")
-                    else None,
+                    environments=(
+                        [Environment(e) for e in conditions.get("environments", [])]
+                        if conditions.get("environments")
+                        else None
+                    ),
                     features=conditions.get("features"),
                     models=conditions.get("models"),
                     max_tokens=conditions.get("max_tokens"),
                     max_context_tokens=conditions.get("max_context_tokens"),
-                    action=PolicyDecision(p.action.value) if p.action else PolicyDecision.ALLOW,
+                    action=(
+                        PolicyDecision(p.action.value)
+                        if p.action
+                        else PolicyDecision.ALLOW
+                    ),
                 )
                 rules.append(rule)
 
@@ -153,9 +159,11 @@ class PolicyEngine(AsyncLoadableEntity[list[PolicyRule]]):
         # Build context for condition matching
         context = ConditionContext(
             model=model,
-            environment=contract.environment.value
-            if hasattr(contract.environment, "value")
-            else str(contract.environment),
+            environment=(
+                contract.environment.value
+                if hasattr(contract.environment, "value")
+                else str(contract.environment)
+            ),
             feature=contract.feature,
             app_id=contract.app_id,
             input_tokens=input_tokens,
@@ -187,7 +195,9 @@ class PolicyEngine(AsyncLoadableEntity[list[PolicyRule]]):
 
             # Check allowed hours using ConditionMatcher
             if rule.allowed_hours:
-                ok, reason = ConditionMatcher.matches_time(allowed_hours=rule.allowed_hours)
+                ok, reason = ConditionMatcher.matches_time(
+                    allowed_hours=rule.allowed_hours
+                )
                 if not ok:
                     if rule.action == PolicyDecision.DENY:
                         return PolicyResult(
@@ -225,8 +235,12 @@ class PolicyEngine(AsyncLoadableEntity[list[PolicyRule]]):
         """Check if a rule applies using ConditionMatcher."""
         # Check environment
         if rule.environments:
-            env_values = [e.value if hasattr(e, "value") else str(e) for e in rule.environments]
-            ok, _ = ConditionMatcher.matches_environment(context.environment, allowed=env_values)
+            env_values = [
+                e.value if hasattr(e, "value") else str(e) for e in rule.environments
+            ]
+            ok, _ = ConditionMatcher.matches_environment(
+                context.environment, allowed=env_values
+            )
             if not ok:
                 return False
 
@@ -238,7 +252,9 @@ class PolicyEngine(AsyncLoadableEntity[list[PolicyRule]]):
 
         # Check feature
         if rule.features:
-            ok, _ = ConditionMatcher.matches_feature(context.feature, allowed=rule.features)
+            ok, _ = ConditionMatcher.matches_feature(
+                context.feature, allowed=rule.features
+            )
             if not ok:
                 return False
 

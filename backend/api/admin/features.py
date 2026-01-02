@@ -105,7 +105,9 @@ class RegistryResponse(BaseModel):
 
 
 @router.post(
-    "/{app_id}/registry", response_model=RegistryResponse, status_code=status.HTTP_201_CREATED
+    "/{app_id}/registry",
+    response_model=RegistryResponse,
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_registry(
     app_id: str,
@@ -175,7 +177,9 @@ async def get_registry(
     )
 
 
-@router.post("/{app_id}", response_model=FeatureResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "/{app_id}", response_model=FeatureResponse, status_code=status.HTTP_201_CREATED
+)
 async def create_feature(
     app_id: str,
     data: FeatureCreate,

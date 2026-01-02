@@ -32,7 +32,9 @@ def wizard(
     admin_email: str = typer.Option(None, "--admin-email", help="Admin email"),
     admin_password: str = typer.Option(None, "--admin-password", help="Admin password"),
     skip_seed: bool = typer.Option(False, "--skip-seed", help="Skip seed data"),
-    seed: str = typer.Option("development", "--seed", help="Seed type: development, production"),
+    seed: str = typer.Option(
+        "development", "--seed", help="Seed type: development, production"
+    ),
 ):
     """Interactive first-time setup wizard."""
     console.print(
@@ -48,7 +50,9 @@ def wizard(
     db_ok, db_msg = run_async(_check_db())
     if not db_ok:
         console.print(f"[red]Database error:[/red] {db_msg}")
-        console.print("\nPlease ensure PostgreSQL is running and DATABASE_URL is correct.")
+        console.print(
+            "\nPlease ensure PostgreSQL is running and DATABASE_URL is correct."
+        )
         raise typer.Exit(1)
     console.print(f"  [green]✓[/green] {db_msg}")
 
@@ -86,7 +90,9 @@ def wizard(
         raise typer.Exit(1)
 
     if not non_interactive and not admin_password:
-        admin_password = typer.prompt("  Password", hide_input=True, confirmation_prompt=True)
+        admin_password = typer.prompt(
+            "  Password", hide_input=True, confirmation_prompt=True
+        )
     elif not admin_password:
         admin_password = generate_password()
         console.print(f"  [yellow]Generated password:[/yellow] {admin_password}")
@@ -106,7 +112,9 @@ def wizard(
             api_key = seed_result.get("api_key")
             console.print("  [green]✓[/green] Data seeded")
         else:
-            console.print(f"  [yellow]Warning:[/yellow] {seed_result.get('error', 'Seed skipped')}")
+            console.print(
+                f"  [yellow]Warning:[/yellow] {seed_result.get('error', 'Seed skipped')}"
+            )
 
     # Step 7: Mark setup complete
     run_async(_mark_setup_complete())
@@ -133,7 +141,9 @@ def wizard(
     console.print(table)
 
     if api_key:
-        console.print("\n[yellow]⚠ Save the API key now. It cannot be recovered.[/yellow]")
+        console.print(
+            "\n[yellow]⚠ Save the API key now. It cannot be recovered.[/yellow]"
+        )
 
 
 @app.command()
@@ -217,7 +227,9 @@ async def _run_migrations() -> dict:
 
     try:
         # Find alembic.ini - could be in backend/ or project root
-        backend_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        backend_dir = os.path.dirname(
+            os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        )
 
         # Try backend/alembic.ini first, then project root
         ini_path = os.path.join(backend_dir, "alembic.ini")
@@ -238,7 +250,9 @@ async def _run_migrations() -> dict:
                 return {"success": True, "method": "alembic"}
             else:
                 # If Alembic fails, fall back to create_all
-                console.print(f"  [yellow]Alembic warning:[/yellow] {result.stderr[:200] if result.stderr else 'Unknown error'}")
+                console.print(
+                    f"  [yellow]Alembic warning:[/yellow] {result.stderr[:200] if result.stderr else 'Unknown error'}"
+                )
                 console.print("  [yellow]Falling back to create_all...[/yellow]")
 
         # Fallback: use create_all if Alembic not configured or failed

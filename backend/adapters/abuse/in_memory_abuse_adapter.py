@@ -202,7 +202,9 @@ class InMemoryAbuseAdapter(AbuseDetectorPort):
         self._force_block.pop(app_id, None)
 
         # Also clear signature keys that start with app_id
-        keys_to_remove = [k for k in self._signatures.keys() if k.startswith(f"{app_id}:")]
+        keys_to_remove = [
+            k for k in self._signatures.keys() if k.startswith(f"{app_id}:")
+        ]
         for key in keys_to_remove:
             del self._signatures[key]
 
@@ -243,7 +245,9 @@ class InMemoryAbuseAdapter(AbuseDetectorPort):
 
         # Remove old signatures
         cutoff = now - self.identical_request_window_seconds
-        self._signatures[key] = [(ts, h) for ts, h in self._signatures[key] if ts > cutoff]
+        self._signatures[key] = [
+            (ts, h) for ts, h in self._signatures[key] if ts > cutoff
+        ]
 
         # Count identical requests
         identical_count = len(self._signatures[key])
@@ -324,9 +328,9 @@ class InMemoryAbuseAdapter(AbuseDetectorPort):
         content = json.dumps(messages, sort_keys=True)
         input_hash = hashlib.sha256(content.encode()).hexdigest()[:16]
 
-        full_hash = hashlib.sha256(f"{app_id}:{feature}:{model}:{input_hash}".encode()).hexdigest()[
-            :16
-        ]
+        full_hash = hashlib.sha256(
+            f"{app_id}:{feature}:{model}:{input_hash}".encode()
+        ).hexdigest()[:16]
 
         return RequestSignature(
             hash=full_hash,

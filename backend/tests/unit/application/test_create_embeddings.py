@@ -286,7 +286,9 @@ class TestCreateEmbeddingsUseCase:
         assert result.metadata.get("num_embeddings") == 3
 
     @pytest.mark.asyncio
-    async def test_policy_blocks_request(self, policy_evaluator, budget_checker, basic_command):
+    async def test_policy_blocks_request(
+        self, policy_evaluator, budget_checker, basic_command
+    ):
         """Vérifie qu'une policy DENY bloque la requête."""
         blocking_rule = PolicyRule(
             id="block-embeddings",
@@ -355,9 +357,13 @@ class TestCreateEmbeddingsUseCase:
         assert "API key" in result.error_message
 
     @pytest.mark.asyncio
-    async def test_provider_error_returns_error_outcome(self, policy_evaluator, budget_checker):
+    async def test_provider_error_returns_error_outcome(
+        self, policy_evaluator, budget_checker
+    ):
         """Vérifie qu'une erreur du provider retourne ERROR."""
-        error_provider = MockEmbeddingProvider(error=Exception("Embedding service unavailable"))
+        error_provider = MockEmbeddingProvider(
+            error=Exception("Embedding service unavailable")
+        )
 
         use_case = CreateEmbeddingsUseCase(
             policy_evaluator=policy_evaluator,
@@ -594,7 +600,9 @@ class TestMetricsIntegration:
         assert mock_metrics.requests_finished[0] == "test-app"
 
     @pytest.mark.asyncio
-    async def test_metrics_recorded_on_policy_denial(self, policy_evaluator, budget_checker):
+    async def test_metrics_recorded_on_policy_denial(
+        self, policy_evaluator, budget_checker
+    ):
         """Vérifie que les métriques sont enregistrées lors d'un refus par policy."""
         blocking_rule = PolicyRule(
             id="block-embeddings",
@@ -638,7 +646,9 @@ class TestMetricsIntegration:
         assert len(mock_metrics.request_metrics) == 0
 
     @pytest.mark.asyncio
-    async def test_metrics_recorded_on_budget_denial(self, policy_evaluator, budget_checker):
+    async def test_metrics_recorded_on_budget_denial(
+        self, policy_evaluator, budget_checker
+    ):
         """Vérifie que les métriques sont enregistrées lors d'un refus par budget."""
         exhausted_budget = Budget(
             id="budget-exhausted",

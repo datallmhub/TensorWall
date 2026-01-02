@@ -19,7 +19,9 @@ async def test_create_application(client: AsyncClient, sample_application_data):
 
 
 @pytest.mark.asyncio
-async def test_create_application_duplicate(client: AsyncClient, sample_application_data):
+async def test_create_application_duplicate(
+    client: AsyncClient, sample_application_data
+):
     """Test creating a duplicate application fails."""
     # Create first
     await client.post("/admin/applications", json=sample_application_data)
@@ -62,7 +64,9 @@ async def test_list_applications(client: AsyncClient, sample_application_data):
 async def test_get_application(client: AsyncClient, sample_application_data):
     """Test getting a specific application by UUID."""
     # Create an application
-    create_response = await client.post("/admin/applications", json=sample_application_data)
+    create_response = await client.post(
+        "/admin/applications", json=sample_application_data
+    )
     app_uuid = create_response.json()["uuid"]
 
     # Get by UUID
@@ -88,7 +92,9 @@ async def test_get_application_not_found(client: AsyncClient):
 async def test_update_application(client: AsyncClient, sample_application_data):
     """Test updating an application."""
     # Create an application
-    create_response = await client.post("/admin/applications", json=sample_application_data)
+    create_response = await client.post(
+        "/admin/applications", json=sample_application_data
+    )
     app_uuid = create_response.json()["uuid"]
 
     # Update it
@@ -108,7 +114,9 @@ async def test_update_application(client: AsyncClient, sample_application_data):
 async def test_delete_application_soft(client: AsyncClient, sample_application_data):
     """Test soft deleting an application."""
     # Create an application
-    create_response = await client.post("/admin/applications", json=sample_application_data)
+    create_response = await client.post(
+        "/admin/applications", json=sample_application_data
+    )
     app_uuid = create_response.json()["uuid"]
 
     # Delete it (soft)
@@ -126,7 +134,9 @@ async def test_delete_application_soft(client: AsyncClient, sample_application_d
 async def test_create_api_key(client: AsyncClient, sample_application_data):
     """Test creating an API key for an application."""
     # Create an application
-    create_response = await client.post("/admin/applications", json=sample_application_data)
+    create_response = await client.post(
+        "/admin/applications", json=sample_application_data
+    )
     app_uuid = create_response.json()["uuid"]
 
     # Create an API key
@@ -148,7 +158,9 @@ async def test_create_api_key(client: AsyncClient, sample_application_data):
 async def test_list_api_keys(client: AsyncClient, sample_application_data):
     """Test listing API keys for an application."""
     # Create an application
-    create_response = await client.post("/admin/applications", json=sample_application_data)
+    create_response = await client.post(
+        "/admin/applications", json=sample_application_data
+    )
     app_uuid = create_response.json()["uuid"]
 
     # Create an API key
@@ -172,7 +184,9 @@ async def test_list_api_keys(client: AsyncClient, sample_application_data):
 async def test_revoke_api_key(client: AsyncClient, sample_application_data):
     """Test revoking an API key."""
     # Create an application
-    create_response = await client.post("/admin/applications", json=sample_application_data)
+    create_response = await client.post(
+        "/admin/applications", json=sample_application_data
+    )
     app_uuid = create_response.json()["uuid"]
 
     # Create an API key
@@ -197,7 +211,9 @@ async def test_revoke_api_key(client: AsyncClient, sample_application_data):
 async def test_rotate_api_key(client: AsyncClient, sample_application_data):
     """Test rotating an API key."""
     # Create an application
-    create_response = await client.post("/admin/applications", json=sample_application_data)
+    create_response = await client.post(
+        "/admin/applications", json=sample_application_data
+    )
     app_uuid = create_response.json()["uuid"]
 
     # Create an API key
@@ -210,7 +226,9 @@ async def test_rotate_api_key(client: AsyncClient, sample_application_data):
     old_api_key = key_response.json()["api_key"]
 
     # Rotate it
-    response = await client.post(f"/admin/applications/{app_uuid}/keys/{old_key_id}/rotate")
+    response = await client.post(
+        f"/admin/applications/{app_uuid}/keys/{old_key_id}/rotate"
+    )
 
     assert response.status_code == 200
     data = response.json()

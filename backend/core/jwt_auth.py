@@ -53,7 +53,9 @@ def hash_password(password: str) -> str:
 
 def create_access_token(user: User) -> str:
     """Create a short-lived access token."""
-    expire = datetime.now(timezone.utc) + timedelta(minutes=settings.access_token_expire_minutes)
+    expire = datetime.now(timezone.utc) + timedelta(
+        minutes=settings.access_token_expire_minutes
+    )
     payload = {
         "sub": user.email,
         "user_id": user.id,
@@ -61,12 +63,16 @@ def create_access_token(user: User) -> str:
         "exp": expire,
         "type": "access",
     }
-    return jwt.encode(payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
+    return jwt.encode(
+        payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm
+    )
 
 
 def create_refresh_token(user: User) -> str:
     """Create a long-lived refresh token."""
-    expire = datetime.now(timezone.utc) + timedelta(days=settings.refresh_token_expire_days)
+    expire = datetime.now(timezone.utc) + timedelta(
+        days=settings.refresh_token_expire_days
+    )
     payload = {
         "sub": user.email,
         "user_id": user.id,
@@ -74,13 +80,17 @@ def create_refresh_token(user: User) -> str:
         "exp": expire,
         "type": "refresh",
     }
-    return jwt.encode(payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm)
+    return jwt.encode(
+        payload, settings.jwt_secret_key, algorithm=settings.jwt_algorithm
+    )
 
 
 def decode_token(token: str) -> Optional[TokenPayload]:
     """Decode and validate a JWT token."""
     try:
-        payload = jwt.decode(token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm])
+        payload = jwt.decode(
+            token, settings.jwt_secret_key, algorithms=[settings.jwt_algorithm]
+        )
         return TokenPayload(**payload)
     except JWTError:
         return None

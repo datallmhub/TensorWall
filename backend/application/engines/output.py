@@ -77,10 +77,14 @@ class OutputValidator:
 
         # Length checks
         if constraint.max_length and len(output) > constraint.max_length:
-            errors.append(f"Output exceeds max length: {len(output)} > {constraint.max_length}")
+            errors.append(
+                f"Output exceeds max length: {len(output)} > {constraint.max_length}"
+            )
 
         if constraint.min_length and len(output) < constraint.min_length:
-            errors.append(f"Output below min length: {len(output)} < {constraint.min_length}")
+            errors.append(
+                f"Output below min length: {len(output)} < {constraint.min_length}"
+            )
 
         # Content checks
         for required in constraint.must_contain:
@@ -108,7 +112,9 @@ class OutputValidator:
             if not constraint.json_schema:
                 warnings.append("JSON schema format specified but no schema provided")
             else:
-                schema_result = self._validate_json_schema(output, constraint.json_schema)
+                schema_result = self._validate_json_schema(
+                    output, constraint.json_schema
+                )
                 if not schema_result["valid"]:
                     errors.extend(schema_result["errors"])
                 else:
@@ -199,7 +205,9 @@ class OutputValidator:
             }
             expected = type_map.get(expected_type)
             if expected and not isinstance(data, expected):
-                errors.append(f"Expected type '{expected_type}', got '{type(data).__name__}'")
+                errors.append(
+                    f"Expected type '{expected_type}', got '{type(data).__name__}'"
+                )
 
         # Check required properties for objects
         if isinstance(data, dict):
@@ -214,7 +222,9 @@ class OutputValidator:
                 if prop in data:
                     # Recursive validation for nested objects
                     if prop_schema.get("type") == "object":
-                        nested_result = self._basic_schema_validation(data[prop], prop_schema)
+                        nested_result = self._basic_schema_validation(
+                            data[prop], prop_schema
+                        )
                         errors.extend([f"{prop}.{e}" for e in nested_result["errors"]])
 
         return {
@@ -346,7 +356,10 @@ COMMON_SCHEMAS = {
         "type": "object",
         "required": ["sentiment", "score"],
         "properties": {
-            "sentiment": {"type": "string", "enum": ["positive", "negative", "neutral"]},
+            "sentiment": {
+                "type": "string",
+                "enum": ["positive", "negative", "neutral"],
+            },
             "score": {"type": "number"},
         },
     },

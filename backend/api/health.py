@@ -126,7 +126,9 @@ def check_memory() -> ComponentHealth:
             status="healthy", message="Memory check skipped (psutil not installed)"
         )
     except Exception as e:
-        return ComponentHealth(status="degraded", message=f"Memory check failed: {str(e)[:100]}")
+        return ComponentHealth(
+            status="degraded", message=f"Memory check failed: {str(e)[:100]}"
+        )
 
 
 def check_disk() -> ComponentHealth:
@@ -153,7 +155,9 @@ def check_disk() -> ComponentHealth:
             status="healthy", message="Disk check skipped (psutil not installed)"
         )
     except Exception as e:
-        return ComponentHealth(status="degraded", message=f"Disk check failed: {str(e)[:100]}")
+        return ComponentHealth(
+            status="degraded", message=f"Disk check failed: {str(e)[:100]}"
+        )
 
 
 # =============================================================================
@@ -161,12 +165,16 @@ def check_disk() -> ComponentHealth:
 # =============================================================================
 
 
-def _build_components_dict(names: list[str], results: list) -> dict[str, ComponentHealth]:
+def _build_components_dict(
+    names: list[str], results: list
+) -> dict[str, ComponentHealth]:
     """Build components dictionary from check results."""
     components = {}
     for name, result in zip(names, results):
         if isinstance(result, Exception):
-            components[name] = ComponentHealth(status="unhealthy", message=str(result)[:100])
+            components[name] = ComponentHealth(
+                status="unhealthy", message=str(result)[:100]
+            )
         else:
             components[name] = result
     return components
@@ -179,13 +187,21 @@ def _count_checks(components: dict[str, ComponentHealth]) -> tuple[int, int]:
     return passed, failed
 
 
-def _determine_overall_status(components: dict[str, ComponentHealth], checks_failed: int) -> str:
+def _determine_overall_status(
+    components: dict[str, ComponentHealth], checks_failed: int
+) -> str:
     """Determine overall health status."""
     if checks_failed > 0:
         # Critical components
-        if components.get("database", ComponentHealth(status="healthy")).status == "unhealthy":
+        if (
+            components.get("database", ComponentHealth(status="healthy")).status
+            == "unhealthy"
+        ):
             return "unhealthy"
-        if components.get("redis", ComponentHealth(status="healthy")).status == "unhealthy":
+        if (
+            components.get("redis", ComponentHealth(status="healthy")).status
+            == "unhealthy"
+        ):
             return "unhealthy"
         return "degraded"
     if any(c.status == "degraded" for c in components.values()):
@@ -303,7 +319,9 @@ async def detailed_health():
     - Disk usage
     """
     # Run async health checks concurrently
-    async_results = await asyncio.gather(check_database(), check_redis(), return_exceptions=True)
+    async_results = await asyncio.gather(
+        check_database(), check_redis(), return_exceptions=True
+    )
 
     # Run sync checks
     sync_results = [check_memory(), check_disk()]

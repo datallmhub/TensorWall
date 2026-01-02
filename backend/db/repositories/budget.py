@@ -161,7 +161,9 @@ class BudgetRepository:
             budgets.extend(org_budgets)
 
         # 3. Check app-level budgets
-        app_budgets = await self._get_app_budgets_for_request(application_id, feature, environment)
+        app_budgets = await self._get_app_budgets_for_request(
+            application_id, feature, environment
+        )
         budgets.extend(app_budgets)
 
         return budgets

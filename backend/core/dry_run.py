@@ -176,11 +176,15 @@ class PolicySimulator(AsyncLoadableEntity[list[dict]]):
 
         # Check model using ConditionMatcher
         if "models" in conditions:
-            ok, reason = ConditionMatcher.matches_model(model, allowed=conditions["models"])
+            ok, reason = ConditionMatcher.matches_model(
+                model, allowed=conditions["models"]
+            )
             if ok:
                 result.add_match(f"model={model}")
             else:
-                result.add_failure("model", reason or f"model not in {conditions['models']}")
+                result.add_failure(
+                    "model", reason or f"model not in {conditions['models']}"
+                )
 
         # Check environment using ConditionMatcher
         if "environment" in conditions:
@@ -191,7 +195,8 @@ class PolicySimulator(AsyncLoadableEntity[list[dict]]):
                 result.add_match(f"environment={environment}")
             else:
                 result.add_failure(
-                    "environment", reason or f"environment != {conditions['environment']}"
+                    "environment",
+                    reason or f"environment != {conditions['environment']}",
                 )
 
         if "environments" in conditions:
@@ -202,7 +207,8 @@ class PolicySimulator(AsyncLoadableEntity[list[dict]]):
                 result.add_match(f"environment={environment}")
             else:
                 result.add_failure(
-                    "environment", reason or f"environment not in {conditions['environments']}"
+                    "environment",
+                    reason or f"environment not in {conditions['environments']}",
                 )
 
         # Check token limit using ConditionMatcher
@@ -220,11 +226,15 @@ class PolicySimulator(AsyncLoadableEntity[list[dict]]):
 
         # Check app_id using ConditionMatcher
         if "app_id" in conditions:
-            ok, reason = ConditionMatcher.matches_app(app_id, allowed=[conditions["app_id"]])
+            ok, reason = ConditionMatcher.matches_app(
+                app_id, allowed=[conditions["app_id"]]
+            )
             if ok:
                 result.add_match(f"app_id={app_id}")
             else:
-                result.add_failure("app_id", reason or f"app_id != {conditions['app_id']}")
+                result.add_failure(
+                    "app_id", reason or f"app_id != {conditions['app_id']}"
+                )
 
         would_match = result.matches and policy.get("enabled", True)
 
@@ -259,7 +269,9 @@ class PolicySimulator(AsyncLoadableEntity[list[dict]]):
 
         impacts = []
         for policy in all_policies:
-            impact = self.evaluate_policy(policy, model, environment, max_tokens, app_id)
+            impact = self.evaluate_policy(
+                policy, model, environment, max_tokens, app_id
+            )
             impacts.append(impact)
 
         return impacts
@@ -329,7 +341,9 @@ class DryRunEngine:
 
         # 1. Simulate feature validation
         if mode in (DryRunMode.FULL,):
-            feature_result = self._simulate_feature_check(app_id, feature_id, model, environment)
+            feature_result = self._simulate_feature_check(
+                app_id, feature_id, model, environment
+            )
             result.feature_validation = feature_result
             if not feature_result.get("allowed", True):
                 chain.add_decision(
@@ -337,7 +351,9 @@ class DryRunEngine:
                         stage=DecisionStage.FEATURE_CHECK,
                         outcome=DecisionOutcome.DENY,
                         code=DecisionCode.FEATURE_UNKNOWN,
-                        reason=feature_result.get("reason", "Feature validation failed"),
+                        reason=feature_result.get(
+                            "reason", "Feature validation failed"
+                        ),
                     )
                 )
                 result.would_be_allowed = False
@@ -386,7 +402,9 @@ class DryRunEngine:
 
         # 3. Simulate budget check
         if mode in (DryRunMode.FULL, DryRunMode.BUDGET_ONLY):
-            budget_result = self._simulate_budget_check(app_id, environment, model, max_tokens)
+            budget_result = self._simulate_budget_check(
+                app_id, environment, model, max_tokens
+            )
             result.budget_impact = budget_result
 
             if not budget_result.get("allowed", True):
@@ -409,7 +427,9 @@ class DryRunEngine:
             for finding in security_results:
                 if finding.get("severity") == "high":
                     result.would_be_allowed = False
-                    result.blocking_reason = finding.get("message", "Security violation")
+                    result.blocking_reason = finding.get(
+                        "message", "Security violation"
+                    )
                     chain.add_decision(
                         Decision(
                             stage=DecisionStage.SECURITY_CHECK,
@@ -424,7 +444,9 @@ class DryRunEngine:
         result.recommendations = self._generate_recommendations(result)
 
         # Complete chain
-        chain.complete(DecisionOutcome.ALLOW if result.would_be_allowed else DecisionOutcome.DENY)
+        chain.complete(
+            DecisionOutcome.ALLOW if result.would_be_allowed else DecisionOutcome.DENY
+        )
 
         return result
 
@@ -511,7 +533,9 @@ class DryRunEngine:
             )
 
         if result.security_findings:
-            high_severity = [f for f in result.security_findings if f.get("severity") == "high"]
+            high_severity = [
+                f for f in result.security_findings if f.get("severity") == "high"
+            ]
             if high_severity:
                 recommendations.append(
                     f"Security: {len(high_severity)} high-severity finding(s) detected"
@@ -566,7 +590,8 @@ class DryRunEngine:
                     "request": request,
                     "baseline_allowed": baseline.would_be_allowed,
                     "with_new_policy_allowed": with_new.would_be_allowed,
-                    "would_break": baseline.would_be_allowed and not with_new.would_be_allowed,
+                    "would_break": baseline.would_be_allowed
+                    and not with_new.would_be_allowed,
                     "new_policy_impact": self.policy_simulator.evaluate_policy(
                         new_policy,
                         request.get("model", "gpt-4o"),

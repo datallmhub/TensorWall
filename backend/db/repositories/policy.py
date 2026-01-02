@@ -42,12 +42,16 @@ class PolicyRepository:
 
     async def get_by_id(self, id: int) -> Optional[PolicyRule]:
         """Get policy rule by ID (internal use only)."""
-        result = await self.session.execute(select(PolicyRule).where(PolicyRule.id == id))
+        result = await self.session.execute(
+            select(PolicyRule).where(PolicyRule.id == id)
+        )
         return result.scalar_one_or_none()
 
     async def get_by_uuid(self, uuid: UUID) -> Optional[PolicyRule]:
         """Get policy rule by UUID (public API use)."""
-        result = await self.session.execute(select(PolicyRule).where(PolicyRule.uuid == uuid))
+        result = await self.session.execute(
+            select(PolicyRule).where(PolicyRule.uuid == uuid)
+        )
         return result.scalar_one_or_none()
 
     async def list_for_application(

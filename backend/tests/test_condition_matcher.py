@@ -40,7 +40,9 @@ class TestConditionMatcher:
 
     def test_matches_environment_in_denied_list(self):
         """Environment should not match when in denied list."""
-        ok, reason = ConditionMatcher.matches_environment("production", denied=["production"])
+        ok, reason = ConditionMatcher.matches_environment(
+            "production", denied=["production"]
+        )
         assert ok is False
         assert "denied" in reason
 
@@ -64,7 +66,9 @@ class TestConditionMatcher:
 
     def test_matches_model_exact_match_in_allowed(self):
         """Model should match exactly when in allowed list."""
-        ok, reason = ConditionMatcher.matches_model("gpt-4o", allowed=["gpt-4o", "gpt-4o-mini"])
+        ok, reason = ConditionMatcher.matches_model(
+            "gpt-4o", allowed=["gpt-4o", "gpt-4o-mini"]
+        )
         assert ok is True
         assert reason is None
 
@@ -101,7 +105,9 @@ class TestConditionMatcher:
 
     def test_matches_model_denied_takes_priority(self):
         """Denied should take priority over allowed."""
-        ok, reason = ConditionMatcher.matches_model("gpt-4o", allowed=["gpt-4o"], denied=["gpt-4o"])
+        ok, reason = ConditionMatcher.matches_model(
+            "gpt-4o", allowed=["gpt-4o"], denied=["gpt-4o"]
+        )
         assert ok is False
 
     # -------------------------------------------------------------------------
@@ -116,19 +122,25 @@ class TestConditionMatcher:
 
     def test_matches_feature_no_feature_specified(self):
         """No feature should always match (no restriction)."""
-        ok, reason = ConditionMatcher.matches_feature(None, allowed=["chat", "completion"])
+        ok, reason = ConditionMatcher.matches_feature(
+            None, allowed=["chat", "completion"]
+        )
         assert ok is True
         assert reason is None
 
     def test_matches_feature_in_allowed(self):
         """Feature should match when in allowed list."""
-        ok, reason = ConditionMatcher.matches_feature("chat", allowed=["chat", "completion"])
+        ok, reason = ConditionMatcher.matches_feature(
+            "chat", allowed=["chat", "completion"]
+        )
         assert ok is True
         assert reason is None
 
     def test_matches_feature_not_in_allowed(self):
         """Feature should not match when not in allowed list."""
-        ok, reason = ConditionMatcher.matches_feature("embedding", allowed=["chat", "completion"])
+        ok, reason = ConditionMatcher.matches_feature(
+            "embedding", allowed=["chat", "completion"]
+        )
         assert ok is False
         assert "not allowed" in reason
 
@@ -138,7 +150,9 @@ class TestConditionMatcher:
 
     def test_matches_tokens_no_limits(self):
         """Tokens should match when no limits are set."""
-        ok, reason = ConditionMatcher.matches_tokens(input_tokens=1000, output_tokens=500)
+        ok, reason = ConditionMatcher.matches_tokens(
+            input_tokens=1000, output_tokens=500
+        )
         assert ok is True
         assert reason is None
 
@@ -163,7 +177,9 @@ class TestConditionMatcher:
 
     def test_matches_tokens_exceeds_output_limit(self):
         """Tokens should not match when exceeding output limit."""
-        ok, reason = ConditionMatcher.matches_tokens(output_tokens=1500, max_output=1000)
+        ok, reason = ConditionMatcher.matches_tokens(
+            output_tokens=1500, max_output=1000
+        )
         assert ok is False
         assert "Output tokens" in reason
 
@@ -196,29 +212,39 @@ class TestConditionMatcher:
 
     def test_matches_time_within_allowed_hours(self):
         """Time should match when within allowed hours."""
-        ok, reason = ConditionMatcher.matches_time(allowed_hours=(9, 17), current_hour=12)
+        ok, reason = ConditionMatcher.matches_time(
+            allowed_hours=(9, 17), current_hour=12
+        )
         assert ok is True
         assert reason is None
 
     def test_matches_time_outside_allowed_hours(self):
         """Time should not match when outside allowed hours."""
-        ok, reason = ConditionMatcher.matches_time(allowed_hours=(9, 17), current_hour=20)
+        ok, reason = ConditionMatcher.matches_time(
+            allowed_hours=(9, 17), current_hour=20
+        )
         assert ok is False
         assert "outside allowed hours" in reason
 
     def test_matches_time_overnight_range_inside(self):
         """Time should match overnight range (e.g., 22-6) when inside."""
-        ok, reason = ConditionMatcher.matches_time(allowed_hours=(22, 6), current_hour=23)
+        ok, reason = ConditionMatcher.matches_time(
+            allowed_hours=(22, 6), current_hour=23
+        )
         assert ok is True
         assert reason is None
 
-        ok, reason = ConditionMatcher.matches_time(allowed_hours=(22, 6), current_hour=3)
+        ok, reason = ConditionMatcher.matches_time(
+            allowed_hours=(22, 6), current_hour=3
+        )
         assert ok is True
         assert reason is None
 
     def test_matches_time_overnight_range_outside(self):
         """Time should not match overnight range when outside."""
-        ok, reason = ConditionMatcher.matches_time(allowed_hours=(22, 6), current_hour=12)
+        ok, reason = ConditionMatcher.matches_time(
+            allowed_hours=(22, 6), current_hour=12
+        )
         assert ok is False
 
     # -------------------------------------------------------------------------
@@ -233,13 +259,17 @@ class TestConditionMatcher:
 
     def test_matches_app_in_allowed(self):
         """App should match when in allowed list."""
-        ok, reason = ConditionMatcher.matches_app("my-app", allowed=["my-app", "other-app"])
+        ok, reason = ConditionMatcher.matches_app(
+            "my-app", allowed=["my-app", "other-app"]
+        )
         assert ok is True
         assert reason is None
 
     def test_matches_app_not_in_allowed(self):
         """App should not match when not in allowed list."""
-        ok, reason = ConditionMatcher.matches_app("unknown-app", allowed=["my-app", "other-app"])
+        ok, reason = ConditionMatcher.matches_app(
+            "unknown-app", allowed=["my-app", "other-app"]
+        )
         assert ok is False
         assert "not in allowed" in reason
 
@@ -354,7 +384,9 @@ class TestMatchConditions:
 
     def test_feature_condition(self):
         """Feature condition should be checked."""
-        context = ConditionContext(model="gpt-4o", environment="production", feature="chat")
+        context = ConditionContext(
+            model="gpt-4o", environment="production", feature="chat"
+        )
 
         result = match_conditions({"features": ["chat", "completion"]}, context)
         assert result.matches is True
@@ -364,7 +396,9 @@ class TestMatchConditions:
 
     def test_token_condition(self):
         """Token limits should be checked."""
-        context = ConditionContext(model="gpt-4o", environment="production", max_tokens=2000)
+        context = ConditionContext(
+            model="gpt-4o", environment="production", max_tokens=2000
+        )
 
         result = match_conditions({"max_tokens": 4000}, context)
         assert result.matches is True
@@ -374,7 +408,9 @@ class TestMatchConditions:
 
     def test_time_condition(self):
         """Time condition should be checked."""
-        context = ConditionContext(model="gpt-4o", environment="production", current_hour=14)
+        context = ConditionContext(
+            model="gpt-4o", environment="production", current_hour=14
+        )
 
         result = match_conditions({"allowed_hours": [9, 17]}, context)
         assert result.matches is True
@@ -384,7 +420,9 @@ class TestMatchConditions:
 
     def test_app_condition(self):
         """App condition should be checked."""
-        context = ConditionContext(model="gpt-4o", environment="production", app_id="my-app")
+        context = ConditionContext(
+            model="gpt-4o", environment="production", app_id="my-app"
+        )
 
         result = match_conditions({"app_id": "my-app"}, context)
         assert result.matches is True

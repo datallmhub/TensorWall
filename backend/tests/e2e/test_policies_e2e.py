@@ -11,7 +11,9 @@ class TestPoliciesE2E:
     """E2E tests for /admin/policies endpoints."""
 
     @pytest.mark.asyncio
-    async def test_create_policy(self, client: AsyncClient, seed_application: Application):
+    async def test_create_policy(
+        self, client: AsyncClient, seed_application: Application
+    ):
         """Test creating a new policy."""
         response = await client.post(
             "/admin/policies",
@@ -72,7 +74,10 @@ class TestPoliciesE2E:
 
     @pytest.mark.asyncio
     async def test_list_policies_by_app(
-        self, client: AsyncClient, seed_application: Application, seed_policy: PolicyRule
+        self,
+        client: AsyncClient,
+        seed_application: Application,
+        seed_policy: PolicyRule,
     ):
         """Test listing policies filtered by app."""
         response = await client.get(f"/admin/policies?app_id={seed_application.app_id}")
@@ -81,7 +86,9 @@ class TestPoliciesE2E:
         data = response.json()
         # Response is paginated
         items = data["items"]
-        assert all(p["app_id"] == seed_application.app_id or p["app_id"] is None for p in items)
+        assert all(
+            p["app_id"] == seed_application.app_id or p["app_id"] is None for p in items
+        )
 
     @pytest.mark.asyncio
     async def test_get_policy(self, client: AsyncClient, seed_policy: PolicyRule):
@@ -117,7 +124,9 @@ class TestPoliciesE2E:
         assert data["priority"] == 50
 
     @pytest.mark.asyncio
-    async def test_update_policy_conditions(self, client: AsyncClient, seed_policy: PolicyRule):
+    async def test_update_policy_conditions(
+        self, client: AsyncClient, seed_policy: PolicyRule
+    ):
         """Test updating policy conditions."""
         new_conditions = {
             "environments": ["staging", "production"],
@@ -135,7 +144,9 @@ class TestPoliciesE2E:
         assert "staging" in data["conditions"]["environments"]
 
     @pytest.mark.asyncio
-    async def test_update_policy_action(self, client: AsyncClient, seed_policy: PolicyRule):
+    async def test_update_policy_action(
+        self, client: AsyncClient, seed_policy: PolicyRule
+    ):
         """Test changing policy action from deny to warn."""
         response = await client.patch(
             f"/admin/policies/{seed_policy.uuid}",
@@ -159,7 +170,9 @@ class TestPoliciesE2E:
         assert data["is_enabled"] is False
 
     @pytest.mark.asyncio
-    async def test_delete_policy(self, client: AsyncClient, db: AsyncSession, seed_application):
+    async def test_delete_policy(
+        self, client: AsyncClient, db: AsyncSession, seed_application
+    ):
         """Test deleting a policy."""
         # Create a policy to delete
         policy = PolicyRule(

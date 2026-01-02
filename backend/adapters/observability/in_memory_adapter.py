@@ -220,7 +220,9 @@ class InMemoryObservabilityAdapter(ObservabilityPort):
             hour_key = record.timestamp.strftime("%Y-%m-%d-%H")
             hourly_costs[hour_key] = hourly_costs.get(hour_key, 0) + record.cost_usd
             hourly_tokens[hour_key] = (
-                hourly_tokens.get(hour_key, 0) + record.input_tokens + record.output_tokens
+                hourly_tokens.get(hour_key, 0)
+                + record.input_tokens
+                + record.output_tokens
             )
             if record.error:
                 hourly_errors[hour_key] = hourly_errors.get(hour_key, 0) + 1
@@ -229,12 +231,16 @@ class InMemoryObservabilityAdapter(ObservabilityPort):
             hourly_latencies[hour_key].append(record.latency_ms)
 
         # Detect cost spikes
-        anomalies.extend(self._detect_spikes(hourly_costs, AnomalyType.COST_SPIKE, app_id))
+        anomalies.extend(
+            self._detect_spikes(hourly_costs, AnomalyType.COST_SPIKE, app_id)
+        )
 
         # Detect token spikes
         anomalies.extend(
             self._detect_spikes(
-                {k: float(v) for k, v in hourly_tokens.items()}, AnomalyType.TOKEN_SPIKE, app_id
+                {k: float(v) for k, v in hourly_tokens.items()},
+                AnomalyType.TOKEN_SPIKE,
+                app_id,
             )
         )
 
@@ -242,7 +248,9 @@ class InMemoryObservabilityAdapter(ObservabilityPort):
         if hourly_errors:
             anomalies.extend(
                 self._detect_spikes(
-                    {k: float(v) for k, v in hourly_errors.items()}, AnomalyType.ERROR_SPIKE, app_id
+                    {k: float(v) for k, v in hourly_errors.items()},
+                    AnomalyType.ERROR_SPIKE,
+                    app_id,
                 )
             )
 
@@ -318,7 +326,9 @@ class InMemoryObservabilityAdapter(ObservabilityPort):
     ) -> list[tuple[datetime, float]]:
         """Get usage trends for an app."""
         cutoff = datetime.now() - timedelta(hours=lookback_hours)
-        filtered = [r for r in self._records if r.app_id == app_id and r.timestamp >= cutoff]
+        filtered = [
+            r for r in self._records if r.app_id == app_id and r.timestamp >= cutoff
+        ]
 
         if not filtered:
             return []
@@ -341,7 +351,9 @@ class InMemoryObservabilityAdapter(ObservabilityPort):
             elif metric == "cost":
                 buckets[key] = buckets.get(key, 0) + record.cost_usd
             elif metric == "tokens":
-                buckets[key] = buckets.get(key, 0) + record.input_tokens + record.output_tokens
+                buckets[key] = (
+                    buckets.get(key, 0) + record.input_tokens + record.output_tokens
+                )
             elif metric == "latency":
                 if key not in buckets:
                     buckets[key] = record.latency_ms
@@ -399,9 +411,11 @@ class InMemoryObservabilityAdapter(ObservabilityPort):
                 severity = (
                     AnomalySeverity.CRITICAL
                     if deviation > 200
-                    else AnomalySeverity.HIGH
-                    if deviation > 100
-                    else AnomalySeverity.MEDIUM
+                    else (
+                        AnomalySeverity.HIGH
+                        if deviation > 100
+                        else AnomalySeverity.MEDIUM
+                    )
                 )
                 anomalies.append(
                     Anomaly(

@@ -227,12 +227,16 @@ app.include_router(auth.router, tags=["Authentication"])
 
 # Routes - Admin API
 ADMIN_PREFIX = "/admin"
-app.include_router(applications.router, prefix=ADMIN_PREFIX, tags=["Admin - Applications"])
+app.include_router(
+    applications.router, prefix=ADMIN_PREFIX, tags=["Admin - Applications"]
+)
 app.include_router(policies.router, prefix=ADMIN_PREFIX, tags=["Admin - Policies"])
 app.include_router(features.router, prefix=ADMIN_PREFIX, tags=["Admin - Features"])
 app.include_router(models.router, prefix=ADMIN_PREFIX, tags=["Admin - Models"])
 app.include_router(requests.router, prefix=ADMIN_PREFIX, tags=["Admin - Requests"])
 app.include_router(budgets.router, prefix=ADMIN_PREFIX, tags=["Admin - Budgets"])
 app.include_router(users.router, prefix=ADMIN_PREFIX, tags=["Admin - Users"])
-app.include_router(admin_settings.router, prefix=ADMIN_PREFIX, tags=["Admin - Settings"])
+app.include_router(
+    admin_settings.router, prefix=ADMIN_PREFIX, tags=["Admin - Settings"]
+)
 app.include_router(security.router, prefix=ADMIN_PREFIX, tags=["Admin - Security"])

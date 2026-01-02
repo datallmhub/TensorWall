@@ -32,14 +32,16 @@ logger = logging.getLogger(__name__)
 
 class CircuitState(Enum):
     """Circuit breaker states."""
-    CLOSED = "closed"      # Normal operation
-    OPEN = "open"          # Failing, reject requests
+
+    CLOSED = "closed"  # Normal operation
+    OPEN = "open"  # Failing, reject requests
     HALF_OPEN = "half_open"  # Testing if recovered
 
 
 @dataclass
 class EndpointHealth:
     """Health status for an endpoint."""
+
     failures: int = 0
     successes: int = 0
     last_failure: float = 0
@@ -55,9 +57,8 @@ class EndpointHealth:
         self.request_count += 1
         # Update rolling average latency
         self.avg_latency_ms = (
-            (self.avg_latency_ms * (self.request_count - 1) + latency_ms)
-            / self.request_count
-        )
+            self.avg_latency_ms * (self.request_count - 1) + latency_ms
+        ) / self.request_count
         # Reset circuit breaker on success
         if self.circuit_state == CircuitState.HALF_OPEN:
             self.circuit_state = CircuitState.CLOSED
@@ -87,6 +88,7 @@ class EndpointHealth:
 @dataclass
 class RouteEndpoint:
     """Configuration for a routing endpoint."""
+
     provider: LLMProvider
     weight: int = 100
     priority: int = 0  # Lower = higher priority (for fallback ordering)
@@ -102,6 +104,7 @@ class RouteEndpoint:
 @dataclass
 class RetryConfig:
     """Retry configuration."""
+
     max_retries: int = 3
     base_delay: float = 1.0  # seconds
     max_delay: float = 30.0  # seconds
@@ -110,17 +113,15 @@ class RetryConfig:
 
     def get_delay(self, attempt: int) -> float:
         """Calculate delay for retry attempt with exponential backoff."""
-        delay = min(
-            self.base_delay * (self.exponential_base ** attempt),
-            self.max_delay
-        )
+        delay = min(self.base_delay * (self.exponential_base**attempt), self.max_delay)
         if self.jitter:
-            delay *= (0.5 + random.random())  # 50-150% of delay
+            delay *= 0.5 + random.random()  # 50-150% of delay
         return delay
 
 
 class LoadBalanceStrategy(Enum):
     """Load balancing strategies."""
+
     ROUND_ROBIN = "round_robin"
     WEIGHTED = "weighted"
     LEAST_LATENCY = "least_latency"
@@ -200,9 +201,11 @@ class LLMRouter:
         model: str,
     ) -> Optional[RouteEndpoint]:
         """Select endpoint using round-robin."""
-        healthy = [e for e in endpoints if e.health.is_healthy(
-            self.failure_threshold, self.recovery_time
-        )]
+        healthy = [
+            e
+            for e in endpoints
+            if e.health.is_healthy(self.failure_threshold, self.recovery_time)
+        ]
         if not healthy:
             return None
 
@@ -215,9 +218,11 @@ class LLMRouter:
         endpoints: list[RouteEndpoint],
     ) -> Optional[RouteEndpoint]:
         """Select endpoint using weighted random selection."""
-        healthy = [e for e in endpoints if e.health.is_healthy(
-            self.failure_threshold, self.recovery_time
-        )]
+        healthy = [
+            e
+            for e in endpoints
+            if e.health.is_healthy(self.failure_threshold, self.recovery_time)
+        ]
         if not healthy:
             return None
 
@@ -235,9 +240,11 @@ class LLMRouter:
         endpoints: list[RouteEndpoint],
     ) -> Optional[RouteEndpoint]:
         """Select endpoint with lowest average latency."""
-        healthy = [e for e in endpoints if e.health.is_healthy(
-            self.failure_threshold, self.recovery_time
-        )]
+        healthy = [
+            e
+            for e in endpoints
+            if e.health.is_healthy(self.failure_threshold, self.recovery_time)
+        ]
         if not healthy:
             return None
 
@@ -260,9 +267,11 @@ class LLMRouter:
         elif self.strategy == LoadBalanceStrategy.LEAST_LATENCY:
             return self._select_endpoint_least_latency(endpoints)
         elif self.strategy == LoadBalanceStrategy.RANDOM:
-            healthy = [e for e in endpoints if e.health.is_healthy(
-                self.failure_threshold, self.recovery_time
-            )]
+            healthy = [
+                e
+                for e in endpoints
+                if e.health.is_healthy(self.failure_threshold, self.recovery_time)
+            ]
             return random.choice(healthy) if healthy else None
         else:
             return endpoints[0] if endpoints else None
@@ -327,9 +336,7 @@ class LLMRouter:
             except Exception as e:
                 endpoint.health.record_failure()
                 errors.append(e)
-                logger.warning(
-                    f"Request failed on {endpoint.provider.name}: {e}"
-                )
+                logger.warning(f"Request failed on {endpoint.provider.name}: {e}")
 
                 # If not last attempt and fallback enabled, try next endpoint
                 if fallback and attempt < self.retry_config.max_retries:
@@ -389,9 +396,7 @@ def create_router_with_fallback(
         RouteEndpoint(provider=primary_provider, weight=100, priority=0),
     ]
     for i, provider in enumerate(fallback_providers):
-        endpoints.append(
-            RouteEndpoint(provider=provider, weight=50, priority=i + 1)
-        )
+        endpoints.append(RouteEndpoint(provider=provider, weight=50, priority=i + 1))
 
     router.add_route(model_pattern, endpoints)
     return router

@@ -100,7 +100,9 @@ class MistralProvider(LLMProvider):
                 finish_reason=data["choices"][0]["finish_reason"],
             )
 
-    async def chat_stream(self, request: ChatRequest, api_key: str) -> AsyncIterator[str]:
+    async def chat_stream(
+        self, request: ChatRequest, api_key: str
+    ) -> AsyncIterator[str]:
         """Stream chat completion from Mistral AI."""
 
         async with httpx.AsyncClient(timeout=60.0) as client:

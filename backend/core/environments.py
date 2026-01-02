@@ -144,7 +144,9 @@ class EnvironmentManager:
     """
 
     def __init__(self):
-        self.environments: dict[Environment, EnvironmentConfig] = dict(DEFAULT_ENVIRONMENTS)
+        self.environments: dict[Environment, EnvironmentConfig] = dict(
+            DEFAULT_ENVIRONMENTS
+        )
         self._api_key_environment_map: dict[str, Environment] = {}
 
     def configure_environment(self, config: EnvironmentConfig) -> None:
@@ -159,7 +161,9 @@ class EnvironmentManager:
         except ValueError:
             return None
 
-    def bind_api_key_to_environment(self, api_key_prefix: str, environment: Environment) -> None:
+    def bind_api_key_to_environment(
+        self, api_key_prefix: str, environment: Environment
+    ) -> None:
         """Bind an API key prefix to an environment."""
         self._api_key_environment_map[api_key_prefix] = environment
 
@@ -246,7 +250,9 @@ class EnvironmentManager:
                 for allowed_ip in config.allowed_source_ips:
                     if "/" in allowed_ip:
                         # CIDR notation - simplified check
-                        if source_ip.startswith(allowed_ip.split("/")[0].rsplit(".", 1)[0]):
+                        if source_ip.startswith(
+                            allowed_ip.split("/")[0].rsplit(".", 1)[0]
+                        ):
                             ip_allowed = True
                             break
                     elif source_ip == allowed_ip:
@@ -254,7 +260,9 @@ class EnvironmentManager:
                         break
 
                 if not ip_allowed:
-                    errors.append(f"Source IP {source_ip} not allowed in {declared_environment}")
+                    errors.append(
+                        f"Source IP {source_ip} not allowed in {declared_environment}"
+                    )
 
         # Check model access
         if model:
@@ -262,7 +270,9 @@ class EnvironmentManager:
                 errors.append(f"Model '{model}' is blocked in {declared_environment}")
 
             if config.allowed_models and model not in config.allowed_models:
-                errors.append(f"Model '{model}' is not allowed in {declared_environment}")
+                errors.append(
+                    f"Model '{model}' is not allowed in {declared_environment}"
+                )
 
         # Check contract requirement
         if config.require_contracts and not has_contract:
@@ -505,7 +515,9 @@ class EnvironmentIsolation:
             return policy_id
         return f"env:{environment}:{policy_id}"
 
-    def extract_environment_from_id(self, isolated_id: str) -> tuple[Optional[str], str]:
+    def extract_environment_from_id(
+        self, isolated_id: str
+    ) -> tuple[Optional[str], str]:
         """
         Extract environment from isolated ID.
 
@@ -562,7 +574,11 @@ class EnvironmentAwareMetrics:
         return f"{self._isolation.get_metrics_namespace(environment)}:{name}"
 
     def increment_counter(
-        self, name: str, environment: str, value: int = 1, labels: Optional[dict[str, str]] = None
+        self,
+        name: str,
+        environment: str,
+        value: int = 1,
+        labels: Optional[dict[str, str]] = None,
     ) -> None:
         """Increment a counter with environment isolation."""
         key = self._get_metric_key(name, environment)
@@ -576,7 +592,11 @@ class EnvironmentAwareMetrics:
         self._counters[key][label_key] += value
 
     def set_gauge(
-        self, name: str, environment: str, value: float, labels: Optional[dict[str, str]] = None
+        self,
+        name: str,
+        environment: str,
+        value: float,
+        labels: Optional[dict[str, str]] = None,
     ) -> None:
         """Set a gauge with environment isolation."""
         key = self._get_metric_key(name, environment)

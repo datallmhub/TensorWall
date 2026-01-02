@@ -8,7 +8,10 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.ports.policy_repository import PolicyRepositoryPort
-from backend.domain.models import PolicyRule as DomainPolicyRule, PolicyAction as DomainPolicyAction
+from backend.domain.models import (
+    PolicyRule as DomainPolicyRule,
+    PolicyAction as DomainPolicyAction,
+)
 from backend.db.models import PolicyRule as DBPolicyRule, PolicyAction as DBPolicyAction
 from backend.db.session import get_db_context
 
@@ -131,7 +134,9 @@ class PolicyRepositoryAdapter(PolicyRepositoryPort):
             return None
 
         async with self._get_session() as session:
-            result = await session.execute(select(DBPolicyRule).where(DBPolicyRule.id == policy_id))
+            result = await session.execute(
+                select(DBPolicyRule).where(DBPolicyRule.id == policy_id)
+            )
             db_policy = result.scalar_one_or_none()
 
             if not db_policy:
@@ -175,7 +180,9 @@ class PolicyRepositoryAdapter(PolicyRepositoryPort):
             raise ValueError(f"Invalid policy ID: {rule.id}")
 
         async with self._get_session() as session:
-            result = await session.execute(select(DBPolicyRule).where(DBPolicyRule.id == policy_id))
+            result = await session.execute(
+                select(DBPolicyRule).where(DBPolicyRule.id == policy_id)
+            )
             db_policy = result.scalar_one_or_none()
 
             if not db_policy:
@@ -208,7 +215,9 @@ class PolicyRepositoryAdapter(PolicyRepositoryPort):
             return False
 
         async with self._get_session() as session:
-            result = await session.execute(select(DBPolicyRule).where(DBPolicyRule.id == policy_id))
+            result = await session.execute(
+                select(DBPolicyRule).where(DBPolicyRule.id == policy_id)
+            )
             db_policy = result.scalar_one_or_none()
 
             if not db_policy:

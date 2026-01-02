@@ -10,7 +10,12 @@ from .features import (
     FeatureRegistry,
     feature_engine,
 )
-from .pipeline import governance_pipeline, GovernancePipeline, PipelineRequest, PipelineResult
+from .pipeline import (
+    governance_pipeline,
+    GovernancePipeline,
+    PipelineRequest,
+    PipelineResult,
+)
 
 __all__ = [
     # Policy

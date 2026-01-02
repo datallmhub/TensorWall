@@ -67,7 +67,9 @@ class UsageRepository:
         if to_date:
             query = query.where(UsageRecord.created_at <= to_date)
 
-        query = query.order_by(UsageRecord.created_at.desc()).offset(offset).limit(limit)
+        query = (
+            query.order_by(UsageRecord.created_at.desc()).offset(offset).limit(limit)
+        )
 
         result = await self.session.execute(query)
         return list(result.scalars().all())
@@ -125,7 +127,9 @@ class UsageRepository:
         """Get total tokens for an application."""
         query = select(
             func.coalesce(func.sum(UsageRecord.input_tokens), 0).label("input_tokens"),
-            func.coalesce(func.sum(UsageRecord.output_tokens), 0).label("output_tokens"),
+            func.coalesce(func.sum(UsageRecord.output_tokens), 0).label(
+                "output_tokens"
+            ),
         ).where(UsageRecord.app_id == app_id)
 
         if from_date:
@@ -172,7 +176,9 @@ class UsageRepository:
                 "input_tokens": row.input_tokens,
                 "output_tokens": row.output_tokens,
                 "total_cost": float(row.total_cost) if row.total_cost else 0.0,
-                "avg_latency_ms": float(row.avg_latency_ms) if row.avg_latency_ms else 0.0,
+                "avg_latency_ms": (
+                    float(row.avg_latency_ms) if row.avg_latency_ms else 0.0
+                ),
             }
             for row in result.all()
         ]
@@ -204,7 +210,9 @@ class UsageRepository:
                 "feature": row.feature or "unknown",
                 "request_count": row.request_count,
                 "total_cost": float(row.total_cost) if row.total_cost else 0.0,
-                "avg_latency_ms": float(row.avg_latency_ms) if row.avg_latency_ms else 0.0,
+                "avg_latency_ms": (
+                    float(row.avg_latency_ms) if row.avg_latency_ms else 0.0
+                ),
             }
             for row in result.all()
         ]

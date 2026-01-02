@@ -255,9 +255,11 @@ class DecisionChain(BaseModel):
             "request_id": self.request_id,
             "final_outcome": self.final_outcome.value if self.final_outcome else None,
             "total_decisions": len(self.decisions),
-            "blocking_decision": self.blocking_decision.to_response_dict()
-            if self.blocking_decision
-            else None,
+            "blocking_decision": (
+                self.blocking_decision.to_response_dict()
+                if self.blocking_decision
+                else None
+            ),
             "warnings": [d.to_response_dict() for d in self.get_warnings()],
             "duration_ms": (
                 (self.completed_at - self.started_at).total_seconds() * 1000
@@ -276,7 +278,9 @@ class DecisionChain(BaseModel):
             "environment": self.environment,
             "final_outcome": self.final_outcome.value if self.final_outcome else None,
             "started_at": self.started_at.isoformat(),
-            "completed_at": self.completed_at.isoformat() if self.completed_at else None,
+            "completed_at": (
+                self.completed_at.isoformat() if self.completed_at else None
+            ),
             "decisions": [
                 {
                     "stage": d.stage.value,
@@ -366,7 +370,9 @@ class DecisionBuilder:
 
 
 # Convenience functions
-def allow_decision(stage: DecisionStage, code: DecisionCode, reason: str, **details) -> Decision:
+def allow_decision(
+    stage: DecisionStage, code: DecisionCode, reason: str, **details
+) -> Decision:
     """Crée une décision ALLOW."""
     return Decision(
         stage=stage,
@@ -395,7 +401,9 @@ def deny_decision(
     )
 
 
-def warn_decision(stage: DecisionStage, code: DecisionCode, reason: str, **details) -> Decision:
+def warn_decision(
+    stage: DecisionStage, code: DecisionCode, reason: str, **details
+) -> Decision:
     """Crée une décision WARN."""
     return Decision(
         stage=stage,

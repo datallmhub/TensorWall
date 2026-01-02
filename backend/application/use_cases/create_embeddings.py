@@ -120,7 +120,8 @@ class CreateEmbeddingsUseCase:
                     request_id=command.request_id,
                     outcome=EmbeddingOutcome.DENIED_POLICY,
                     policy_decision=policy_decision,
-                    error_message="; ".join(policy_decision.reasons) or "Denied by policy",
+                    error_message="; ".join(policy_decision.reasons)
+                    or "Denied by policy",
                 )
 
             # 4. Récupérer les budgets
@@ -165,7 +166,9 @@ class CreateEmbeddingsUseCase:
             if self.metrics:
                 self.metrics.request_started(command.app_id)
 
-            response = await self.embedding_provider.embed(domain_request, command.api_key)
+            response = await self.embedding_provider.embed(
+                domain_request, command.api_key
+            )
 
             latency_seconds = time.time() - start_time
 

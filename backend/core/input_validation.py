@@ -245,8 +245,8 @@ class InputValidator:
                     continue
 
             # Detect instructions in content
-            has_instructions, risk_score, patterns = InstructionPatterns.detect_instructions(
-                content
+            has_instructions, risk_score, patterns = (
+                InstructionPatterns.detect_instructions(content)
             )
 
             # Determine message type and trust
@@ -276,7 +276,9 @@ class InputValidator:
                 if has_instructions:
                     if self.allow_instructions_in_user:
                         message_type = MessageType.MIXED
-                        result.add_warning(f"Message {i} (USER): Contains instructions (allowed)")
+                        result.add_warning(
+                            f"Message {i} (USER): Contains instructions (allowed)"
+                        )
                     else:
                         message_type = MessageType.INSTRUCTION
                 else:
@@ -326,16 +328,24 @@ class InputValidator:
         sanitized = content
 
         # Remove role markers
-        sanitized = re.sub(r"\b(system|assistant|user):\s*", "", sanitized, flags=re.IGNORECASE)
+        sanitized = re.sub(
+            r"\b(system|assistant|user):\s*", "", sanitized, flags=re.IGNORECASE
+        )
 
         # Remove bracketed roles
         sanitized = re.sub(
-            r"\[(system|assistant|user|admin|instruction)\]", "", sanitized, flags=re.IGNORECASE
+            r"\[(system|assistant|user|admin|instruction)\]",
+            "",
+            sanitized,
+            flags=re.IGNORECASE,
         )
 
         # Remove XML-like tags
         sanitized = re.sub(
-            r"<\s*/?\s*(system|instruction|admin|prompt)\s*>", "", sanitized, flags=re.IGNORECASE
+            r"<\s*/?\s*(system|instruction|admin|prompt)\s*>",
+            "",
+            sanitized,
+            flags=re.IGNORECASE,
         )
 
         return sanitized

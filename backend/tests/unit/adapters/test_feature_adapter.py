@@ -525,8 +525,12 @@ class TestCRUD:
         """Vérifie le listing des features."""
         adapter = InMemoryFeatureAdapter()
 
-        feature1 = FeatureDefinition(id="f1", name="F1", allowed_actions=[FeatureAction.CHAT])
-        feature2 = FeatureDefinition(id="f2", name="F2", allowed_actions=[FeatureAction.EMBEDDING])
+        feature1 = FeatureDefinition(
+            id="f1", name="F1", allowed_actions=[FeatureAction.CHAT]
+        )
+        feature2 = FeatureDefinition(
+            id="f2", name="F2", allowed_actions=[FeatureAction.EMBEDDING]
+        )
 
         await adapter.register_feature("app-1", feature1)
         await adapter.register_feature("app-1", feature2)
@@ -617,7 +621,9 @@ class TestHelpers:
         """Vérifie l'effacement de toutes les données."""
         adapter = InMemoryFeatureAdapter()
 
-        feature = FeatureDefinition(id="f1", name="F1", allowed_actions=[FeatureAction.CHAT])
+        feature = FeatureDefinition(
+            id="f1", name="F1", allowed_actions=[FeatureAction.CHAT]
+        )
         await adapter.register_feature("app-1", feature)
         await adapter.set_strict_mode("app-1", True)
 

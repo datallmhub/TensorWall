@@ -47,7 +47,9 @@ class MockProvider(LLMProvider):
             output_tokens=int(output_tokens),
         )
 
-    async def chat_stream(self, request: ChatRequest, api_key: str) -> AsyncIterator[str]:
+    async def chat_stream(
+        self, request: ChatRequest, api_key: str
+    ) -> AsyncIterator[str]:
         """Stream a mock response."""
         response = await self.chat(request, api_key)
 

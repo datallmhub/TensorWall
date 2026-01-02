@@ -125,7 +125,9 @@ class TestTokenEfficiency:
         """Test input/output ratio calculation."""
         efficiency = await adapter_with_data.get_token_efficiency("app1")
 
-        expected_ratio = efficiency.total_input_tokens / max(efficiency.total_output_tokens, 1)
+        expected_ratio = efficiency.total_input_tokens / max(
+            efficiency.total_output_tokens, 1
+        )
         assert abs(efficiency.input_output_ratio - expected_ratio) < 0.01
 
     @pytest.mark.asyncio
@@ -178,7 +180,10 @@ class TestAnomalyDetection:
 
         # Should detect cost or token spike
         spike_types = [a.anomaly_type for a in anomalies]
-        assert AnomalyType.COST_SPIKE in spike_types or AnomalyType.TOKEN_SPIKE in spike_types
+        assert (
+            AnomalyType.COST_SPIKE in spike_types
+            or AnomalyType.TOKEN_SPIKE in spike_types
+        )
 
     @pytest.mark.asyncio
     async def test_no_anomalies_with_normal_usage(self, adapter):
@@ -242,7 +247,8 @@ class TestAnomalyDetection:
         if anomalies:
             # Large spikes should be HIGH or CRITICAL
             assert any(
-                a.severity in (AnomalySeverity.HIGH, AnomalySeverity.CRITICAL) for a in anomalies
+                a.severity in (AnomalySeverity.HIGH, AnomalySeverity.CRITICAL)
+                for a in anomalies
             )
 
 

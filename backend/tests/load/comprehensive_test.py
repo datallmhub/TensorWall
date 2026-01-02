@@ -42,7 +42,13 @@ class TestResult:
 
 
 class TensorWallTester:
-    def __init__(self, base_url: str, api_key: str, model: str = "phi-2", admin_password: str = "admin123"):
+    def __init__(
+        self,
+        base_url: str,
+        api_key: str,
+        model: str = "phi-2",
+        admin_password: str = "admin123",
+    ):
         self.base_url = base_url
         self.api_key = api_key
         self.model = model
@@ -77,26 +83,32 @@ class TensorWallTester:
                 duration = (time.perf_counter() - start) * 1000
                 data = await resp.json()
                 if resp.status == 200 and data.get("status") == "healthy":
-                    self.add_result(TestResult(
-                        name="Health Endpoint",
-                        status=TestStatus.PASSED,
-                        duration_ms=duration,
-                        details=data
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Health Endpoint",
+                            status=TestStatus.PASSED,
+                            duration_ms=duration,
+                            details=data,
+                        )
+                    )
                 else:
-                    self.add_result(TestResult(
-                        name="Health Endpoint",
-                        status=TestStatus.FAILED,
-                        duration_ms=duration,
-                        message=f"Status: {resp.status}, Response: {data}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Health Endpoint",
+                            status=TestStatus.FAILED,
+                            duration_ms=duration,
+                            message=f"Status: {resp.status}, Response: {data}",
+                        )
+                    )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Health Endpoint",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Health Endpoint",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     async def test_health_ready(self):
         """Test /health/ready endpoint"""
@@ -105,25 +117,31 @@ class TensorWallTester:
             async with self.session.get(f"{self.base_url}/health/ready") as resp:
                 duration = (time.perf_counter() - start) * 1000
                 if resp.status == 200:
-                    self.add_result(TestResult(
-                        name="Health Ready",
-                        status=TestStatus.PASSED,
-                        duration_ms=duration
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Health Ready",
+                            status=TestStatus.PASSED,
+                            duration_ms=duration,
+                        )
+                    )
                 else:
-                    self.add_result(TestResult(
-                        name="Health Ready",
-                        status=TestStatus.FAILED,
-                        duration_ms=duration,
-                        message=f"Status: {resp.status}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Health Ready",
+                            status=TestStatus.FAILED,
+                            duration_ms=duration,
+                            message=f"Status: {resp.status}",
+                        )
+                    )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Health Ready",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Health Ready",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     # =========================================================================
     # Authentication Tests
@@ -136,66 +154,77 @@ class TensorWallTester:
             async with self.session.post(
                 f"{self.base_url}/auth/login",
                 json={"email": "admin@example.com", "password": pwd},
-                headers={"Content-Type": "application/json"}
+                headers={"Content-Type": "application/json"},
             ) as resp:
                 duration = (time.perf_counter() - start) * 1000
                 if resp.status == 200:
                     # Store cookies for subsequent requests
                     self.cookies = resp.cookies
                     data = await resp.json()
-                    self.add_result(TestResult(
-                        name="Login",
-                        status=TestStatus.PASSED,
-                        duration_ms=duration,
-                        message=f"Logged in as {data.get('user', {}).get('email', 'unknown')}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Login",
+                            status=TestStatus.PASSED,
+                            duration_ms=duration,
+                            message=f"Logged in as {data.get('user', {}).get('email', 'unknown')}",
+                        )
+                    )
                 else:
                     text = await resp.text()
-                    self.add_result(TestResult(
-                        name="Login",
-                        status=TestStatus.FAILED,
-                        duration_ms=duration,
-                        message=f"Status: {resp.status}, Response: {text[:200]}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Login",
+                            status=TestStatus.FAILED,
+                            duration_ms=duration,
+                            message=f"Status: {resp.status}, Response: {text[:200]}",
+                        )
+                    )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Login",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Login",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     async def test_auth_me(self):
         """Test /auth/me endpoint"""
         start = time.perf_counter()
         try:
             async with self.session.get(
-                f"{self.base_url}/auth/me",
-                cookies=self.cookies
+                f"{self.base_url}/auth/me", cookies=self.cookies
             ) as resp:
                 duration = (time.perf_counter() - start) * 1000
                 if resp.status == 200:
                     data = await resp.json()
-                    self.add_result(TestResult(
-                        name="Auth Me",
-                        status=TestStatus.PASSED,
-                        duration_ms=duration,
-                        message=f"User: {data.get('email', 'unknown')}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Auth Me",
+                            status=TestStatus.PASSED,
+                            duration_ms=duration,
+                            message=f"User: {data.get('email', 'unknown')}",
+                        )
+                    )
                 else:
-                    self.add_result(TestResult(
-                        name="Auth Me",
-                        status=TestStatus.FAILED,
-                        duration_ms=duration,
-                        message=f"Status: {resp.status}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Auth Me",
+                            status=TestStatus.FAILED,
+                            duration_ms=duration,
+                            message=f"Status: {resp.status}",
+                        )
+                    )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Auth Me",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Auth Me",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     # =========================================================================
     # LLM API Tests
@@ -208,53 +237,62 @@ class TensorWallTester:
                 f"{self.base_url}/v1/chat/completions",
                 json={
                     "model": self.model,
-                    "messages": [{"role": "user", "content": "Say 'hello' in one word"}],
-                    "max_tokens": 10
+                    "messages": [
+                        {"role": "user", "content": "Say 'hello' in one word"}
+                    ],
+                    "max_tokens": 10,
                 },
-                headers={
-                    "X-API-Key": self.api_key,
-                    "Content-Type": "application/json"
-                },
-                timeout=aiohttp.ClientTimeout(total=60)
+                headers={"X-API-Key": self.api_key, "Content-Type": "application/json"},
+                timeout=aiohttp.ClientTimeout(total=60),
             ) as resp:
                 duration = (time.perf_counter() - start) * 1000
                 data = await resp.json()
                 if resp.status == 200 and "choices" in data:
                     content = data["choices"][0]["message"]["content"][:50]
-                    self.add_result(TestResult(
-                        name="Chat Completion",
-                        status=TestStatus.PASSED,
-                        duration_ms=duration,
-                        message=f"Response: {content}..."
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Chat Completion",
+                            status=TestStatus.PASSED,
+                            duration_ms=duration,
+                            message=f"Response: {content}...",
+                        )
+                    )
                 elif resp.status == 429:
-                    self.add_result(TestResult(
-                        name="Chat Completion",
-                        status=TestStatus.WARNING,
-                        duration_ms=duration,
-                        message="Rate limited"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Chat Completion",
+                            status=TestStatus.WARNING,
+                            duration_ms=duration,
+                            message="Rate limited",
+                        )
+                    )
                 else:
-                    self.add_result(TestResult(
-                        name="Chat Completion",
-                        status=TestStatus.FAILED,
-                        duration_ms=duration,
-                        message=f"Status: {resp.status}, Response: {json.dumps(data)[:200]}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Chat Completion",
+                            status=TestStatus.FAILED,
+                            duration_ms=duration,
+                            message=f"Status: {resp.status}, Response: {json.dumps(data)[:200]}",
+                        )
+                    )
         except asyncio.TimeoutError:
-            self.add_result(TestResult(
-                name="Chat Completion",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message="Timeout (60s) - LLM may be slow or unavailable"
-            ))
+            self.add_result(
+                TestResult(
+                    name="Chat Completion",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message="Timeout (60s) - LLM may be slow or unavailable",
+                )
+            )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Chat Completion",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Chat Completion",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     async def test_dry_run_mode(self):
         """Test dry-run mode (no actual LLM call)"""
@@ -265,37 +303,43 @@ class TensorWallTester:
                 json={
                     "model": self.model,
                     "messages": [{"role": "user", "content": "Test message"}],
-                    "max_tokens": 10
+                    "max_tokens": 10,
                 },
                 headers={
                     "X-API-Key": self.api_key,
                     "X-Dry-Run": "true",
-                    "Content-Type": "application/json"
-                }
+                    "Content-Type": "application/json",
+                },
             ) as resp:
                 duration = (time.perf_counter() - start) * 1000
                 data = await resp.json()
                 if resp.status == 200 and data.get("dry_run") is True:
-                    self.add_result(TestResult(
-                        name="Dry-Run Mode",
-                        status=TestStatus.PASSED,
-                        duration_ms=duration,
-                        message=f"Would be allowed: {data.get('would_be_allowed', 'unknown')}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Dry-Run Mode",
+                            status=TestStatus.PASSED,
+                            duration_ms=duration,
+                            message=f"Would be allowed: {data.get('would_be_allowed', 'unknown')}",
+                        )
+                    )
                 else:
-                    self.add_result(TestResult(
-                        name="Dry-Run Mode",
-                        status=TestStatus.FAILED,
-                        duration_ms=duration,
-                        message=f"Status: {resp.status}, Response: {json.dumps(data)[:200]}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Dry-Run Mode",
+                            status=TestStatus.FAILED,
+                            duration_ms=duration,
+                            message=f"Status: {resp.status}, Response: {json.dumps(data)[:200]}",
+                        )
+                    )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Dry-Run Mode",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Dry-Run Mode",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     async def test_debug_mode(self):
         """Test debug mode (includes decision trace)"""
@@ -306,39 +350,51 @@ class TensorWallTester:
                 json={
                     "model": self.model,
                     "messages": [{"role": "user", "content": "Debug test"}],
-                    "max_tokens": 10
+                    "max_tokens": 10,
                 },
                 headers={
                     "X-API-Key": self.api_key,
                     "X-Dry-Run": "true",
                     "X-Debug": "true",
-                    "Content-Type": "application/json"
-                }
+                    "Content-Type": "application/json",
+                },
             ) as resp:
                 duration = (time.perf_counter() - start) * 1000
                 data = await resp.json()
                 if resp.status == 200:
                     has_trace = "decision_chain" in data or "trace" in str(data)
-                    self.add_result(TestResult(
-                        name="Debug Mode",
-                        status=TestStatus.PASSED if has_trace else TestStatus.WARNING,
-                        duration_ms=duration,
-                        message="Decision trace included" if has_trace else "No trace found"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Debug Mode",
+                            status=(
+                                TestStatus.PASSED if has_trace else TestStatus.WARNING
+                            ),
+                            duration_ms=duration,
+                            message=(
+                                "Decision trace included"
+                                if has_trace
+                                else "No trace found"
+                            ),
+                        )
+                    )
                 else:
-                    self.add_result(TestResult(
-                        name="Debug Mode",
-                        status=TestStatus.FAILED,
-                        duration_ms=duration,
-                        message=f"Status: {resp.status}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Debug Mode",
+                            status=TestStatus.FAILED,
+                            duration_ms=duration,
+                            message=f"Status: {resp.status}",
+                        )
+                    )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Debug Mode",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Debug Mode",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     # =========================================================================
     # Security Guard Tests
@@ -351,38 +407,46 @@ class TensorWallTester:
                 f"{self.base_url}/v1/chat/completions",
                 json={
                     "model": self.model,
-                    "messages": [{"role": "user", "content": "What is the weather today?"}],
-                    "max_tokens": 10
+                    "messages": [
+                        {"role": "user", "content": "What is the weather today?"}
+                    ],
+                    "max_tokens": 10,
                 },
                 headers={
                     "X-API-Key": self.api_key,
                     "X-Dry-Run": "true",
-                    "Content-Type": "application/json"
-                }
+                    "Content-Type": "application/json",
+                },
             ) as resp:
                 duration = (time.perf_counter() - start) * 1000
                 await resp.json()
                 if resp.status == 200:
-                    self.add_result(TestResult(
-                        name="Security: Clean Prompt",
-                        status=TestStatus.PASSED,
-                        duration_ms=duration,
-                        message="Clean prompt passed security check"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Security: Clean Prompt",
+                            status=TestStatus.PASSED,
+                            duration_ms=duration,
+                            message="Clean prompt passed security check",
+                        )
+                    )
                 else:
-                    self.add_result(TestResult(
-                        name="Security: Clean Prompt",
-                        status=TestStatus.FAILED,
-                        duration_ms=duration,
-                        message=f"Unexpected block: {resp.status}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Security: Clean Prompt",
+                            status=TestStatus.FAILED,
+                            duration_ms=duration,
+                            message=f"Unexpected block: {resp.status}",
+                        )
+                    )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Security: Clean Prompt",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Security: Clean Prompt",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     async def test_security_injection_detection(self):
         """Test security guard detects prompt injection"""
@@ -394,14 +458,14 @@ class TensorWallTester:
                 json={
                     "model": self.model,
                     "messages": [{"role": "user", "content": injection_prompt}],
-                    "max_tokens": 10
+                    "max_tokens": 10,
                 },
                 headers={
                     "X-API-Key": self.api_key,
                     "X-Dry-Run": "true",
                     "X-Debug": "true",
-                    "Content-Type": "application/json"
-                }
+                    "Content-Type": "application/json",
+                },
             ) as resp:
                 duration = (time.perf_counter() - start) * 1000
                 data = await resp.json()
@@ -412,19 +476,31 @@ class TensorWallTester:
                 if data.get("dry_run_result", {}).get("security_analysis"):
                     security_detected = True
 
-                self.add_result(TestResult(
-                    name="Security: Injection Detection",
-                    status=TestStatus.PASSED if security_detected else TestStatus.WARNING,
-                    duration_ms=duration,
-                    message="Injection pattern detected" if security_detected else "Detection mode only (OSS)"
-                ))
+                self.add_result(
+                    TestResult(
+                        name="Security: Injection Detection",
+                        status=(
+                            TestStatus.PASSED
+                            if security_detected
+                            else TestStatus.WARNING
+                        ),
+                        duration_ms=duration,
+                        message=(
+                            "Injection pattern detected"
+                            if security_detected
+                            else "Detection mode only (OSS)"
+                        ),
+                    )
+                )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Security: Injection Detection",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Security: Injection Detection",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     # =========================================================================
     # Admin API Tests
@@ -434,262 +510,314 @@ class TensorWallTester:
         start = time.perf_counter()
         try:
             async with self.session.get(
-                f"{self.base_url}/admin/applications",
-                cookies=self.cookies
+                f"{self.base_url}/admin/applications", cookies=self.cookies
             ) as resp:
                 duration = (time.perf_counter() - start) * 1000
                 if resp.status == 200:
                     data = await resp.json()
-                    count = len(data) if isinstance(data, list) else data.get("total", 0)
-                    self.add_result(TestResult(
-                        name="Admin: Applications",
-                        status=TestStatus.PASSED,
-                        duration_ms=duration,
-                        message=f"Found {count} applications"
-                    ))
+                    count = (
+                        len(data) if isinstance(data, list) else data.get("total", 0)
+                    )
+                    self.add_result(
+                        TestResult(
+                            name="Admin: Applications",
+                            status=TestStatus.PASSED,
+                            duration_ms=duration,
+                            message=f"Found {count} applications",
+                        )
+                    )
                 else:
-                    self.add_result(TestResult(
-                        name="Admin: Applications",
-                        status=TestStatus.FAILED,
-                        duration_ms=duration,
-                        message=f"Status: {resp.status}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Admin: Applications",
+                            status=TestStatus.FAILED,
+                            duration_ms=duration,
+                            message=f"Status: {resp.status}",
+                        )
+                    )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Admin: Applications",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Admin: Applications",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     async def test_admin_policies(self):
         """Test admin policies endpoint"""
         start = time.perf_counter()
         try:
             async with self.session.get(
-                f"{self.base_url}/admin/policies",
-                cookies=self.cookies
+                f"{self.base_url}/admin/policies", cookies=self.cookies
             ) as resp:
                 duration = (time.perf_counter() - start) * 1000
                 if resp.status == 200:
                     data = await resp.json()
-                    count = len(data) if isinstance(data, list) else data.get("total", 0)
-                    self.add_result(TestResult(
-                        name="Admin: Policies",
-                        status=TestStatus.PASSED,
-                        duration_ms=duration,
-                        message=f"Found {count} policies"
-                    ))
+                    count = (
+                        len(data) if isinstance(data, list) else data.get("total", 0)
+                    )
+                    self.add_result(
+                        TestResult(
+                            name="Admin: Policies",
+                            status=TestStatus.PASSED,
+                            duration_ms=duration,
+                            message=f"Found {count} policies",
+                        )
+                    )
                 else:
-                    self.add_result(TestResult(
-                        name="Admin: Policies",
-                        status=TestStatus.FAILED,
-                        duration_ms=duration,
-                        message=f"Status: {resp.status}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Admin: Policies",
+                            status=TestStatus.FAILED,
+                            duration_ms=duration,
+                            message=f"Status: {resp.status}",
+                        )
+                    )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Admin: Policies",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Admin: Policies",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     async def test_admin_budgets(self):
         """Test admin budgets endpoint"""
         start = time.perf_counter()
         try:
             async with self.session.get(
-                f"{self.base_url}/admin/budgets",
-                cookies=self.cookies
+                f"{self.base_url}/admin/budgets", cookies=self.cookies
             ) as resp:
                 duration = (time.perf_counter() - start) * 1000
                 if resp.status == 200:
                     data = await resp.json()
-                    count = len(data) if isinstance(data, list) else data.get("total", 0)
-                    self.add_result(TestResult(
-                        name="Admin: Budgets",
-                        status=TestStatus.PASSED,
-                        duration_ms=duration,
-                        message=f"Found {count} budgets"
-                    ))
+                    count = (
+                        len(data) if isinstance(data, list) else data.get("total", 0)
+                    )
+                    self.add_result(
+                        TestResult(
+                            name="Admin: Budgets",
+                            status=TestStatus.PASSED,
+                            duration_ms=duration,
+                            message=f"Found {count} budgets",
+                        )
+                    )
                 else:
-                    self.add_result(TestResult(
-                        name="Admin: Budgets",
-                        status=TestStatus.FAILED,
-                        duration_ms=duration,
-                        message=f"Status: {resp.status}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Admin: Budgets",
+                            status=TestStatus.FAILED,
+                            duration_ms=duration,
+                            message=f"Status: {resp.status}",
+                        )
+                    )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Admin: Budgets",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Admin: Budgets",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     async def test_admin_requests_stats(self):
         """Test admin requests stats"""
         start = time.perf_counter()
         try:
             async with self.session.get(
-                f"{self.base_url}/admin/requests/stats/summary",
-                cookies=self.cookies
+                f"{self.base_url}/admin/requests/stats/summary", cookies=self.cookies
             ) as resp:
                 duration = (time.perf_counter() - start) * 1000
                 if resp.status == 200:
                     data = await resp.json()
-                    self.add_result(TestResult(
-                        name="Admin: Request Stats",
-                        status=TestStatus.PASSED,
-                        duration_ms=duration,
-                        message=f"Total requests: {data.get('total_requests', 0)}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Admin: Request Stats",
+                            status=TestStatus.PASSED,
+                            duration_ms=duration,
+                            message=f"Total requests: {data.get('total_requests', 0)}",
+                        )
+                    )
                 else:
-                    self.add_result(TestResult(
-                        name="Admin: Request Stats",
-                        status=TestStatus.FAILED,
-                        duration_ms=duration,
-                        message=f"Status: {resp.status}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Admin: Request Stats",
+                            status=TestStatus.FAILED,
+                            duration_ms=duration,
+                            message=f"Status: {resp.status}",
+                        )
+                    )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Admin: Request Stats",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Admin: Request Stats",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     async def test_admin_security_posture(self):
         """Test admin security posture endpoint"""
         start = time.perf_counter()
         try:
             async with self.session.get(
-                f"{self.base_url}/admin/security/posture",
-                cookies=self.cookies
+                f"{self.base_url}/admin/security/posture", cookies=self.cookies
             ) as resp:
                 duration = (time.perf_counter() - start) * 1000
                 if resp.status == 200:
                     data = await resp.json()
-                    self.add_result(TestResult(
-                        name="Admin: Security Posture",
-                        status=TestStatus.PASSED,
-                        duration_ms=duration,
-                        message=f"Status: {data.get('status', 'unknown')}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Admin: Security Posture",
+                            status=TestStatus.PASSED,
+                            duration_ms=duration,
+                            message=f"Status: {data.get('status', 'unknown')}",
+                        )
+                    )
                 else:
-                    self.add_result(TestResult(
-                        name="Admin: Security Posture",
-                        status=TestStatus.FAILED,
-                        duration_ms=duration,
-                        message=f"Status: {resp.status}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Admin: Security Posture",
+                            status=TestStatus.FAILED,
+                            duration_ms=duration,
+                            message=f"Status: {resp.status}",
+                        )
+                    )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Admin: Security Posture",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Admin: Security Posture",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     async def test_admin_security_threats(self):
         """Test admin security threats endpoint"""
         start = time.perf_counter()
         try:
             async with self.session.get(
-                f"{self.base_url}/admin/security/threats",
-                cookies=self.cookies
+                f"{self.base_url}/admin/security/threats", cookies=self.cookies
             ) as resp:
                 duration = (time.perf_counter() - start) * 1000
                 if resp.status == 200:
                     data = await resp.json()
-                    count = len(data) if isinstance(data, list) else data.get("total", 0)
-                    self.add_result(TestResult(
-                        name="Admin: Security Threats",
-                        status=TestStatus.PASSED,
-                        duration_ms=duration,
-                        message=f"Threats: {count}"
-                    ))
+                    count = (
+                        len(data) if isinstance(data, list) else data.get("total", 0)
+                    )
+                    self.add_result(
+                        TestResult(
+                            name="Admin: Security Threats",
+                            status=TestStatus.PASSED,
+                            duration_ms=duration,
+                            message=f"Threats: {count}",
+                        )
+                    )
                 else:
-                    self.add_result(TestResult(
-                        name="Admin: Security Threats",
-                        status=TestStatus.FAILED,
-                        duration_ms=duration,
-                        message=f"Status: {resp.status}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Admin: Security Threats",
+                            status=TestStatus.FAILED,
+                            duration_ms=duration,
+                            message=f"Status: {resp.status}",
+                        )
+                    )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Admin: Security Threats",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Admin: Security Threats",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     async def test_admin_users(self):
         """Test admin users endpoint"""
         start = time.perf_counter()
         try:
             async with self.session.get(
-                f"{self.base_url}/admin/users",
-                cookies=self.cookies
+                f"{self.base_url}/admin/users", cookies=self.cookies
             ) as resp:
                 duration = (time.perf_counter() - start) * 1000
                 if resp.status == 200:
                     data = await resp.json()
-                    count = len(data) if isinstance(data, list) else data.get("total", 0)
-                    self.add_result(TestResult(
-                        name="Admin: Users",
-                        status=TestStatus.PASSED,
-                        duration_ms=duration,
-                        message=f"Found {count} users"
-                    ))
+                    count = (
+                        len(data) if isinstance(data, list) else data.get("total", 0)
+                    )
+                    self.add_result(
+                        TestResult(
+                            name="Admin: Users",
+                            status=TestStatus.PASSED,
+                            duration_ms=duration,
+                            message=f"Found {count} users",
+                        )
+                    )
                 else:
-                    self.add_result(TestResult(
-                        name="Admin: Users",
-                        status=TestStatus.FAILED,
-                        duration_ms=duration,
-                        message=f"Status: {resp.status}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Admin: Users",
+                            status=TestStatus.FAILED,
+                            duration_ms=duration,
+                            message=f"Status: {resp.status}",
+                        )
+                    )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Admin: Users",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Admin: Users",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     async def test_admin_models(self):
         """Test admin models endpoint"""
         start = time.perf_counter()
         try:
             async with self.session.get(
-                f"{self.base_url}/admin/models",
-                cookies=self.cookies
+                f"{self.base_url}/admin/models", cookies=self.cookies
             ) as resp:
                 duration = (time.perf_counter() - start) * 1000
                 if resp.status == 200:
                     data = await resp.json()
-                    count = len(data) if isinstance(data, list) else data.get("total", 0)
-                    self.add_result(TestResult(
-                        name="Admin: Models Registry",
-                        status=TestStatus.PASSED,
-                        duration_ms=duration,
-                        message=f"Found {count} models"
-                    ))
+                    count = (
+                        len(data) if isinstance(data, list) else data.get("total", 0)
+                    )
+                    self.add_result(
+                        TestResult(
+                            name="Admin: Models Registry",
+                            status=TestStatus.PASSED,
+                            duration_ms=duration,
+                            message=f"Found {count} models",
+                        )
+                    )
                 else:
-                    self.add_result(TestResult(
-                        name="Admin: Models Registry",
-                        status=TestStatus.FAILED,
-                        duration_ms=duration,
-                        message=f"Status: {resp.status}"
-                    ))
+                    self.add_result(
+                        TestResult(
+                            name="Admin: Models Registry",
+                            status=TestStatus.FAILED,
+                            duration_ms=duration,
+                            message=f"Status: {resp.status}",
+                        )
+                    )
         except Exception as e:
-            self.add_result(TestResult(
-                name="Admin: Models Registry",
-                status=TestStatus.FAILED,
-                duration_ms=(time.perf_counter() - start) * 1000,
-                message=str(e)
-            ))
+            self.add_result(
+                TestResult(
+                    name="Admin: Models Registry",
+                    status=TestStatus.FAILED,
+                    duration_ms=(time.perf_counter() - start) * 1000,
+                    message=str(e),
+                )
+            )
 
     # =========================================================================
     # Run All Tests
@@ -746,7 +874,9 @@ class TensorWallTester:
         skipped = sum(1 for r in self.results if r.status == TestStatus.SKIPPED)
         total = len(self.results)
 
-        avg_duration = sum(r.duration_ms for r in self.results) / total if total > 0 else 0
+        avg_duration = (
+            sum(r.duration_ms for r in self.results) / total if total > 0 else 0
+        )
 
         print("\n" + "=" * 60)
         print("📋 TEST SUMMARY")
@@ -785,7 +915,7 @@ async def main():
         base_url=args.url,
         api_key=args.api_key,
         model=args.model,
-        admin_password=args.admin_password
+        admin_password=args.admin_password,
     ) as tester:
         exit_code = await tester.run_all()
 

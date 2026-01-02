@@ -1,6 +1,5 @@
 """Unit tests for Dry Run / Policy Simulation module."""
 
-
 from backend.core.dry_run import (
     DryRunMode,
     PolicyImpact,

@@ -279,7 +279,8 @@ class FeatureEngine:
             return FeatureCheckResult(
                 allowed=False,
                 feature=effective_feature,
-                reason=reason or f"Token limit exceeded for feature '{effective_feature}'",
+                reason=reason
+                or f"Token limit exceeded for feature '{effective_feature}'",
                 config=config,
             )
 
@@ -319,7 +320,9 @@ class FeatureEngine:
             condition=f"app={app_id}, feature={feature}",
             actual_value=feature,
             expected_value=list(
-                self.registries.get(app_id, FeatureRegistry(app_id=app_id)).features.keys()
+                self.registries.get(
+                    app_id, FeatureRegistry(app_id=app_id)
+                ).features.keys()
             ),
             duration_ms=duration_ms,
         )

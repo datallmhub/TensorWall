@@ -26,7 +26,9 @@ class PermissionDependency:
         self.action = action
 
     async def __call__(
-        self, db: AsyncSession = Depends(get_db), user_id: int = Depends(get_current_user_id)
+        self,
+        db: AsyncSession = Depends(get_db),
+        user_id: int = Depends(get_current_user_id),
     ):
         # OSS: All permissions are granted
         pass
@@ -43,7 +45,9 @@ class RoleDependency:
         self.role_name = role_name
 
     async def __call__(
-        self, db: AsyncSession = Depends(get_db), user_id: int = Depends(get_current_user_id)
+        self,
+        db: AsyncSession = Depends(get_db),
+        user_id: int = Depends(get_current_user_id),
     ):
         # OSS: All roles are granted
         pass

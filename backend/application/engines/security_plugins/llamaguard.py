@@ -96,8 +96,7 @@ class LlamaGuardPlugin(AsyncSecurityPlugin):
                     data = response.json()
                     models = [m.get("name", "") for m in data.get("models", [])]
                     self._available = any(
-                        self.model in m or "llama-guard" in m.lower()
-                        for m in models
+                        self.model in m or "llama-guard" in m.lower() for m in models
                     )
                     if not self._available:
                         logger.warning(
@@ -142,15 +141,17 @@ class LlamaGuardPlugin(AsyncSecurityPlugin):
                     code = code.strip().upper()
                     if code in LLAMAGUARD_CATEGORIES:
                         category_name, severity = LLAMAGUARD_CATEGORIES[code]
-                        findings.append(SecurityFinding(
-                            plugin=self.name,
-                            category="content_safety",
-                            severity=severity,
-                            description=f"LlamaGuard: {category_name} ({code})",
-                            pattern_matched=code,
-                            confidence=0.9,  # ML-based detection
-                            metadata={"llamaguard_category": code},
-                        ))
+                        findings.append(
+                            SecurityFinding(
+                                plugin=self.name,
+                                category="content_safety",
+                                severity=severity,
+                                description=f"LlamaGuard: {category_name} ({code})",
+                                pattern_matched=code,
+                                confidence=0.9,  # ML-based detection
+                                metadata={"llamaguard_category": code},
+                            )
+                        )
 
         return findings
 
@@ -240,6 +241,7 @@ class OpenAIModerationPlugin(AsyncSecurityPlugin):
     def initialize(self) -> None:
         if not self.api_key:
             import os
+
             self.api_key = os.getenv("OPENAI_API_KEY")
 
         if not self.api_key:
@@ -287,15 +289,17 @@ class OpenAIModerationPlugin(AsyncSecurityPlugin):
                                 category_info = self.CATEGORY_MAPPING.get(
                                     category, (category, RiskLevel.MEDIUM)
                                 )
-                                findings.append(SecurityFinding(
-                                    plugin=self.name,
-                                    category="content_safety",
-                                    severity=category_info[1],
-                                    description=f"OpenAI Moderation: {category_info[0]}",
-                                    pattern_matched=category,
-                                    confidence=scores.get(category, 0.5),
-                                    metadata={"openai_category": category},
-                                ))
+                                findings.append(
+                                    SecurityFinding(
+                                        plugin=self.name,
+                                        category="content_safety",
+                                        severity=category_info[1],
+                                        description=f"OpenAI Moderation: {category_info[0]}",
+                                        pattern_matched=category,
+                                        confidence=scores.get(category, 0.5),
+                                        metadata={"openai_category": category},
+                                    )
+                                )
 
         except Exception as e:
             logger.error(f"OpenAI Moderation error: {e}")

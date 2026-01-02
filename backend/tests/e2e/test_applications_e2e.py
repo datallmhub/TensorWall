@@ -64,7 +64,9 @@ class TestApplicationsE2E:
         assert response.status_code == 422
 
     @pytest.mark.asyncio
-    async def test_list_applications(self, client: AsyncClient, seed_application: Application):
+    async def test_list_applications(
+        self, client: AsyncClient, seed_application: Application
+    ):
         """Test listing applications."""
         response = await client.get("/admin/applications")
 
@@ -95,7 +97,9 @@ class TestApplicationsE2E:
         assert response.status_code == 404
 
     @pytest.mark.asyncio
-    async def test_update_application(self, client: AsyncClient, seed_application: Application):
+    async def test_update_application(
+        self, client: AsyncClient, seed_application: Application
+    ):
         """Test updating an application."""
         response = await client.patch(
             f"/admin/applications/{seed_application.uuid}",
@@ -126,7 +130,9 @@ class TestApplicationsE2E:
         assert set(data["allowed_models"]) == set(new_models)
 
     @pytest.mark.asyncio
-    async def test_deactivate_application(self, client: AsyncClient, seed_application: Application):
+    async def test_deactivate_application(
+        self, client: AsyncClient, seed_application: Application
+    ):
         """Test deactivating an application."""
         response = await client.patch(
             f"/admin/applications/{seed_application.uuid}",
@@ -167,7 +173,9 @@ class TestApplicationApiKeysE2E:
     """E2E tests for application API key management."""
 
     @pytest.mark.asyncio
-    async def test_create_api_key(self, client: AsyncClient, seed_application: Application):
+    async def test_create_api_key(
+        self, client: AsyncClient, seed_application: Application
+    ):
         """Test creating an API key for an application."""
         response = await client.post(
             f"/admin/applications/{seed_application.uuid}/keys",

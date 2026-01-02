@@ -51,8 +51,7 @@ class PromptInjectionPlugin(SecurityPlugin):
 
     def initialize(self) -> None:
         self._compiled = [
-            (re.compile(p, re.IGNORECASE), name)
-            for p, name in self.PATTERNS
+            (re.compile(p, re.IGNORECASE), name) for p, name in self.PATTERNS
         ]
 
     def check(self, messages: list[dict]) -> list[SecurityFinding]:
@@ -68,13 +67,15 @@ class PromptInjectionPlugin(SecurityPlugin):
 
             for pattern, pattern_name in self._compiled:
                 if pattern.search(content):
-                    findings.append(SecurityFinding(
-                        plugin=self.name,
-                        category="prompt_injection",
-                        severity=RiskLevel.HIGH,
-                        description=f"Potential prompt injection: {pattern_name}",
-                        pattern_matched=pattern_name,
-                    ))
+                    findings.append(
+                        SecurityFinding(
+                            plugin=self.name,
+                            category="prompt_injection",
+                            severity=RiskLevel.HIGH,
+                            description=f"Potential prompt injection: {pattern_name}",
+                            pattern_matched=pattern_name,
+                        )
+                    )
 
         return findings
 
@@ -107,10 +108,7 @@ class SecretsPlugin(SecurityPlugin):
     ]
 
     def initialize(self) -> None:
-        self._compiled = [
-            (re.compile(p), name)
-            for p, name in self.PATTERNS
-        ]
+        self._compiled = [(re.compile(p), name) for p, name in self.PATTERNS]
 
     def check(self, messages: list[dict]) -> list[SecurityFinding]:
         findings = []
@@ -122,13 +120,15 @@ class SecretsPlugin(SecurityPlugin):
 
             for pattern, secret_type in self._compiled:
                 if pattern.search(content):
-                    findings.append(SecurityFinding(
-                        plugin=self.name,
-                        category="secrets",
-                        severity=RiskLevel.HIGH,
-                        description=f"Potential {secret_type} detected",
-                        pattern_matched=secret_type,
-                    ))
+                    findings.append(
+                        SecurityFinding(
+                            plugin=self.name,
+                            category="secrets",
+                            severity=RiskLevel.HIGH,
+                            description=f"Potential {secret_type} detected",
+                            pattern_matched=secret_type,
+                        )
+                    )
 
         return findings
 
@@ -153,10 +153,7 @@ class PIIPlugin(SecurityPlugin):
     ]
 
     def initialize(self) -> None:
-        self._compiled = [
-            (re.compile(p), name)
-            for p, name in self.PATTERNS
-        ]
+        self._compiled = [(re.compile(p), name) for p, name in self.PATTERNS]
 
     def check(self, messages: list[dict]) -> list[SecurityFinding]:
         findings = []
@@ -168,13 +165,15 @@ class PIIPlugin(SecurityPlugin):
 
             for pattern, pii_type in self._compiled:
                 if pattern.search(content):
-                    findings.append(SecurityFinding(
-                        plugin=self.name,
-                        category="pii",
-                        severity=RiskLevel.MEDIUM,
-                        description=f"Potential {pii_type} detected",
-                        pattern_matched=pii_type,
-                    ))
+                    findings.append(
+                        SecurityFinding(
+                            plugin=self.name,
+                            category="pii",
+                            severity=RiskLevel.MEDIUM,
+                            description=f"Potential {pii_type} detected",
+                            pattern_matched=pii_type,
+                        )
+                    )
 
         return findings
 
@@ -197,17 +196,17 @@ class CodeInjectionPlugin(SecurityPlugin):
         (r"`[^`]*`", "backtick_execution"),
         (r"\$\([^)]+\)", "command_substitution"),
         # SQL injection
-        (r"(?i)(union\s+select|drop\s+table|delete\s+from|insert\s+into)", "sql_injection"),
+        (
+            r"(?i)(union\s+select|drop\s+table|delete\s+from|insert\s+into)",
+            "sql_injection",
+        ),
         (r"(?i)('\s*or\s*'1'\s*=\s*'1|--\s*$)", "sql_injection"),
         # Path traversal
         (r"\.\./\.\.", "path_traversal"),
     ]
 
     def initialize(self) -> None:
-        self._compiled = [
-            (re.compile(p), name)
-            for p, name in self.PATTERNS
-        ]
+        self._compiled = [(re.compile(p), name) for p, name in self.PATTERNS]
 
     def check(self, messages: list[dict]) -> list[SecurityFinding]:
         findings = []
@@ -219,13 +218,15 @@ class CodeInjectionPlugin(SecurityPlugin):
 
             for pattern, attack_type in self._compiled:
                 if pattern.search(content):
-                    findings.append(SecurityFinding(
-                        plugin=self.name,
-                        category="code_injection",
-                        severity=RiskLevel.HIGH,
-                        description=f"Potential {attack_type} detected",
-                        pattern_matched=attack_type,
-                    ))
+                    findings.append(
+                        SecurityFinding(
+                            plugin=self.name,
+                            category="code_injection",
+                            severity=RiskLevel.HIGH,
+                            description=f"Potential {attack_type} detected",
+                            pattern_matched=attack_type,
+                        )
+                    )
 
         return findings
 

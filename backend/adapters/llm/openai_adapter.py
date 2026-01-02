@@ -69,7 +69,9 @@ class OpenAIAdapter(LLMProviderPort):
 
         return self._parse_response(data)
 
-    async def chat_stream(self, request: ChatRequest, api_key: str) -> AsyncIterator[str]:
+    async def chat_stream(
+        self, request: ChatRequest, api_key: str
+    ) -> AsyncIterator[str]:
         """Stream une réponse de chat completion depuis OpenAI.
 
         Args:
@@ -119,7 +121,9 @@ class OpenAIAdapter(LLMProviderPort):
         """
         payload = {
             "model": request.model,
-            "messages": [{"role": msg.role, "content": msg.content} for msg in request.messages],
+            "messages": [
+                {"role": msg.role, "content": msg.content} for msg in request.messages
+            ],
             "stream": stream,
         }
 

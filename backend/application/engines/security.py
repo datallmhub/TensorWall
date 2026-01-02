@@ -18,6 +18,7 @@ from typing import Optional
 
 class RiskLevel(str, Enum):
     """Risk level classification."""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -26,7 +27,8 @@ class RiskLevel(str, Enum):
 
 class SecurityFinding(BaseModel):
     """Individual security finding."""
-    category: str          # "prompt_injection", "pii", "secrets", "abuse"
+
+    category: str  # "prompt_injection", "pii", "secrets", "abuse"
     severity: RiskLevel
     description: str
     pattern_matched: Optional[str] = None
@@ -34,6 +36,7 @@ class SecurityFinding(BaseModel):
 
 class SecurityCheckResult(BaseModel):
     """Result of security analysis."""
+
     safe: bool
     risk_level: str  # low, medium, high, critical
     risk_score: float  # 0.0 - 1.0 for fine-grained scoring
@@ -47,14 +50,18 @@ class SecurityCheckResult(BaseModel):
             "risk_level": self.risk_level,
             "risk_score": self.risk_score,
             "issues_count": len(self.issues),
-            "findings": [
-                {
-                    "category": f.category,
-                    "severity": f.severity.value,
-                    "description": f.description,
-                }
-                for f in self.findings
-            ] if self.findings else [],
+            "findings": (
+                [
+                    {
+                        "category": f.category,
+                        "severity": f.severity.value,
+                        "description": f.description,
+                    }
+                    for f in self.findings
+                ]
+                if self.findings
+                else []
+            ),
         }
 
 
@@ -108,8 +115,12 @@ class SecurityGuard:
 
     def __init__(self):
         """Initialize SecurityGuard with compiled regex patterns."""
-        self.injection_regex = [(re.compile(p, re.IGNORECASE), name) for p, name in self.INJECTION_PATTERNS]
-        self.secrets_regex = [(re.compile(p), name) for p, name in self.SECRETS_PATTERNS]
+        self.injection_regex = [
+            (re.compile(p, re.IGNORECASE), name) for p, name in self.INJECTION_PATTERNS
+        ]
+        self.secrets_regex = [
+            (re.compile(p), name) for p, name in self.SECRETS_PATTERNS
+        ]
         self.pii_regex = [(re.compile(p), name) for p, name in self.PII_PATTERNS]
 
     def check_prompt(self, messages: list[dict]) -> SecurityCheckResult:
@@ -217,11 +228,13 @@ class SecurityGuard:
                 risk_level=RiskLevel.MEDIUM.value,
                 risk_score=0.3,
                 issues=["Empty messages array"],
-                findings=[SecurityFinding(
-                    category="validation",
-                    severity=RiskLevel.MEDIUM,
-                    description="Empty messages array",
-                )],
+                findings=[
+                    SecurityFinding(
+                        category="validation",
+                        severity=RiskLevel.MEDIUM,
+                        description="Empty messages array",
+                    )
+                ],
             )
 
         valid_roles = {"system", "user", "assistant", "tool", "function"}
@@ -232,27 +245,33 @@ class SecurityGuard:
 
             if role not in valid_roles:
                 issues.append(f"Invalid role at index {i}: {role}")
-                findings.append(SecurityFinding(
-                    category="validation",
-                    severity=RiskLevel.MEDIUM,
-                    description=f"Invalid role: {role}",
-                ))
+                findings.append(
+                    SecurityFinding(
+                        category="validation",
+                        severity=RiskLevel.MEDIUM,
+                        description=f"Invalid role: {role}",
+                    )
+                )
 
             if role == "system":
                 if seen_system:
                     issues.append("Multiple system messages detected")
-                    findings.append(SecurityFinding(
-                        category="validation",
-                        severity=RiskLevel.LOW,
-                        description="Multiple system messages",
-                    ))
+                    findings.append(
+                        SecurityFinding(
+                            category="validation",
+                            severity=RiskLevel.LOW,
+                            description="Multiple system messages",
+                        )
+                    )
                 if i != 0:
                     issues.append("System message should be first")
-                    findings.append(SecurityFinding(
-                        category="validation",
-                        severity=RiskLevel.LOW,
-                        description="System message not first",
-                    ))
+                    findings.append(
+                        SecurityFinding(
+                            category="validation",
+                            severity=RiskLevel.LOW,
+                            description="System message not first",
+                        )
+                    )
                 seen_system = True
 
             if not msg.get("content") and role not in ["tool", "function"]:
@@ -281,7 +300,12 @@ class SecurityGuard:
         all_issues = prompt_result.issues + structure_result.issues
 
         # Take highest risk
-        risk_levels = [RiskLevel.LOW, RiskLevel.MEDIUM, RiskLevel.HIGH, RiskLevel.CRITICAL]
+        risk_levels = [
+            RiskLevel.LOW,
+            RiskLevel.MEDIUM,
+            RiskLevel.HIGH,
+            RiskLevel.CRITICAL,
+        ]
         prompt_risk_idx = risk_levels.index(RiskLevel(prompt_result.risk_level))
         struct_risk_idx = risk_levels.index(RiskLevel(structure_result.risk_level))
         max_risk = risk_levels[max(prompt_risk_idx, struct_risk_idx)]

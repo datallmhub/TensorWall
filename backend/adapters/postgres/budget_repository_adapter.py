@@ -8,7 +8,10 @@ from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.ports.budget_repository import BudgetRepositoryPort
-from backend.domain.models import Budget as DomainBudget, BudgetPeriod as DomainBudgetPeriod
+from backend.domain.models import (
+    Budget as DomainBudget,
+    BudgetPeriod as DomainBudgetPeriod,
+)
 from backend.db.models import (
     Budget as DBBudget,
     BudgetPeriod as DBBudgetPeriod,
@@ -35,7 +38,9 @@ class BudgetRepositoryAdapter(BudgetRepositoryPort):
         """
         self._session = session
 
-    def _to_domain(self, db_budget: DBBudget, app_id: str | None = None) -> DomainBudget:
+    def _to_domain(
+        self, db_budget: DBBudget, app_id: str | None = None
+    ) -> DomainBudget:
         """Convertit un modèle SQLAlchemy vers le domaine.
 
         Args:
@@ -97,7 +102,9 @@ class BudgetRepositoryAdapter(BudgetRepositoryPort):
 
             # Filtrer par org_id si fourni
             if org_id:
-                query = query.where((DBBudget.org_id == org_id) | (DBBudget.org_id.is_(None)))
+                query = query.where(
+                    (DBBudget.org_id == org_id) | (DBBudget.org_id.is_(None))
+                )
 
             result = await session.execute(query)
             db_budgets = result.scalars().all()
@@ -129,7 +136,9 @@ class BudgetRepositoryAdapter(BudgetRepositoryPort):
             app_id = ""
             if db_budget.application_id:
                 app_result = await session.execute(
-                    select(Application).where(Application.id == db_budget.application_id)
+                    select(Application).where(
+                        Application.id == db_budget.application_id
+                    )
                 )
                 app = app_result.scalar_one_or_none()
                 if app:
@@ -259,7 +268,9 @@ class BudgetRepositoryAdapter(BudgetRepositoryPort):
             app_id = ""
             if db_budget.application_id:
                 app_result = await session.execute(
-                    select(Application).where(Application.id == db_budget.application_id)
+                    select(Application).where(
+                        Application.id == db_budget.application_id
+                    )
                 )
                 app = app_result.scalar_one_or_none()
                 if app:

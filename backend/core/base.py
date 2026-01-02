@@ -214,7 +214,10 @@ class ConditionMatcher:
             return False, f"Input tokens ({input_tokens}) exceeds limit ({max_input})"
 
         if max_output and output_tokens and output_tokens > max_output:
-            return False, f"Output tokens ({output_tokens}) exceeds limit ({max_output})"
+            return (
+                False,
+                f"Output tokens ({output_tokens}) exceeds limit ({max_output})",
+            )
 
         if max_total:
             total = (input_tokens or 0) + (output_tokens or 0)
@@ -255,7 +258,10 @@ class ConditionMatcher:
             in_range = current_hour >= start or current_hour < end
 
         if not in_range:
-            return False, f"Current hour ({current_hour}) outside allowed hours ({start}-{end})"
+            return (
+                False,
+                f"Current hour ({current_hour}) outside allowed hours ({start}-{end})",
+            )
 
         return True, None
 
@@ -363,7 +369,9 @@ def _check_model_condition(
 
     allowed = conditions.get("models") or conditions.get("allowed_models")
     denied = conditions.get("blocked_models")
-    ok, reason = ConditionMatcher.matches_model(context.model, allowed=allowed, denied=denied)
+    ok, reason = ConditionMatcher.matches_model(
+        context.model, allowed=allowed, denied=denied
+    )
 
     if ok:
         result.add_match(f"model={context.model}")
@@ -378,7 +386,9 @@ def _check_feature_condition(
     if "features" not in conditions:
         return
 
-    ok, reason = ConditionMatcher.matches_feature(context.feature, allowed=conditions["features"])
+    ok, reason = ConditionMatcher.matches_feature(
+        context.feature, allowed=conditions["features"]
+    )
 
     if ok:
         result.add_match(f"feature={context.feature}")
@@ -390,7 +400,9 @@ def _check_token_condition(
     conditions: dict, context: ConditionContext, result: ConditionMatchResult
 ) -> None:
     """Check token limits condition and update result."""
-    max_input = conditions.get("max_context_tokens") or conditions.get("max_input_tokens")
+    max_input = conditions.get("max_context_tokens") or conditions.get(
+        "max_input_tokens"
+    )
     max_output = conditions.get("max_tokens") or conditions.get("max_output_tokens")
 
     if not max_input and not max_output:
@@ -438,7 +450,9 @@ def _check_app_condition(
     if "app_id" not in conditions:
         return
 
-    ok, reason = ConditionMatcher.matches_app(context.app_id, allowed=[conditions["app_id"]])
+    ok, reason = ConditionMatcher.matches_app(
+        context.app_id, allowed=[conditions["app_id"]]
+    )
 
     if ok:
         result.add_match(f"app_id={context.app_id}")
@@ -446,7 +460,9 @@ def _check_app_condition(
         result.add_failure("app_id", reason or "App not allowed")
 
 
-def match_conditions(conditions: dict, context: ConditionContext) -> ConditionMatchResult:
+def match_conditions(
+    conditions: dict, context: ConditionContext
+) -> ConditionMatchResult:
     """
     Match all conditions against a context.
 

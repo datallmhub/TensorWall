@@ -12,7 +12,12 @@ from backend.ports.policy_repository import PolicyRepositoryPort
 from backend.ports.budget_repository import BudgetRepositoryPort
 from backend.ports.cache import CachePort
 from backend.ports.audit_log import AuditLogPort, AuditEntry
-from backend.ports.metrics import MetricsPort, RequestMetrics, DecisionMetrics, BudgetMetrics
+from backend.ports.metrics import (
+    MetricsPort,
+    RequestMetrics,
+    DecisionMetrics,
+    BudgetMetrics,
+)
 from backend.ports.abuse_detector import AbuseDetectorPort, AbuseCheckResult, AbuseType
 from backend.ports.feature_registry import (
     FeatureRegistryPort,

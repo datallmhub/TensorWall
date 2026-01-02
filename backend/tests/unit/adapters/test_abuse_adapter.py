@@ -175,7 +175,12 @@ class TestSelfReferenceDetection:
         """Vérifie que le contenu normal n'est pas bloqué."""
         adapter = InMemoryAbuseAdapter()
 
-        messages = [{"role": "user", "content": "Write a Python function to calculate factorial"}]
+        messages = [
+            {
+                "role": "user",
+                "content": "Write a Python function to calculate factorial",
+            }
+        ]
         result = await adapter.check_request("app-1", "chat", "gpt-4", messages)
 
         assert result.blocked is False
@@ -293,7 +298,9 @@ class TestDataClearing:
         adapter = InMemoryAbuseAdapter()
 
         # Generate some data
-        await adapter.check_request("app-1", "chat", "gpt-4", [{"role": "user", "content": "Hi"}])
+        await adapter.check_request(
+            "app-1", "chat", "gpt-4", [{"role": "user", "content": "Hi"}]
+        )
         await adapter.record_error("app-1")
         await adapter.record_cost("app-1", 0.01)
 
@@ -338,8 +345,12 @@ class TestBlockManagement:
         )
 
         # Trigger rate limit
-        await adapter.check_request("app-1", "chat", "gpt-4", [{"role": "user", "content": "1"}])
-        await adapter.check_request("app-1", "chat", "gpt-4", [{"role": "user", "content": "2"}])
+        await adapter.check_request(
+            "app-1", "chat", "gpt-4", [{"role": "user", "content": "1"}]
+        )
+        await adapter.check_request(
+            "app-1", "chat", "gpt-4", [{"role": "user", "content": "2"}]
+        )
         result = await adapter.check_request(
             "app-1", "chat", "gpt-4", [{"role": "user", "content": "3"}]
         )
@@ -369,11 +380,17 @@ class TestAppIsolation:
     @pytest.mark.asyncio
     async def test_different_apps_isolated(self):
         """Vérifie que les données sont isolées entre applications."""
-        adapter = InMemoryAbuseAdapter(max_requests_per_minute=2, dedup_window_seconds=0)
+        adapter = InMemoryAbuseAdapter(
+            max_requests_per_minute=2, dedup_window_seconds=0
+        )
 
         # app-1 reaches limit
-        await adapter.check_request("app-1", "chat", "gpt-4", [{"role": "user", "content": "1"}])
-        await adapter.check_request("app-1", "chat", "gpt-4", [{"role": "user", "content": "2"}])
+        await adapter.check_request(
+            "app-1", "chat", "gpt-4", [{"role": "user", "content": "1"}]
+        )
+        await adapter.check_request(
+            "app-1", "chat", "gpt-4", [{"role": "user", "content": "2"}]
+        )
         result1 = await adapter.check_request(
             "app-1", "chat", "gpt-4", [{"role": "user", "content": "3"}]
         )

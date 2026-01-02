@@ -85,7 +85,9 @@ async def list_budgets(
 
     if app_id:
         # Find application by app_id
-        app_result = await db.execute(select(Application).where(Application.app_id == app_id))
+        app_result = await db.execute(
+            select(Application).where(Application.app_id == app_id)
+        )
         app = app_result.scalar_one_or_none()
         if app:
             query = query.where(Budget.application_id == app.id)
@@ -137,7 +139,9 @@ async def create_budget(
     Action is always 'block' when exceeded.
     """
     # Find application
-    app_result = await db.execute(select(Application).where(Application.app_id == request.app_id))
+    app_result = await db.execute(
+        select(Application).where(Application.app_id == request.app_id)
+    )
     app = app_result.scalar_one_or_none()
 
     if not app:
@@ -199,13 +203,16 @@ async def get_budget(
 ):
     """Get a specific budget by UUID."""
     result = await db.execute(
-        select(Budget).options(selectinload(Budget.application)).where(Budget.uuid == budget_uuid)
+        select(Budget)
+        .options(selectinload(Budget.application))
+        .where(Budget.uuid == budget_uuid)
     )
     budget = result.scalar_one_or_none()
 
     if not budget:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Budget '{budget_uuid}' not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Budget '{budget_uuid}' not found",
         )
 
     app_id_str = ""
@@ -244,13 +251,16 @@ async def update_budget(
     Can only update the limit, not the scope or other advanced options.
     """
     result = await db.execute(
-        select(Budget).options(selectinload(Budget.application)).where(Budget.uuid == budget_uuid)
+        select(Budget)
+        .options(selectinload(Budget.application))
+        .where(Budget.uuid == budget_uuid)
     )
     budget = result.scalar_one_or_none()
 
     if not budget:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Budget '{budget_uuid}' not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Budget '{budget_uuid}' not found",
         )
 
     if request.limit_usd is not None:
@@ -296,7 +306,8 @@ async def delete_budget(
 
     if not budget:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Budget '{budget_uuid}' not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Budget '{budget_uuid}' not found",
         )
 
     await db.delete(budget)
@@ -314,13 +325,16 @@ async def reset_budget(
     Useful for manual reset at start of billing period.
     """
     result = await db.execute(
-        select(Budget).options(selectinload(Budget.application)).where(Budget.uuid == budget_uuid)
+        select(Budget)
+        .options(selectinload(Budget.application))
+        .where(Budget.uuid == budget_uuid)
     )
     budget = result.scalar_one_or_none()
 
     if not budget:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Budget '{budget_uuid}' not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Budget '{budget_uuid}' not found",
         )
 
     budget.current_spend_usd = 0.0

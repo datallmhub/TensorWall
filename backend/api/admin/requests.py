@@ -121,7 +121,11 @@ async def list_request_logs(
 
     # Apply pagination
     offset = (page - 1) * page_size
-    query = query.order_by(desc(LLMRequestTrace.timestamp_start)).offset(offset).limit(page_size)
+    query = (
+        query.order_by(desc(LLMRequestTrace.timestamp_start))
+        .offset(offset)
+        .limit(page_size)
+    )
 
     result = await db.execute(query)
     traces = result.scalars().all()
@@ -177,7 +181,9 @@ async def get_request_stats(
     allowed_requests = allowed_result.scalar_one()
 
     warned_result = await db.execute(
-        select(func.count(LLMRequestTrace.id)).where(LLMRequestTrace.decision == TraceDecision.WARN)
+        select(func.count(LLMRequestTrace.id)).where(
+            LLMRequestTrace.decision == TraceDecision.WARN
+        )
     )
     warned_requests = warned_result.scalar_one()
 
@@ -188,13 +194,19 @@ async def get_request_stats(
     )
     blocked_requests = blocked_result.scalar_one()
 
-    apps_result = await db.execute(select(func.count(func.distinct(LLMRequestTrace.app_id))))
+    apps_result = await db.execute(
+        select(func.count(func.distinct(LLMRequestTrace.app_id)))
+    )
     unique_apps = apps_result.scalar_one()
 
-    models_result = await db.execute(select(func.count(func.distinct(LLMRequestTrace.model))))
+    models_result = await db.execute(
+        select(func.count(func.distinct(LLMRequestTrace.model)))
+    )
     unique_models = models_result.scalar_one()
 
-    block_rate = round(blocked_requests / total_requests * 100, 1) if total_requests > 0 else 0
+    block_rate = (
+        round(blocked_requests / total_requests * 100, 1) if total_requests > 0 else 0
+    )
 
     return {
         "total_requests": total_requests,
@@ -217,13 +229,17 @@ async def get_filter_values(
 
     # Get apps from applications table
     apps_result = await db.execute(
-        select(Application.app_id).where(Application.is_active.is_(True)).order_by(Application.app_id)
+        select(Application.app_id)
+        .where(Application.is_active.is_(True))
+        .order_by(Application.app_id)
     )
     apps = [row[0] for row in apps_result.fetchall()]
 
     # Get models from llm_models table
     models_result = await db.execute(
-        select(LLMModel.model_id).where(LLMModel.is_enabled.is_(True)).order_by(LLMModel.model_id)
+        select(LLMModel.model_id)
+        .where(LLMModel.is_enabled.is_(True))
+        .order_by(LLMModel.model_id)
     )
     models = [row[0] for row in models_result.fetchall()]
 
@@ -255,7 +271,8 @@ async def get_request_detail(
 
     if not trace:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Request {request_id} not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Request {request_id} not found",
         )
 
     return RequestDetail(

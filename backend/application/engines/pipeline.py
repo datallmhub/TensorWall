@@ -199,7 +199,9 @@ class GovernancePipeline:
 
         return True
 
-    def _check_contract(self, builder: DecisionBuilder, request: PipelineRequest) -> bool:
+    def _check_contract(
+        self, builder: DecisionBuilder, request: PipelineRequest
+    ) -> bool:
         """Validate the usage contract."""
         start = time.time()
 
@@ -221,7 +223,10 @@ class GovernancePipeline:
             result=DecisionType.ALLOW if not issues else DecisionType.DENY,
             matched=bool(issues),
             condition="required fields present",
-            actual_value={"app_id": request.contract.app_id, "feature": request.contract.feature},
+            actual_value={
+                "app_id": request.contract.app_id,
+                "feature": request.contract.feature,
+            },
             duration_ms=duration_ms,
         )
 
@@ -236,7 +241,9 @@ class GovernancePipeline:
 
         return True
 
-    def _check_features(self, builder: DecisionBuilder, request: PipelineRequest) -> Optional[dict]:
+    def _check_features(
+        self, builder: DecisionBuilder, request: PipelineRequest
+    ) -> Optional[dict]:
         """Check feature enforcement."""
         start = time.time()
 
@@ -272,7 +279,9 @@ class GovernancePipeline:
 
         return {"allowed": True, "warnings": result.warnings}
 
-    def _check_security(self, builder: DecisionBuilder, request: PipelineRequest) -> Optional[dict]:
+    def _check_security(
+        self, builder: DecisionBuilder, request: PipelineRequest
+    ) -> Optional[dict]:
         """Run security checks and store full analysis."""
         start = time.time()
         warnings = []
@@ -356,9 +365,11 @@ class GovernancePipeline:
                 matched=True,
                 rule_name=rule_name,
                 condition=f"model={request.model}, max_tokens={request.max_tokens}",
-                duration_ms=duration_ms / len(result.matched_rules)
-                if result.matched_rules
-                else duration_ms,
+                duration_ms=(
+                    duration_ms / len(result.matched_rules)
+                    if result.matched_rules
+                    else duration_ms
+                ),
             )
 
         if result.decision == PolicyDecision.DENY:
@@ -389,7 +400,9 @@ class GovernancePipeline:
         # Estimate input tokens if not provided
         input_tokens = request.input_tokens
         if not input_tokens:
-            input_tokens = sum(len(m.get("content", "").split()) * 1.3 for m in request.messages)
+            input_tokens = sum(
+                len(m.get("content", "").split()) * 1.3 for m in request.messages
+            )
 
         # Estimate cost
         estimated_cost = budget_engine.estimate_cost(

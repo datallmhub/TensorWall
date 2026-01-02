@@ -41,6 +41,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class LangfuseTrace:
     """Represents a Langfuse trace."""
+
     id: str
     name: str
     input: Optional[dict] = None
@@ -54,6 +55,7 @@ class LangfuseTrace:
 @dataclass
 class LangfuseGeneration:
     """Represents a Langfuse generation (LLM call)."""
+
     trace_id: str
     name: str
     model: str
@@ -251,8 +253,10 @@ class LangfuseAdapter:
                     "input": input_tokens,
                     "output": output_tokens,
                     "total": input_tokens + output_tokens,
-                    "inputCost": cost_usd * (input_tokens / (input_tokens + output_tokens + 0.001)),
-                    "outputCost": cost_usd * (output_tokens / (input_tokens + output_tokens + 0.001)),
+                    "inputCost": cost_usd
+                    * (input_tokens / (input_tokens + output_tokens + 0.001)),
+                    "outputCost": cost_usd
+                    * (output_tokens / (input_tokens + output_tokens + 0.001)),
                     "totalCost": cost_usd,
                 },
                 "metadata": {

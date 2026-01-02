@@ -117,13 +117,19 @@ class PostgresRequestTracingAdapter(RequestTracingPort):
 
                     # Track tokens from LLM response
                     if "input_tokens" in data:
-                        self._active_traces[trace_id]["input_tokens"] = data["input_tokens"]
+                        self._active_traces[trace_id]["input_tokens"] = data[
+                            "input_tokens"
+                        ]
                     if "output_tokens" in data:
-                        self._active_traces[trace_id]["output_tokens"] = data["output_tokens"]
+                        self._active_traces[trace_id]["output_tokens"] = data[
+                            "output_tokens"
+                        ]
 
                 return span
 
-        return TraceSpan(step=step, started_at=now, ended_at=now, status=status, error=error)
+        return TraceSpan(
+            step=step, started_at=now, ended_at=now, status=status, error=error
+        )
 
     async def update_trace(
         self,
@@ -226,7 +232,9 @@ class PostgresRequestTracingAdapter(RequestTracingPort):
         trace.total_duration_ms = (now - trace.started_at).total_seconds() * 1000
 
         # Persist to database with correct outcome
-        await self._persist_trace(trace_data, final_outcome, error=error, blocked_by=step)
+        await self._persist_trace(
+            trace_data, final_outcome, error=error, blocked_by=step
+        )
 
         # Clean up
         del self._active_traces[trace_id]
@@ -289,7 +297,9 @@ class PostgresRequestTracingAdapter(RequestTracingPort):
                 return trace_data["trace"]
 
         async with get_db_context() as db:
-            stmt = select(LLMRequestTrace).where(LLMRequestTrace.request_id == request_id)
+            stmt = select(LLMRequestTrace).where(
+                LLMRequestTrace.request_id == request_id
+            )
             result = await db.execute(stmt)
             db_trace = result.scalar_one_or_none()
 
@@ -404,13 +414,19 @@ class PostgresRequestTracingAdapter(RequestTracingPort):
             status=status,
             started_at=db_trace.timestamp_start,
             ended_at=db_trace.timestamp_end,
-            total_duration_ms=float(db_trace.latency_ms) if db_trace.latency_ms else None,
-            outcome="allowed" if db_trace.decision == TraceDecision.ALLOW else "blocked",
+            total_duration_ms=(
+                float(db_trace.latency_ms) if db_trace.latency_ms else None
+            ),
+            outcome=(
+                "allowed" if db_trace.decision == TraceDecision.ALLOW else "blocked"
+            ),
             context=db_trace.extra_metadata or {},
             error=db_trace.error_message,
         )
 
-    def _estimate_cost(self, model: str | None, input_tokens: int, output_tokens: int) -> float:
+    def _estimate_cost(
+        self, model: str | None, input_tokens: int, output_tokens: int
+    ) -> float:
         """Estimate cost based on model and tokens."""
         if not model:
             return 0.0
@@ -445,7 +461,9 @@ class PostgresRequestTracingAdapter(RequestTracingPort):
             return "openai"
         elif "claude" in model_lower or "anthropic" in model_lower:
             return "anthropic"
-        elif "llama" in model_lower or "mistral" in model_lower or "qwen" in model_lower:
+        elif (
+            "llama" in model_lower or "mistral" in model_lower or "qwen" in model_lower
+        ):
             return "ollama"
         elif "phi" in model_lower or "local" in model_lower:
             return "lmstudio"

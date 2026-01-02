@@ -26,7 +26,11 @@ class RequestTraceService:
         logger.debug(f"Trace created: {request_id}")
 
     async def update_decision(
-        self, request_id: str, decision: str, reasons: Optional[List[str]] = None, **kwargs
+        self,
+        request_id: str,
+        decision: str,
+        reasons: Optional[List[str]] = None,
+        **kwargs,
     ) -> None:
         """Update trace with decision."""
         logger.debug(f"Trace decision updated: {request_id} -> {decision}")

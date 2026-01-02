@@ -72,7 +72,9 @@ class AnthropicAdapter(LLMProviderPort):
 
         return self._parse_response(data)
 
-    async def chat_stream(self, request: ChatRequest, api_key: str) -> AsyncIterator[str]:
+    async def chat_stream(
+        self, request: ChatRequest, api_key: str
+    ) -> AsyncIterator[str]:
         """Stream une réponse de chat completion depuis Anthropic.
 
         Convertit le format de streaming Anthropic vers le format OpenAI
@@ -123,7 +125,9 @@ class AnthropicAdapter(LLMProviderPort):
             "Content-Type": "application/json",
         }
 
-    def _convert_messages(self, messages: list[ChatMessage]) -> tuple[str | None, list[dict]]:
+    def _convert_messages(
+        self, messages: list[ChatMessage]
+    ) -> tuple[str | None, list[dict]]:
         """Convertit les messages du format OpenAI vers le format Anthropic.
 
         Anthropic gère le message système séparément des autres messages.

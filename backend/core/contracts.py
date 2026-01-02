@@ -30,7 +30,9 @@ class UsageContract(BaseModel):
     action: ActionType = Field(..., description="Type d'action LLM")
     environment: Environment = Field(..., description="Environnement d'exécution")
     owner: Optional[str] = Field(None, description="Équipe/service responsable")
-    request_id: Optional[str] = Field(None, description="ID de requête pour traçabilité")
+    request_id: Optional[str] = Field(
+        None, description="ID de requête pour traçabilité"
+    )
 
     class Config:
         json_schema_extra = {
@@ -74,4 +76,6 @@ def validate_contract(contract: Optional[UsageContract]) -> ContractValidationRe
     if contract.environment == Environment.PRODUCTION and not contract.owner:
         warnings.append("owner is recommended for production environments")
 
-    return ContractValidationResult(valid=len(errors) == 0, errors=errors, warnings=warnings)
+    return ContractValidationResult(
+        valid=len(errors) == 0, errors=errors, warnings=warnings
+    )

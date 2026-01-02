@@ -79,7 +79,9 @@ class ManageBudgetsUseCase:
             is_exceeded=budget.is_exceeded,
         )
 
-    async def list_budgets(self, app_id: str, org_id: str | None = None) -> list[BudgetDTO]:
+    async def list_budgets(
+        self, app_id: str, org_id: str | None = None
+    ) -> list[BudgetDTO]:
         """Liste les budgets pour une application."""
         budgets = await self.budget_repository.get_budgets_for_app(
             app_id=app_id,
@@ -96,7 +98,9 @@ class ManageBudgetsUseCase:
 
     async def create_budget(self, command: CreateBudgetCommand) -> BudgetDTO:
         """Crée un nouveau budget."""
-        period = BudgetPeriod(command.period) if command.period else BudgetPeriod.MONTHLY
+        period = (
+            BudgetPeriod(command.period) if command.period else BudgetPeriod.MONTHLY
+        )
         budget = Budget(
             id="",  # Sera généré par le repository
             app_id=command.app_id,

@@ -53,7 +53,9 @@ RISKY_PROMPTS = [
 ]
 
 
-def make_request(prompt: str, app: str, feature: str, model: str, user: str, env: str) -> dict:
+def make_request(
+    prompt: str, app: str, feature: str, model: str, user: str, env: str
+) -> dict:
     """Make a chat completion request to the gateway."""
 
     payload = {
@@ -80,7 +82,9 @@ def make_request(prompt: str, app: str, feature: str, model: str, user: str, env
         return {
             "status": response.status_code,
             "success": response.status_code == 200,
-            "data": response.json() if response.status_code in [200, 403, 400] else None,
+            "data": (
+                response.json() if response.status_code in [200, 403, 400] else None
+            ),
         }
     except Exception as e:
         return {"status": 500, "success": False, "error": str(e)}
@@ -103,7 +107,9 @@ def generate_normal_requests(count: int = 50):
 
         if result["success"]:
             success_count += 1
-            print(f"  ✓ [{i + 1}/{count}] {app}/{feature} - {model} - {result['status']}")
+            print(
+                f"  ✓ [{i + 1}/{count}] {app}/{feature} - {model} - {result['status']}"
+            )
         else:
             print(
                 f"  ✗ [{i + 1}/{count}] {app}/{feature} - ERROR: {result.get('error', result['status'])}"
@@ -134,9 +140,13 @@ def generate_risky_requests(count: int = 10):
             blocked_count += 1
             print(f"  ✓ [{i + 1}/{count}] BLOCKED - {prompt[:50]}...")
         elif result["status"] == 200:
-            print(f"  ⚠ [{i + 1}/{count}] ALLOWED (should be blocked!) - {prompt[:50]}...")
+            print(
+                f"  ⚠ [{i + 1}/{count}] ALLOWED (should be blocked!) - {prompt[:50]}..."
+            )
         else:
-            print(f"  ✗ [{i + 1}/{count}] ERROR: {result.get('error', result['status'])}")
+            print(
+                f"  ✗ [{i + 1}/{count}] ERROR: {result.get('error', result['status'])}"
+            )
 
         time.sleep(0.1)
 

@@ -213,11 +213,15 @@ async def change_password(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    if not user.password_hash or not verify_password(data.current_password, user.password_hash):
+    if not user.password_hash or not verify_password(
+        data.current_password, user.password_hash
+    ):
         raise HTTPException(status_code=400, detail="Current password is incorrect")
 
     if len(data.new_password) < 8:
-        raise HTTPException(status_code=400, detail="Password must be at least 8 characters")
+        raise HTTPException(
+            status_code=400, detail="Password must be at least 8 characters"
+        )
 
     user.password_hash = hash_password(data.new_password)
     user.updated_at = datetime.utcnow()
@@ -247,7 +251,9 @@ async def set_initial_password(
         raise HTTPException(status_code=400, detail="Password already set")
 
     if len(data.password) < 8:
-        raise HTTPException(status_code=400, detail="Password must be at least 8 characters")
+        raise HTTPException(
+            status_code=400, detail="Password must be at least 8 characters"
+        )
 
     user.password_hash = hash_password(data.password)
     user.updated_at = datetime.utcnow()

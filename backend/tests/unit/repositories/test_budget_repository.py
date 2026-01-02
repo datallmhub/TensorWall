@@ -55,7 +55,9 @@ async def app_repo(session: AsyncSession) -> ApplicationRepository:
 
 
 @pytest_asyncio.fixture
-async def test_app(app_repo: ApplicationRepository, session: AsyncSession) -> Application:
+async def test_app(
+    app_repo: ApplicationRepository, session: AsyncSession
+) -> Application:
     """Create a test application."""
     app = await app_repo.create(
         app_id="test-app",
@@ -99,7 +101,9 @@ class TestBudgetRepositoryCreate:
         assert budget.application_id == test_app.id
 
     @pytest.mark.asyncio
-    async def test_create_user_budget(self, repo: BudgetRepository, session: AsyncSession):
+    async def test_create_user_budget(
+        self, repo: BudgetRepository, session: AsyncSession
+    ):
         """Test creating a user budget."""
         budget = await repo.create_user_budget(
             user_email="user@example.com",
@@ -112,7 +116,9 @@ class TestBudgetRepositoryCreate:
         assert budget.user_email == "user@example.com"
 
     @pytest.mark.asyncio
-    async def test_create_org_budget(self, repo: BudgetRepository, session: AsyncSession):
+    async def test_create_org_budget(
+        self, repo: BudgetRepository, session: AsyncSession
+    ):
         """Test creating an organization budget."""
         budget = await repo.create_org_budget(
             org_id="org-123",
@@ -312,7 +318,9 @@ class TestBudgetPeriodReset:
     """Tests for budget period reset functionality."""
 
     @pytest.mark.asyncio
-    async def test_hourly_budget_reset(self, repo: BudgetRepository, session: AsyncSession):
+    async def test_hourly_budget_reset(
+        self, repo: BudgetRepository, session: AsyncSession
+    ):
         """Test hourly budget period reset."""
         budget = await repo.create(
             soft_limit_usd=50.0,
@@ -332,7 +340,9 @@ class TestBudgetPeriodReset:
         assert found.current_spend_usd == 5.0  # Only the new charge
 
     @pytest.mark.asyncio
-    async def test_daily_budget_no_reset(self, repo: BudgetRepository, session: AsyncSession):
+    async def test_daily_budget_no_reset(
+        self, repo: BudgetRepository, session: AsyncSession
+    ):
         """Test that daily budget doesn't reset before period ends."""
         budget = await repo.create(
             soft_limit_usd=50.0,

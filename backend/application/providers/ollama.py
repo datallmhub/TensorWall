@@ -32,7 +32,9 @@ class OllamaProvider(LLMProvider):
     """
 
     def __init__(self, base_url: Optional[str] = None):
-        self.base_url = base_url or getattr(settings, "ollama_api_url", "http://localhost:11434")
+        self.base_url = base_url or getattr(
+            settings, "ollama_api_url", "http://localhost:11434"
+        )
         self._cached_models: List[str] = []
 
     def supports_model(self, model: str) -> bool:
@@ -125,7 +127,9 @@ class OllamaProvider(LLMProvider):
                 finish_reason=data["choices"][0].get("finish_reason", "stop"),
             )
 
-    async def chat_stream(self, request: ChatRequest, api_key: str = "") -> AsyncIterator[str]:
+    async def chat_stream(
+        self, request: ChatRequest, api_key: str = ""
+    ) -> AsyncIterator[str]:
         """Stream chat completion from Ollama."""
 
         async with httpx.AsyncClient(timeout=120.0) as client:

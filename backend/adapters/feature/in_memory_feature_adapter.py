@@ -128,7 +128,9 @@ class InMemoryFeatureAdapter(FeatureRegistryPort):
             )
 
         # Vérifier le modèle
-        if feature.allowed_models and not self._model_matches(model, feature.allowed_models):
+        if feature.allowed_models and not self._model_matches(
+            model, feature.allowed_models
+        ):
             return FeatureCheckResult(
                 allowed=False,
                 decision=FeatureDecision.DENIED_MODEL_NOT_ALLOWED,
@@ -138,7 +140,10 @@ class InMemoryFeatureAdapter(FeatureRegistryPort):
             )
 
         # Vérifier l'environnement
-        if feature.allowed_environments and environment not in feature.allowed_environments:
+        if (
+            feature.allowed_environments
+            and environment not in feature.allowed_environments
+        ):
             return FeatureCheckResult(
                 allowed=False,
                 decision=FeatureDecision.DENIED_ENVIRONMENT_NOT_ALLOWED,

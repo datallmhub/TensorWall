@@ -76,7 +76,9 @@ class Settings(BaseSettings):
                 issues.append("CRITICAL: Using default jwt_secret_key in production!")
 
             if not self.cookie_secure:
-                issues.append("SECURITY: cookie_secure=False in production (should be True for HTTPS)")
+                issues.append(
+                    "SECURITY: cookie_secure=False in production (should be True for HTTPS)"
+                )
 
             if "localhost" in str(self.cors_origins):
                 issues.append("WARNING: localhost in CORS origins in production")

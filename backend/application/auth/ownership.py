@@ -33,7 +33,9 @@ class ResourceNotFoundError(HTTPException):
         )
 
 
-async def get_user_by_uuid(db: AsyncSession, user_uuid: UUID, requesting_user_id: int) -> User:
+async def get_user_by_uuid(
+    db: AsyncSession, user_uuid: UUID, requesting_user_id: int
+) -> User:
     """
     Get user by UUID - OSS: all users can access all users.
     """
@@ -47,7 +49,9 @@ async def get_user_by_uuid(db: AsyncSession, user_uuid: UUID, requesting_user_id
     return user
 
 
-async def get_application_by_uuid(db: AsyncSession, app_uuid: UUID, user_id: int) -> Application:
+async def get_application_by_uuid(
+    db: AsyncSession, app_uuid: UUID, user_id: int
+) -> Application:
     """
     Get application by UUID - OSS: all users can access all applications.
     """
@@ -61,7 +65,9 @@ async def get_application_by_uuid(db: AsyncSession, app_uuid: UUID, user_id: int
     return app
 
 
-async def get_application_by_app_id(db: AsyncSession, app_id: str, user_id: int) -> Application:
+async def get_application_by_app_id(
+    db: AsyncSession, app_id: str, user_id: int
+) -> Application:
     """
     Get application by app_id - OSS: all users can access all applications.
     """
@@ -75,7 +81,9 @@ async def get_application_by_app_id(db: AsyncSession, app_id: str, user_id: int)
     return app
 
 
-async def get_budget_by_uuid(db: AsyncSession, budget_uuid: UUID, user_id: int) -> Budget:
+async def get_budget_by_uuid(
+    db: AsyncSession, budget_uuid: UUID, user_id: int
+) -> Budget:
     """
     Get budget by UUID - OSS: all users can access all budgets.
     """
@@ -89,7 +97,9 @@ async def get_budget_by_uuid(db: AsyncSession, budget_uuid: UUID, user_id: int) 
     return budget
 
 
-async def get_policy_by_uuid(db: AsyncSession, policy_uuid: UUID, user_id: int) -> PolicyRule:
+async def get_policy_by_uuid(
+    db: AsyncSession, policy_uuid: UUID, user_id: int
+) -> PolicyRule:
     """
     Get policy by UUID - OSS: all users can access all policies.
     """
@@ -103,25 +113,32 @@ async def get_policy_by_uuid(db: AsyncSession, policy_uuid: UUID, user_id: int) 
     return policy
 
 
-async def can_modify_user(db: AsyncSession, target_user: User, requesting_user_id: int) -> bool:
+async def can_modify_user(
+    db: AsyncSession, target_user: User, requesting_user_id: int
+) -> bool:
     """
     Check if requesting user can modify target user - OSS: always True.
     """
     return True
 
 
-async def can_delete_user(db: AsyncSession, target_user: User, requesting_user_id: int) -> bool:
+async def can_delete_user(
+    db: AsyncSession, target_user: User, requesting_user_id: int
+) -> bool:
     """
     Check if requesting user can delete target user - OSS: always True except self.
     """
     if target_user.id == requesting_user_id:
         raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Cannot delete your own account"
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Cannot delete your own account",
         )
     return True
 
 
-async def validate_budget_scope_access(db: AsyncSession, budget: Budget, user_id: int) -> bool:
+async def validate_budget_scope_access(
+    db: AsyncSession, budget: Budget, user_id: int
+) -> bool:
     """
     Validate that user has access to budget - OSS: always True.
     """

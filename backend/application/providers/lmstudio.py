@@ -157,10 +157,15 @@ class LMStudioProvider(LLMProvider):
             from sqlalchemy import select
 
             async with get_db_context() as db:
-                result = await db.execute(select(LLMModel).where(LLMModel.model_id == model_id))
+                result = await db.execute(
+                    select(LLMModel).where(LLMModel.model_id == model_id)
+                )
                 model = result.scalar_one_or_none()
                 if model and model.base_url:
-                    _model_config_cache[model_id] = (model.base_url, model.provider_model_id)
+                    _model_config_cache[model_id] = (
+                        model.base_url,
+                        model.provider_model_id,
+                    )
                     return model.base_url, model.provider_model_id
         except Exception:
             pass
@@ -210,7 +215,9 @@ class LMStudioProvider(LLMProvider):
                 finish_reason=data["choices"][0].get("finish_reason", "stop"),
             )
 
-    async def chat_stream(self, request: ChatRequest, api_key: str = "") -> AsyncIterator[str]:
+    async def chat_stream(
+        self, request: ChatRequest, api_key: str = ""
+    ) -> AsyncIterator[str]:
         """Stream chat completion from LM Studio."""
         # Get model config (may have custom base_url)
         base_url, provider_model_id = await self._get_model_config(request.model)

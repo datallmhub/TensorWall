@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 
 class PluginCheckResult(BaseModel):
     """Aggregated result from all plugins."""
+
     safe: bool
     risk_level: str
     risk_score: float
@@ -207,8 +208,7 @@ class PluginManager:
         # Run async plugins concurrently
         if async_tasks:
             results = await asyncio.gather(
-                *[task for _, task in async_tasks],
-                return_exceptions=True
+                *[task for _, task in async_tasks], return_exceptions=True
             )
 
             for (name, _), result in zip(async_tasks, results):
@@ -239,7 +239,12 @@ class PluginManager:
             )
 
         # Calculate max risk level
-        risk_order = [RiskLevel.LOW, RiskLevel.MEDIUM, RiskLevel.HIGH, RiskLevel.CRITICAL]
+        risk_order = [
+            RiskLevel.LOW,
+            RiskLevel.MEDIUM,
+            RiskLevel.HIGH,
+            RiskLevel.CRITICAL,
+        ]
         max_risk = max(findings, key=lambda f: risk_order.index(RiskLevel(f.severity)))
 
         # Calculate risk score
@@ -250,14 +255,17 @@ class PluginManager:
             RiskLevel.CRITICAL: 1.0,
         }
         total_weight = sum(
-            weights.get(RiskLevel(f.severity), 0.1) * f.confidence
-            for f in findings
+            weights.get(RiskLevel(f.severity), 0.1) * f.confidence for f in findings
         )
         risk_score = min(total_weight / 2.0, 1.0)
 
         return PluginCheckResult(
             safe=False,
-            risk_level=max_risk.severity if isinstance(max_risk.severity, str) else max_risk.severity.value,
+            risk_level=(
+                max_risk.severity
+                if isinstance(max_risk.severity, str)
+                else max_risk.severity.value
+            ),
             risk_score=round(risk_score, 2),
             findings=findings,
             plugins_executed=plugins_executed,
