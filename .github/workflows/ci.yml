@@ -196,11 +196,11 @@ jobs:
 
       - name: Set up Docker Compose
         run: |
-          docker-compose version
+          docker compose version
 
       - name: Start services
         run: |
-          docker-compose up -d --build
+          docker compose up -d --build
           sleep 30
 
       - name: Health check
@@ -216,9 +216,9 @@ jobs:
       - name: Show logs on failure
         if: failure()
         run: |
-          docker-compose logs
+          docker compose logs
 
       - name: Stop services
         if: always()
         run: |
-          docker-compose down -v
+          docker compose down -v
