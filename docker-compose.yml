@@ -29,6 +29,10 @@ services:
       - DATABASE_URL=postgresql+asyncpg://postgres:postgres@db:5432/tensorwall
       - REDIS_URL=redis://redis:6379
       - CORS_ORIGINS=["http://localhost:3000","http://localhost:5173","https://frontend.tensorwall.orb.local","http://frontend.tensorwall.orb.local","https://gateway.tensorwall.orb.local","http://gateway.tensorwall.orb.local"]
+      # Langfuse integration (optional - set keys to enable)
+      - LANGFUSE_PUBLIC_KEY=${LANGFUSE_PUBLIC_KEY:-}
+      - LANGFUSE_SECRET_KEY=${LANGFUSE_SECRET_KEY:-}
+      - LANGFUSE_HOST=${LANGFUSE_HOST:-https://cloud.langfuse.com}
     depends_on:
       init:
         condition: service_completed_successfully
