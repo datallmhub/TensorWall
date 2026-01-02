@@ -98,14 +98,13 @@ class MockBudgetRepository(BudgetRepositoryPort):
         self._budgets = [b for b in self._budgets if b.id != budget_id]
         return True
 
-    async def record_usage(
-        self, budget_id: str, cost_usd: float, tokens: int = 0
-    ) -> Budget | None:
+    async def record_usage(self, budget_id: str, amount_usd: float) -> Budget:
         for b in self._budgets:
             if b.id == budget_id:
-                b.spent_usd += cost_usd
+                b.spent_usd += amount_usd
                 return b
-        return None
+        # Return a dummy budget if not found (shouldn't happen in tests)
+        return Budget(id=budget_id, limit_usd=0, spent_usd=amount_usd)
 
 
 class MockLLMProvider(LLMProviderPort):
