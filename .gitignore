@@ -80,3 +80,6 @@ test_*.local.py
 alembic/versions/__pycache__/
 docs/SECURITY.md
 docs/ARCHITECTURE.md
+
+# Hugging Face Space
+huggingface-space/
