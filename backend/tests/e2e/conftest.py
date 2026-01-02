@@ -183,7 +183,9 @@ async def seed_application(db: AsyncSession) -> Application:
 
 
 @pytest_asyncio.fixture
-async def seed_api_key(db: AsyncSession, seed_application: Application) -> tuple[ApiKey, str]:
+async def seed_api_key(
+    db: AsyncSession, seed_application: Application
+) -> tuple[ApiKey, str]:
     """Create a test API key and return both the model and raw key."""
     raw_key = "gw_test_e2e_key_12345678901234567890"
     api_key = ApiKey(
@@ -340,7 +342,9 @@ async def seed_usage_logs(
             model=seed_model.model_id,
             provider="openai",
             feature="chat" if i % 2 == 0 else "completion",
-            environment=Environment.DEVELOPMENT if i % 3 == 0 else Environment.PRODUCTION,
+            environment=(
+                Environment.DEVELOPMENT if i % 3 == 0 else Environment.PRODUCTION
+            ),
             input_tokens=100 + i * 10,
             output_tokens=50 + i * 5,
             cost_usd=0.001 + i * 0.0001,
@@ -370,7 +374,9 @@ async def seed_traces(
             request_id=str(uuid.uuid4()),
             app_id=seed_application.app_id,
             feature="chat" if i % 2 == 0 else "completion",
-            environment=Environment.DEVELOPMENT if i % 3 == 0 else Environment.PRODUCTION,
+            environment=(
+                Environment.DEVELOPMENT if i % 3 == 0 else Environment.PRODUCTION
+            ),
             provider="openai",
             model="gpt-4o",
             input_tokens=100 + i * 10,
@@ -383,7 +389,9 @@ async def seed_traces(
             latency_ms=200 + i * 20,
             status=TraceStatus.SUCCESS if i % 3 != 2 else TraceStatus.BLOCKED,
             timestamp_start=now - timedelta(hours=i),
-            timestamp_end=now - timedelta(hours=i) + timedelta(milliseconds=200 + i * 20),
+            timestamp_end=now
+            - timedelta(hours=i)
+            + timedelta(milliseconds=200 + i * 20),
         )
         traces.append(trace)
         db.add(trace)

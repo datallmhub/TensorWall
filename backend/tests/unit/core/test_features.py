@@ -1010,7 +1010,9 @@ class TestFeatureRegistryAsync:
         """Test get_registry_async loads from DB when not cached."""
         registry = FeatureRegistry()
 
-        with patch.object(registry, "load_from_db", new_callable=AsyncMock) as mock_load:
+        with patch.object(
+            registry, "load_from_db", new_callable=AsyncMock
+        ) as mock_load:
             mock_registry = ApplicationFeatureRegistry(app_id="new-app")
             mock_load.return_value = mock_registry
 
@@ -1156,7 +1158,9 @@ class TestFeatureRegistryLoadFromDb:
         """Test that DB exception returns permissive registry."""
         registry = FeatureRegistry()
 
-        with patch("backend.db.session.get_db_context", side_effect=Exception("DB error")):
+        with patch(
+            "backend.db.session.get_db_context", side_effect=Exception("DB error")
+        ):
             result = await registry.load_from_db("test-app")
 
         assert result is not None
@@ -1216,7 +1220,10 @@ class TestFeatureRegistryLoadFromDb:
         mock_db_context = AsyncMock()
         mock_db = AsyncMock()
         mock_result = MagicMock()
-        mock_result.scalars.return_value.all.return_value = [mock_feature1, mock_feature2]
+        mock_result.scalars.return_value.all.return_value = [
+            mock_feature1,
+            mock_feature2,
+        ]
         mock_db.execute.return_value = mock_result
 
         mock_db_context.__aenter__.return_value = mock_db

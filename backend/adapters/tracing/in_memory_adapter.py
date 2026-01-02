@@ -148,7 +148,9 @@ class InMemoryRequestTracingAdapter(RequestTracingPort):
         trace.status = TraceStatus.COMPLETED
         trace.outcome = outcome
         trace.ended_at = datetime.now()
-        trace.total_duration_ms = (trace.ended_at - trace.started_at).total_seconds() * 1000
+        trace.total_duration_ms = (
+            trace.ended_at - trace.started_at
+        ).total_seconds() * 1000
 
         if final_data:
             trace.context.update(final_data)
@@ -171,7 +173,9 @@ class InMemoryRequestTracingAdapter(RequestTracingPort):
         trace.error = error
         trace.outcome = outcome or "error"
         trace.ended_at = datetime.now()
-        trace.total_duration_ms = (trace.ended_at - trace.started_at).total_seconds() * 1000
+        trace.total_duration_ms = (
+            trace.ended_at - trace.started_at
+        ).total_seconds() * 1000
 
         if step:
             trace.context["failed_at_step"] = step
@@ -229,10 +233,16 @@ class InMemoryRequestTracingAdapter(RequestTracingPort):
         if filters.end_date and trace.started_at > filters.end_date:
             return False
         if filters.min_duration_ms is not None:
-            if trace.total_duration_ms is None or trace.total_duration_ms < filters.min_duration_ms:
+            if (
+                trace.total_duration_ms is None
+                or trace.total_duration_ms < filters.min_duration_ms
+            ):
                 return False
         if filters.max_duration_ms is not None:
-            if trace.total_duration_ms is None or trace.total_duration_ms > filters.max_duration_ms:
+            if (
+                trace.total_duration_ms is None
+                or trace.total_duration_ms > filters.max_duration_ms
+            ):
                 return False
         if filters.has_error is not None:
             has_error = trace.error is not None

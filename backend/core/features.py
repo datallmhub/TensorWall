@@ -95,7 +95,9 @@ class FeatureValidationResult(BaseModel):
     feature_name: Optional[str] = None
 
     # Decision explainability
-    decision_code: str  # ALLOWED, DENIED_UNKNOWN_FEATURE, DENIED_ACTION_NOT_ALLOWED, etc.
+    decision_code: (
+        str  # ALLOWED, DENIED_UNKNOWN_FEATURE, DENIED_ACTION_NOT_ALLOWED, etc.
+    )
     reason: str
 
     # Contraintes appliquées
@@ -176,7 +178,10 @@ class FeatureRegistry:
                         features[f.feature_id] = feature_def
 
                         # First feature with chat action becomes default
-                        if not default_feature_id and FeatureAction.CHAT in allowed_actions:
+                        if (
+                            not default_feature_id
+                            and FeatureAction.CHAT in allowed_actions
+                        ):
                             default_feature_id = f.feature_id
 
                     registry = ApplicationFeatureRegistry(
@@ -204,7 +209,9 @@ class FeatureRegistry:
             self._registries[app_id] = registry
             return registry
 
-    async def get_registry_async(self, app_id: str) -> Optional[ApplicationFeatureRegistry]:
+    async def get_registry_async(
+        self, app_id: str
+    ) -> Optional[ApplicationFeatureRegistry]:
         """Get registry, loading from DB if needed."""
         if app_id not in self._registries:
             await self.load_from_db(app_id)
@@ -317,7 +324,9 @@ class FeatureRegistry:
             )
 
         # 2. Résoudre la feature ("unknown" = no feature specified)
-        effective_feature_id = None if feature_id in (None, "", "unknown") else feature_id
+        effective_feature_id = (
+            None if feature_id in (None, "", "unknown") else feature_id
+        )
         resolved_feature_id = effective_feature_id or registry.default_feature_id
 
         if not resolved_feature_id:
@@ -375,7 +384,9 @@ class FeatureRegistry:
 
         # 6. Vérifier le modèle using ConditionMatcher
         if feature.allowed_models:
-            ok, reason = ConditionMatcher.matches_model(model, allowed=feature.allowed_models)
+            ok, reason = ConditionMatcher.matches_model(
+                model, allowed=feature.allowed_models
+            )
             if not ok:
                 return FeatureValidationResult(
                     allowed=False,
@@ -419,7 +430,9 @@ class FeatureRegistry:
                     feature_name=feature.name,
                     decision_code="DENIED_COST_LIMIT_EXCEEDED",
                     reason=f"Estimated cost (${estimated_cost_usd:.4f}) exceeds feature limit (${feature.max_cost_per_request_usd:.4f})",
-                    applied_constraints={"max_cost_usd": feature.max_cost_per_request_usd},
+                    applied_constraints={
+                        "max_cost_usd": feature.max_cost_per_request_usd
+                    },
                 )
 
         # 10. Tout est OK
@@ -444,7 +457,9 @@ class FeatureRegistry:
             applied_constraints=applied_constraints,
         )
 
-    def get_feature_constraints(self, app_id: str, feature_id: str) -> Optional[FeatureDefinition]:
+    def get_feature_constraints(
+        self, app_id: str, feature_id: str
+    ) -> Optional[FeatureDefinition]:
         """Récupère les contraintes d'une feature."""
         registry = self._registries.get(app_id)
         if not registry:

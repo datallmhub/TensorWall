@@ -78,7 +78,9 @@ async def get_current_user_id(
     """
     # Development fallback
     if not authorization:
-        logger.warning("No Authorization header, using default user_id=1 for development")
+        logger.warning(
+            "No Authorization header, using default user_id=1 for development"
+        )
         return 1
 
     # Extract token from "Bearer <token>"
@@ -116,12 +118,14 @@ async def require_user_id(
     """
     if not authorization:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Missing Authorization header"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Missing Authorization header",
         )
 
     if not authorization.startswith("Bearer "):
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid Authorization header format"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid Authorization header format",
         )
 
     token = authorization.replace("Bearer ", "")

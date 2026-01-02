@@ -50,7 +50,9 @@ class TestApplicationRepository:
     """Tests for ApplicationRepository."""
 
     @pytest.mark.asyncio
-    async def test_create_application(self, repo: ApplicationRepository, session: AsyncSession):
+    async def test_create_application(
+        self, repo: ApplicationRepository, session: AsyncSession
+    ):
         """Test creating an application."""
         app = await repo.create(
             app_id="test-app",
@@ -106,7 +108,9 @@ class TestApplicationRepository:
         assert found is None
 
     @pytest.mark.asyncio
-    async def test_get_by_app_id(self, repo: ApplicationRepository, session: AsyncSession):
+    async def test_get_by_app_id(
+        self, repo: ApplicationRepository, session: AsyncSession
+    ):
         """Test getting an application by app_id."""
         await repo.create(
             app_id="test-app",
@@ -139,7 +143,9 @@ class TestApplicationRepository:
         assert len(apps) == 2
 
     @pytest.mark.asyncio
-    async def test_list_all_active_only(self, repo: ApplicationRepository, session: AsyncSession):
+    async def test_list_all_active_only(
+        self, repo: ApplicationRepository, session: AsyncSession
+    ):
         """Test listing active applications only."""
         await repo.create(app_id="app1", name="App 1", owner="team1")
         app2 = await repo.create(app_id="app2", name="App 2", owner="team2")
@@ -165,7 +171,9 @@ class TestApplicationRepository:
         assert len(apps) == 2
 
     @pytest.mark.asyncio
-    async def test_update_application(self, repo: ApplicationRepository, session: AsyncSession):
+    async def test_update_application(
+        self, repo: ApplicationRepository, session: AsyncSession
+    ):
         """Test updating an application."""
         await repo.create(
             app_id="test-app",
@@ -196,7 +204,9 @@ class TestApplicationRepository:
         assert updated is None
 
     @pytest.mark.asyncio
-    async def test_update_partial(self, repo: ApplicationRepository, session: AsyncSession):
+    async def test_update_partial(
+        self, repo: ApplicationRepository, session: AsyncSession
+    ):
         """Test partial update of an application."""
         await repo.create(
             app_id="test-app",
@@ -216,7 +226,9 @@ class TestApplicationRepository:
         assert updated.description == "Original description"  # Unchanged
 
     @pytest.mark.asyncio
-    async def test_delete_soft(self, repo: ApplicationRepository, session: AsyncSession):
+    async def test_delete_soft(
+        self, repo: ApplicationRepository, session: AsyncSession
+    ):
         """Test soft deleting an application."""
         await repo.create(
             app_id="test-app",
@@ -242,7 +254,9 @@ class TestApplicationRepository:
         assert result is False
 
     @pytest.mark.asyncio
-    async def test_hard_delete(self, repo: ApplicationRepository, session: AsyncSession):
+    async def test_hard_delete(
+        self, repo: ApplicationRepository, session: AsyncSession
+    ):
         """Test permanently deleting an application."""
         await repo.create(
             app_id="test-app",
@@ -267,7 +281,9 @@ class TestApplicationRepository:
         assert result is False
 
     @pytest.mark.asyncio
-    async def test_get_by_uuid(self, repo: ApplicationRepository, session: AsyncSession):
+    async def test_get_by_uuid(
+        self, repo: ApplicationRepository, session: AsyncSession
+    ):
         """Test getting an application by UUID."""
         app = await repo.create(
             app_id="test-app",
@@ -282,7 +298,9 @@ class TestApplicationRepository:
         assert found.id == app.id
 
     @pytest.mark.asyncio
-    async def test_default_providers(self, repo: ApplicationRepository, session: AsyncSession):
+    async def test_default_providers(
+        self, repo: ApplicationRepository, session: AsyncSession
+    ):
         """Test default allowed providers."""
         app = await repo.create(
             app_id="test-app",

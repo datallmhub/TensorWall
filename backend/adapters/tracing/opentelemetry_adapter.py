@@ -80,7 +80,9 @@ class OpenTelemetryTracingAdapter(RequestTracingPort):
 
             # Add exporters
             if self._otlp_endpoint:
-                from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import OTLPSpanExporter
+                from opentelemetry.exporter.otlp.proto.grpc.trace_exporter import (
+                    OTLPSpanExporter,
+                )
                 from opentelemetry.sdk.trace.export import BatchSpanProcessor
 
                 otlp_exporter = OTLPSpanExporter(endpoint=self._otlp_endpoint)
@@ -92,14 +94,19 @@ class OpenTelemetryTracingAdapter(RequestTracingPort):
 
                 jaeger_exporter = JaegerExporter(
                     agent_host_name=self._jaeger_endpoint.split(":")[0],
-                    agent_port=int(self._jaeger_endpoint.split(":")[1])
-                    if ":" in self._jaeger_endpoint
-                    else 6831,
+                    agent_port=(
+                        int(self._jaeger_endpoint.split(":")[1])
+                        if ":" in self._jaeger_endpoint
+                        else 6831
+                    ),
                 )
                 provider.add_span_processor(BatchSpanProcessor(jaeger_exporter))
 
             if console_export:
-                from opentelemetry.sdk.trace.export import ConsoleSpanExporter, SimpleSpanProcessor
+                from opentelemetry.sdk.trace.export import (
+                    ConsoleSpanExporter,
+                    SimpleSpanProcessor,
+                )
 
                 provider.add_span_processor(SimpleSpanProcessor(ConsoleSpanExporter()))
 
@@ -269,7 +276,9 @@ class OpenTelemetryTracingAdapter(RequestTracingPort):
 
         trace = self._traces[trace_id]
         trace.ended_at = datetime.now()
-        trace.total_duration_ms = (trace.ended_at - trace.started_at).total_seconds() * 1000
+        trace.total_duration_ms = (
+            trace.ended_at - trace.started_at
+        ).total_seconds() * 1000
         trace.status = TraceStatus.COMPLETED
         trace.outcome = outcome
         if final_data:
@@ -301,7 +310,9 @@ class OpenTelemetryTracingAdapter(RequestTracingPort):
 
         trace = self._traces[trace_id]
         trace.ended_at = datetime.now()
-        trace.total_duration_ms = (trace.ended_at - trace.started_at).total_seconds() * 1000
+        trace.total_duration_ms = (
+            trace.ended_at - trace.started_at
+        ).total_seconds() * 1000
         trace.status = TraceStatus.FAILED
         trace.error = error
         trace.outcome = outcome or "error"
@@ -358,9 +369,17 @@ class OpenTelemetryTracingAdapter(RequestTracingPort):
         if filters.end_date:
             results = [t for t in results if t.started_at <= filters.end_date]
         if filters.min_duration_ms is not None:
-            results = [t for t in results if (t.total_duration_ms or 0) >= filters.min_duration_ms]
+            results = [
+                t
+                for t in results
+                if (t.total_duration_ms or 0) >= filters.min_duration_ms
+            ]
         if filters.max_duration_ms is not None:
-            results = [t for t in results if (t.total_duration_ms or 0) <= filters.max_duration_ms]
+            results = [
+                t
+                for t in results
+                if (t.total_duration_ms or 0) <= filters.max_duration_ms
+            ]
         if filters.has_error is not None:
             if filters.has_error:
                 results = [t for t in results if t.error is not None]

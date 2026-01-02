@@ -55,7 +55,14 @@ class BedrockProvider(LLMProvider):
         # Direct Bedrock model IDs contain a dot (e.g., "anthropic.claude-3-5-sonnet-20241022-v2:0")
         if "." in model and any(
             model.startswith(prefix)
-            for prefix in ("anthropic.", "meta.", "mistral.", "amazon.", "cohere.", "ai21.")
+            for prefix in (
+                "anthropic.",
+                "meta.",
+                "mistral.",
+                "amazon.",
+                "cohere.",
+                "ai21.",
+            )
         ):
             return True
         return False
@@ -89,7 +96,9 @@ class BedrockProvider(LLMProvider):
             # Log warning but continue - database lookup is optional
             import logging
 
-            logging.getLogger(__name__).debug(f"DB lookup failed for model {model}: {e}")
+            logging.getLogger(__name__).debug(
+                f"DB lookup failed for model {model}: {e}"
+            )
 
         # Fallback: strip prefix and hope it works
         if model.startswith("bedrock/"):
@@ -110,7 +119,9 @@ class BedrockProvider(LLMProvider):
             if msg.role == "system":
                 system_messages.append({"text": msg.content})
             else:
-                conversation_messages.append({"role": msg.role, "content": [{"text": msg.content}]})
+                conversation_messages.append(
+                    {"role": msg.role, "content": [{"text": msg.content}]}
+                )
 
         body = {
             "modelId": model_id,
@@ -153,7 +164,9 @@ class BedrockProvider(LLMProvider):
 
         # Run boto3 sync call in thread pool
         loop = asyncio.get_event_loop()
-        response = await loop.run_in_executor(_executor, self._sync_chat, request, model_id)
+        response = await loop.run_in_executor(
+            _executor, self._sync_chat, request, model_id
+        )
 
         # Extract content from response
         content = ""
@@ -172,7 +185,9 @@ class BedrockProvider(LLMProvider):
         stop_reason = response.get("stopReason", "end_turn")
 
         return ChatResponse(
-            id=response.get("ResponseMetadata", {}).get("RequestId", "bedrock-response"),
+            id=response.get("ResponseMetadata", {}).get(
+                "RequestId", "bedrock-response"
+            ),
             model=model_id,
             content=content,
             input_tokens=input_tokens,
@@ -199,7 +214,9 @@ class BedrockProvider(LLMProvider):
                 elif "messageStop" in event:
                     break
 
-    async def chat_stream(self, request: ChatRequest, api_key: str) -> AsyncIterator[str]:
+    async def chat_stream(
+        self, request: ChatRequest, api_key: str
+    ) -> AsyncIterator[str]:
         """
         Stream chat completion from AWS Bedrock.
 

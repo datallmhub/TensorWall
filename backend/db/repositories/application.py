@@ -39,17 +39,23 @@ class ApplicationRepository:
 
     async def get_by_id(self, id: int) -> Optional[Application]:
         """Get application by internal ID (internal use only)."""
-        result = await self.session.execute(select(Application).where(Application.id == id))
+        result = await self.session.execute(
+            select(Application).where(Application.id == id)
+        )
         return result.scalar_one_or_none()
 
     async def get_by_uuid(self, uuid: UUID) -> Optional[Application]:
         """Get application by UUID (public API use)."""
-        result = await self.session.execute(select(Application).where(Application.uuid == uuid))
+        result = await self.session.execute(
+            select(Application).where(Application.uuid == uuid)
+        )
         return result.scalar_one_or_none()
 
     async def get_by_app_id(self, app_id: str) -> Optional[Application]:
         """Get application by app_id."""
-        result = await self.session.execute(select(Application).where(Application.app_id == app_id))
+        result = await self.session.execute(
+            select(Application).where(Application.app_id == app_id)
+        )
         return result.scalar_one_or_none()
 
     async def get_by_app_id_with_relations(self, app_id: str) -> Optional[Application]:

@@ -153,7 +153,10 @@ class TestRetentionManager:
         )
         manager.set_policy(custom_policy)
 
-        assert manager.policies[DataCategory.REQUEST_LOGS].period == RetentionPeriod.IMMEDIATE
+        assert (
+            manager.policies[DataCategory.REQUEST_LOGS].period
+            == RetentionPeriod.IMMEDIATE
+        )
 
     def test_get_policy(self):
         """Test getting a policy."""

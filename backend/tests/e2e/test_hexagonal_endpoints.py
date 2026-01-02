@@ -79,7 +79,9 @@ class MockBudgetRepository(BudgetRepositoryPort):
     def __init__(self, budgets: list[Budget] = None):
         self._budgets = budgets or []
 
-    async def get_budgets_for_app(self, app_id: str, org_id: str | None = None) -> list[Budget]:
+    async def get_budgets_for_app(
+        self, app_id: str, org_id: str | None = None
+    ) -> list[Budget]:
         return [b for b in self._budgets if b.app_id == app_id or not b.app_id]
 
     async def get_budget_by_id(self, budget_id: str) -> Budget | None:
@@ -96,7 +98,9 @@ class MockBudgetRepository(BudgetRepositoryPort):
         self._budgets = [b for b in self._budgets if b.id != budget_id]
         return True
 
-    async def record_usage(self, budget_id: str, cost_usd: float, tokens: int = 0) -> Budget | None:
+    async def record_usage(
+        self, budget_id: str, cost_usd: float, tokens: int = 0
+    ) -> Budget | None:
         for b in self._budgets:
             if b.id == budget_id:
                 b.spent_usd += cost_usd
@@ -190,7 +194,9 @@ class TestEvaluateLLMRequestIntegration:
         )
 
     @pytest.mark.asyncio
-    async def test_full_flow_success(self, policy_evaluator, budget_checker, basic_command):
+    async def test_full_flow_success(
+        self, policy_evaluator, budget_checker, basic_command
+    ):
         """Test successful request through full use case flow."""
         use_case = EvaluateLLMRequestUseCase(
             policy_evaluator=policy_evaluator,
@@ -211,7 +217,9 @@ class TestEvaluateLLMRequestIntegration:
         assert result.response.content == "Hello! I'm a mock response."
 
     @pytest.mark.asyncio
-    async def test_policy_blocks_request(self, policy_evaluator, budget_checker, basic_command):
+    async def test_policy_blocks_request(
+        self, policy_evaluator, budget_checker, basic_command
+    ):
         """Test request blocked by policy."""
         blocking_rule = PolicyRule(
             id="block-gpt4",
@@ -236,7 +244,9 @@ class TestEvaluateLLMRequestIntegration:
         assert result.response is None
 
     @pytest.mark.asyncio
-    async def test_budget_blocks_request(self, policy_evaluator, budget_checker, basic_command):
+    async def test_budget_blocks_request(
+        self, policy_evaluator, budget_checker, basic_command
+    ):
         """Test request blocked by exhausted budget."""
         exhausted_budget = Budget(
             id="exhausted",
@@ -288,7 +298,9 @@ class TestEvaluateLLMRequestIntegration:
         assert result.dry_run_result["would_be_allowed"] is True
 
     @pytest.mark.asyncio
-    async def test_metrics_recorded(self, policy_evaluator, budget_checker, basic_command):
+    async def test_metrics_recorded(
+        self, policy_evaluator, budget_checker, basic_command
+    ):
         """Test metrics are recorded during execution."""
         metrics = InMemoryMetricsAdapter()
 
@@ -339,7 +351,9 @@ class TestCreateEmbeddingsIntegration:
         )
 
     @pytest.mark.asyncio
-    async def test_full_flow_success(self, policy_evaluator, budget_checker, basic_command):
+    async def test_full_flow_success(
+        self, policy_evaluator, budget_checker, basic_command
+    ):
         """Test successful embedding through full use case flow."""
         use_case = CreateEmbeddingsUseCase(
             policy_evaluator=policy_evaluator,
@@ -359,7 +373,9 @@ class TestCreateEmbeddingsIntegration:
         assert len(result.response.data) == 1
 
     @pytest.mark.asyncio
-    async def test_policy_blocks_embedding(self, policy_evaluator, budget_checker, basic_command):
+    async def test_policy_blocks_embedding(
+        self, policy_evaluator, budget_checker, basic_command
+    ):
         """Test embedding blocked by policy."""
         blocking_rule = PolicyRule(
             id="block-embeddings",
@@ -383,7 +399,9 @@ class TestCreateEmbeddingsIntegration:
         assert result.outcome == EmbeddingOutcome.DENIED_POLICY
 
     @pytest.mark.asyncio
-    async def test_budget_blocks_embedding(self, policy_evaluator, budget_checker, basic_command):
+    async def test_budget_blocks_embedding(
+        self, policy_evaluator, budget_checker, basic_command
+    ):
         """Test embedding blocked by exhausted budget."""
         exhausted_budget = Budget(
             id="exhausted",
@@ -443,7 +461,9 @@ class TestCreateEmbeddingsIntegration:
         assert len(result.response.data) == 3
 
     @pytest.mark.asyncio
-    async def test_metrics_recorded(self, policy_evaluator, budget_checker, basic_command):
+    async def test_metrics_recorded(
+        self, policy_evaluator, budget_checker, basic_command
+    ):
         """Test metrics are recorded for embeddings."""
         metrics = InMemoryMetricsAdapter()
 

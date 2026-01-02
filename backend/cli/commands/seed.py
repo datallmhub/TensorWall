@@ -75,7 +75,6 @@ async def _seed_development() -> dict:
 
     try:
         from sqlalchemy import select
-        from passlib.context import CryptContext
         from backend.db.session import AsyncSessionLocal
         from backend.db.models import (
             Application,
@@ -85,8 +84,6 @@ async def _seed_development() -> dict:
             Feature,
             UsageRecord,
             Organization,
-            User,
-            UserRole,
             Environment,
             BudgetPeriod,
             PolicyAction,
@@ -95,13 +92,14 @@ async def _seed_development() -> dict:
         )
         from backend.core.auth import hash_api_key
 
-        pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
         async with AsyncSessionLocal() as session:
             # Check if already seeded
             result = await session.execute(select(Application).limit(1))
             if result.scalar_one_or_none():
-                return {"success": False, "error": "Data already exists. Use 'seed clean' first."}
+                return {
+                    "success": False,
+                    "error": "Data already exists. Use 'seed clean' first.",
+                }
 
             # Generate unique API key
             api_key_raw = f"gw_{secrets.token_urlsafe(24)}"
@@ -162,7 +160,11 @@ async def _seed_development() -> dict:
                 description="Allow all models for development",
                 application_id=app.id,
                 conditions={
-                    "allowed_models": ["gpt-4o-mini", "gpt-4o", "claude-3-5-sonnet-20241022"]
+                    "allowed_models": [
+                        "gpt-4o-mini",
+                        "gpt-4o",
+                        "claude-3-5-sonnet-20241022",
+                    ]
                 },
                 action=PolicyAction.ALLOW,
                 priority=100,

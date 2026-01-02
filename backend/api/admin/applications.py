@@ -107,7 +107,9 @@ def _to_response(app: Application) -> ApplicationResponse:
 # ============================================================================
 
 
-@router.post("", response_model=ApplicationResponse, status_code=status.HTTP_201_CREATED)
+@router.post(
+    "", response_model=ApplicationResponse, status_code=status.HTTP_201_CREATED
+)
 async def create_application(
     data: ApplicationCreate,
     db: AsyncSession = Depends(get_db),
@@ -262,7 +264,9 @@ async def delete_application(
 
 
 @router.post(
-    "/{app_uuid}/keys", response_model=ApiKeyCreatedResponse, status_code=status.HTTP_201_CREATED
+    "/{app_uuid}/keys",
+    response_model=ApiKeyCreatedResponse,
+    status_code=status.HTTP_201_CREATED,
 )
 async def create_api_key(
     app_uuid: UUID,  # ✅ UUID parameter

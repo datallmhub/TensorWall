@@ -143,7 +143,9 @@ async def lookup_credentials_db(api_key: str) -> Optional[AppCredentials]:
                 logger.warning(f"API key disabled: {key_prefix}...")
                 return None
 
-            if api_key_record.expires_at and api_key_record.expires_at < datetime.now(timezone.utc):
+            if api_key_record.expires_at and api_key_record.expires_at < datetime.now(
+                timezone.utc
+            ):
                 logger.warning(f"API key expired: {key_prefix}...")
                 return None
 
@@ -199,7 +201,9 @@ async def authenticate(
     """
     if not api_key:
         return AuthResult(
-            authenticated=False, error="Missing X-API-Key header", error_code="AUTH_MISSING_KEY"
+            authenticated=False,
+            error="Missing X-API-Key header",
+            error_code="AUTH_MISSING_KEY",
         )
 
     # Database lookup only - no hardcoded fallback
@@ -213,14 +217,18 @@ async def authenticate(
 
     if not credentials.is_active:
         return AuthResult(
-            authenticated=False, error="API key is deactivated", error_code="AUTH_KEY_DISABLED"
+            authenticated=False,
+            error="API key is deactivated",
+            error_code="AUTH_KEY_DISABLED",
         )
 
     # Extract LLM key from Authorization header if not stored
     if authorization and authorization.startswith("Bearer "):
         credentials.llm_api_key = authorization.replace("Bearer ", "")
 
-    return AuthResult(authenticated=True, app_id=credentials.app_id, credentials=credentials)
+    return AuthResult(
+        authenticated=True, app_id=credentials.app_id, credentials=credentials
+    )
 
 
 def require_auth(auth_result: AuthResult) -> AppCredentials:
@@ -314,7 +322,11 @@ async def rotate_api_key(
     Returns the new raw key and ApiKey record.
     """
     # Get old key
-    stmt = select(ApiKey).options(selectinload(ApiKey.application)).where(ApiKey.id == old_key_id)
+    stmt = (
+        select(ApiKey)
+        .options(selectinload(ApiKey.application))
+        .where(ApiKey.id == old_key_id)
+    )
     result = await db.execute(stmt)
     old_key = result.scalar_one_or_none()
 
@@ -332,7 +344,9 @@ async def rotate_api_key(
     )
 
     # Schedule old key expiration
-    old_key.expires_at = datetime.now(timezone.utc) + timedelta(hours=grace_period_hours)
+    old_key.expires_at = datetime.now(timezone.utc) + timedelta(
+        hours=grace_period_hours
+    )
 
     # Invalidate cache for old key
     await invalidate_credentials_cache(old_key.key_hash)

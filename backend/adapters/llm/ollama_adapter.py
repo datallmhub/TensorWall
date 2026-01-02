@@ -54,7 +54,9 @@ class OllamaAdapter(LLMProviderPort):
             base_url: URL de base de l'API Ollama (défaut: http://localhost:11434)
             timeout: Timeout des requêtes en secondes (défaut: 120.0)
         """
-        self._base_url = base_url or getattr(settings, "ollama_api_url", self.DEFAULT_BASE_URL)
+        self._base_url = base_url or getattr(
+            settings, "ollama_api_url", self.DEFAULT_BASE_URL
+        )
         self._timeout = timeout or self.DEFAULT_TIMEOUT
 
     @property
@@ -104,7 +106,9 @@ class OllamaAdapter(LLMProviderPort):
 
         return self._parse_response(data)
 
-    async def chat_stream(self, request: ChatRequest, api_key: str = "") -> AsyncIterator[str]:
+    async def chat_stream(
+        self, request: ChatRequest, api_key: str = ""
+    ) -> AsyncIterator[str]:
         """Stream une réponse de chat completion depuis Ollama.
 
         Args:
@@ -143,7 +147,9 @@ class OllamaAdapter(LLMProviderPort):
 
         payload = {
             "model": model,
-            "messages": [{"role": msg.role, "content": msg.content} for msg in request.messages],
+            "messages": [
+                {"role": msg.role, "content": msg.content} for msg in request.messages
+            ],
             "stream": stream,
         }
 

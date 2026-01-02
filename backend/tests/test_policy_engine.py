@@ -149,7 +149,9 @@ class TestPolicyEngineEvaluate:
         ]
         engine = PolicyEngine(rules=rules)
 
-        result = engine.evaluate(mock_contract, mock_credentials, "gpt-4o", max_tokens=2000)
+        result = engine.evaluate(
+            mock_contract, mock_credentials, "gpt-4o", max_tokens=2000
+        )
 
         assert result.decision == PolicyDecision.DENY
         assert "token-limit" in result.matched_rules
@@ -167,7 +169,9 @@ class TestPolicyEngineEvaluate:
         ]
         engine = PolicyEngine(rules=rules)
 
-        result = engine.evaluate(mock_contract, mock_credentials, "gpt-4o", max_tokens=2000)
+        result = engine.evaluate(
+            mock_contract, mock_credentials, "gpt-4o", max_tokens=2000
+        )
 
         assert result.decision == PolicyDecision.ALLOW
         assert len(result.warnings) > 0
@@ -184,7 +188,9 @@ class TestPolicyEngineEvaluate:
         ]
         engine = PolicyEngine(rules=rules)
 
-        result = engine.evaluate(mock_contract, mock_credentials, "gpt-4o", max_tokens=500)
+        result = engine.evaluate(
+            mock_contract, mock_credentials, "gpt-4o", max_tokens=500
+        )
 
         assert result.decision == PolicyDecision.ALLOW
 
@@ -257,7 +263,9 @@ class TestPolicyEngineEvaluate:
             feature="chat",
             action=ActionType.GENERATE,
         )
-        result = engine.evaluate(chat_contract, mock_credentials, "gpt-4o", max_tokens=200)
+        result = engine.evaluate(
+            chat_contract, mock_credentials, "gpt-4o", max_tokens=200
+        )
         assert result.decision == PolicyDecision.DENY
 
         # Embedding feature should not match
@@ -267,7 +275,9 @@ class TestPolicyEngineEvaluate:
             feature="embedding",
             action=ActionType.EMBED,
         )
-        result = engine.evaluate(embed_contract, mock_credentials, "gpt-4o", max_tokens=200)
+        result = engine.evaluate(
+            embed_contract, mock_credentials, "gpt-4o", max_tokens=200
+        )
         assert result.decision == PolicyDecision.ALLOW
 
     def test_evaluate_app_filter(self, mock_credentials):
@@ -311,7 +321,9 @@ class TestPolicyEngineEvaluate:
         assert "not allowed" in result.reason
         assert "test-app" in result.reason
 
-    def test_evaluate_multiple_rules_first_deny_wins(self, mock_contract, mock_credentials):
+    def test_evaluate_multiple_rules_first_deny_wins(
+        self, mock_contract, mock_credentials
+    ):
         """First matching DENY rule should terminate evaluation."""
         rules = [
             PolicyRule(
@@ -326,7 +338,9 @@ class TestPolicyEngineEvaluate:
         ]
         engine = PolicyEngine(rules=rules)
 
-        result = engine.evaluate(mock_contract, mock_credentials, "gpt-4o", max_tokens=200)
+        result = engine.evaluate(
+            mock_contract, mock_credentials, "gpt-4o", max_tokens=200
+        )
 
         assert result.decision == PolicyDecision.DENY
         assert "deny-all" in result.matched_rules

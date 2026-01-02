@@ -79,7 +79,9 @@ class AnthropicProvider(LLMProvider):
                 finish_reason=data["stop_reason"] or "stop",
             )
 
-    async def chat_stream(self, request: ChatRequest, api_key: str) -> AsyncIterator[str]:
+    async def chat_stream(
+        self, request: ChatRequest, api_key: str
+    ) -> AsyncIterator[str]:
         """Stream chat completion from Anthropic (converted to OpenAI format)."""
 
         system, messages = self._convert_messages(request.messages)
@@ -120,7 +122,9 @@ class AnthropicProvider(LLMProvider):
                                     openai_chunk = {
                                         "choices": [
                                             {
-                                                "delta": {"content": delta.get("text", "")},
+                                                "delta": {
+                                                    "content": delta.get("text", "")
+                                                },
                                                 "index": 0,
                                             }
                                         ]

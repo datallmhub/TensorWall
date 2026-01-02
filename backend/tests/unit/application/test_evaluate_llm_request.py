@@ -98,7 +98,9 @@ class MockBudgetRepository(BudgetRepositoryPort):
 class MockLLMProvider(LLMProviderPort):
     """Mock du provider LLM."""
 
-    def __init__(self, response: ChatResponse | None = None, error: Exception | None = None):
+    def __init__(
+        self, response: ChatResponse | None = None, error: Exception | None = None
+    ):
         self._response = response or ChatResponse(
             id="mock-response-id",
             model="mock-model",
@@ -256,7 +258,10 @@ class TestEvaluateLLMRequestUseCase:
         assert result.outcome == RequestOutcome.DENIED_POLICY
         assert result.response is None
         assert result.error_message is not None
-        assert "policy" in result.error_message.lower() or "Block GPT-4" in result.error_message
+        assert (
+            "policy" in result.error_message.lower()
+            or "Block GPT-4" in result.error_message
+        )
 
     @pytest.mark.asyncio
     async def test_policy_warn_allows_request(
@@ -318,7 +323,9 @@ class TestEvaluateLLMRequestUseCase:
         assert result.error_message is not None
 
     @pytest.mark.asyncio
-    async def test_dry_run_does_not_call_llm(self, policy_evaluator, budget_checker, audit_adapter):
+    async def test_dry_run_does_not_call_llm(
+        self, policy_evaluator, budget_checker, audit_adapter
+    ):
         """Vérifie que dry_run retourne sans appeler le LLM."""
         llm_mock = MockLLMProvider(error=Exception("Should not be called"))
 
@@ -407,7 +414,9 @@ class TestAuditLogging:
     """Tests de l'enregistrement des audits."""
 
     @pytest.mark.asyncio
-    async def test_allowed_request_is_logged(self, use_case, basic_command, audit_adapter):
+    async def test_allowed_request_is_logged(
+        self, use_case, basic_command, audit_adapter
+    ):
         """Vérifie qu'une requête autorisée est loguée."""
         await use_case.execute(basic_command)
 
@@ -418,7 +427,9 @@ class TestAuditLogging:
         assert entry.outcome == "allowed"
 
     @pytest.mark.asyncio
-    async def test_denied_request_is_logged(self, policy_evaluator, budget_checker, basic_command):
+    async def test_denied_request_is_logged(
+        self, policy_evaluator, budget_checker, basic_command
+    ):
         """Vérifie qu'une requête refusée est loguée."""
         audit_adapter = InMemoryAuditAdapter()
 
@@ -553,7 +564,9 @@ class TestPolicyEvaluation:
         assert result_qwen.outcome == RequestOutcome.ALLOWED
 
     @pytest.mark.asyncio
-    async def test_policy_priority_order(self, policy_evaluator, budget_checker, audit_adapter):
+    async def test_policy_priority_order(
+        self, policy_evaluator, budget_checker, audit_adapter
+    ):
         """Vérifie que les policies sont évaluées par priorité."""
         high_priority_gpt4 = PolicyRule(
             id="high-allow-gpt4",
@@ -576,7 +589,9 @@ class TestPolicyEvaluation:
         use_case = EvaluateLLMRequestUseCase(
             policy_evaluator=policy_evaluator,
             budget_checker=budget_checker,
-            policy_repository=MockPolicyRepository([low_priority_gpt35, high_priority_gpt4]),
+            policy_repository=MockPolicyRepository(
+                [low_priority_gpt35, high_priority_gpt4]
+            ),
             budget_repository=MockBudgetRepository(
                 [Budget(id="b1", app_id="test-app", limit_usd=1000.0)]
             ),
@@ -618,7 +633,9 @@ class TestBudgetChecking:
     """Tests de la vérification des budgets."""
 
     @pytest.mark.asyncio
-    async def test_budget_warning_threshold(self, policy_evaluator, budget_checker, audit_adapter):
+    async def test_budget_warning_threshold(
+        self, policy_evaluator, budget_checker, audit_adapter
+    ):
         """Vérifie que le budget proche de la limite génère un warning."""
         almost_exhausted = Budget(
             id="budget-warning",
@@ -653,7 +670,9 @@ class TestBudgetChecking:
         assert result.budget_status.usage_percent >= 90
 
     @pytest.mark.asyncio
-    async def test_no_budget_allows_request(self, policy_evaluator, budget_checker, audit_adapter):
+    async def test_no_budget_allows_request(
+        self, policy_evaluator, budget_checker, audit_adapter
+    ):
         """Vérifie qu'une app sans budget est autorisée."""
         use_case = EvaluateLLMRequestUseCase(
             policy_evaluator=policy_evaluator,
@@ -751,7 +770,9 @@ class TestRequestTracing:
         assert trace.model == "gpt-4"
 
     @pytest.mark.asyncio
-    async def test_tracing_records_spans(self, policy_evaluator, budget_checker, audit_adapter):
+    async def test_tracing_records_spans(
+        self, policy_evaluator, budget_checker, audit_adapter
+    ):
         """Vérifie que les spans sont enregistrés pour chaque étape."""
         from backend.adapters.tracing import InMemoryRequestTracingAdapter
         from backend.ports.request_tracing import TraceStatus

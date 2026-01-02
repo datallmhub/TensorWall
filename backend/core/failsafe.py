@@ -170,7 +170,9 @@ class CircuitBreaker:
         """Get current circuit state, checking for timeout."""
         if self._state == CircuitState.OPEN:
             if self._last_failure_time:
-                elapsed = (datetime.now(timezone.utc) - self._last_failure_time).total_seconds()
+                elapsed = (
+                    datetime.now(timezone.utc) - self._last_failure_time
+                ).total_seconds()
                 if elapsed >= self.reset_timeout:
                     self._state = CircuitState.HALF_OPEN
                     self._success_count = 0
@@ -197,11 +199,15 @@ class CircuitBreaker:
         if self._state == CircuitState.HALF_OPEN:
             # Single failure in half-open reopens circuit
             self._state = CircuitState.OPEN
-            logger.warning(f"Circuit breaker {self.name} reopened (failure in half-open)")
+            logger.warning(
+                f"Circuit breaker {self.name} reopened (failure in half-open)"
+            )
         elif self._state == CircuitState.CLOSED:
             if self._failure_count >= self.failure_threshold:
                 self._state = CircuitState.OPEN
-                logger.warning(f"Circuit breaker {self.name} opened (threshold reached)")
+                logger.warning(
+                    f"Circuit breaker {self.name} opened (threshold reached)"
+                )
 
     def can_execute(self) -> bool:
         """Check if calls are allowed."""
@@ -311,9 +317,11 @@ class FailsafeManager:
         try:
             timeout = self.config.service_timeout_ms / 1000
             result = await asyncio.wait_for(
-                operation(*args, **kwargs)
-                if asyncio.iscoroutinefunction(operation)
-                else asyncio.to_thread(operation, *args, **kwargs),
+                (
+                    operation(*args, **kwargs)
+                    if asyncio.iscoroutinefunction(operation)
+                    else asyncio.to_thread(operation, *args, **kwargs)
+                ),
                 timeout=timeout,
             )
 
@@ -341,7 +349,13 @@ class FailsafeManager:
         except Exception as e:
             circuit.record_failure()
             return self._handle_failure(
-                service_name, environment, failure_mode, str(e), fallback, *args, **kwargs
+                service_name,
+                environment,
+                failure_mode,
+                str(e),
+                fallback,
+                *args,
+                **kwargs,
             )
 
     def _handle_circuit_open(
@@ -393,7 +407,9 @@ class FailsafeManager:
                 service_name=service_name,
                 original_error=error,
                 is_degraded=True,
-                warnings=[f"Service {service_name} is unavailable, running in degraded mode"],
+                warnings=[
+                    f"Service {service_name} is unavailable, running in degraded mode"
+                ],
             )
 
         elif failure_mode == FailureMode.FAIL_CLOSED:
@@ -444,8 +460,12 @@ class FailsafeManager:
         if not health:
             return ServiceStatus.UNKNOWN
 
-        unhealthy_count = sum(1 for h in health.values() if h.status == ServiceStatus.UNHEALTHY)
-        degraded_count = sum(1 for h in health.values() if h.status == ServiceStatus.DEGRADED)
+        unhealthy_count = sum(
+            1 for h in health.values() if h.status == ServiceStatus.UNHEALTHY
+        )
+        degraded_count = sum(
+            1 for h in health.values() if h.status == ServiceStatus.DEGRADED
+        )
 
         if unhealthy_count > 0:
             return ServiceStatus.UNHEALTHY
@@ -551,7 +571,8 @@ class DependencyHealthManager:
     def get_dependency_health(self, dependency_name: str) -> ServiceHealth:
         """Get health status of a dependency."""
         return self._health_state.get(
-            dependency_name, ServiceHealth(name=dependency_name, status=ServiceStatus.UNKNOWN)
+            dependency_name,
+            ServiceHealth(name=dependency_name, status=ServiceStatus.UNKNOWN),
         )
 
     def is_dependency_healthy(self, dependency_name: str) -> bool:
@@ -592,7 +613,10 @@ class DependencyHealthManager:
 
         elif strategy == DependencyStrategy.READ_ONLY:
             # Caller must handle read-only mode
-            return True, f"Dependency {dependency_name} is {health.status.value}, read-only mode"
+            return (
+                True,
+                f"Dependency {dependency_name} is {health.status.value}, read-only mode",
+            )
 
         elif strategy == DependencyStrategy.CACHED_ONLY:
             return (

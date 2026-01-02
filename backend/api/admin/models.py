@@ -34,8 +34,12 @@ router = APIRouter(prefix="/models", tags=["Models"])
 def _load_default_models() -> list[dict]:
     """Load default models from backend/config/default_models.json."""
     config_paths = [
-        Path(__file__).parent.parent.parent / "config" / "default_models.json",  # backend/config/
-        Path("/app/backend/config/default_models.json"),  # Docker path (backend/config/)
+        Path(__file__).parent.parent.parent
+        / "config"
+        / "default_models.json",  # backend/config/
+        Path(
+            "/app/backend/config/default_models.json"
+        ),  # Docker path (backend/config/)
         Path.cwd() / "backend" / "config" / "default_models.json",
     ]
 
@@ -61,7 +65,9 @@ class ModelCreate(BaseModel):
     model_id: str
     name: str
     description: Optional[str] = None
-    provider: str  # openai, anthropic, ollama, lmstudio, azure_openai, groq, together, custom
+    provider: (
+        str  # openai, anthropic, ollama, lmstudio, azure_openai, groq, together, custom
+    )
     provider_model_id: str
     base_url: Optional[str] = None
     api_key_env_var: Optional[str] = None
@@ -177,7 +183,9 @@ async def list_models(
     provider_counts: dict = {}
 
     for m in db_models:
-        provider_name = m.provider.value if hasattr(m.provider, "value") else str(m.provider)
+        provider_name = (
+            m.provider.value if hasattr(m.provider, "value") else str(m.provider)
+        )
         models.append(
             ModelInfo(
                 id=m.model_id,
@@ -200,7 +208,9 @@ async def list_models(
     from backend.core.config import settings
 
     provider_urls_result = await db.execute(
-        select(LLMModel.provider, LLMModel.base_url).distinct().where(LLMModel.is_enabled.is_(True))
+        select(LLMModel.provider, LLMModel.base_url)
+        .distinct()
+        .where(LLMModel.is_enabled.is_(True))
     )
     provider_urls: dict[str, str] = {}
     for provider, base_url in provider_urls_result.all():
@@ -242,7 +252,9 @@ async def list_models(
 def _model_to_response(model: LLMModel) -> ModelResponse:
     """Convert DB model to response, adding has_api_key flag."""
     provider_name = (
-        model.provider.value if hasattr(model.provider, "value") else str(model.provider)
+        model.provider.value
+        if hasattr(model.provider, "value")
+        else str(model.provider)
     )
     return ModelResponse(
         id=model.id,
@@ -273,7 +285,9 @@ async def list_all_models(
     """
     List all models (admin view with full details).
     """
-    result = await db.execute(select(LLMModel).order_by(LLMModel.display_order, LLMModel.name))
+    result = await db.execute(
+        select(LLMModel).order_by(LLMModel.display_order, LLMModel.name)
+    )
     models = result.scalars().all()
     return [_model_to_response(m) for m in models]
 
@@ -288,7 +302,9 @@ async def create_model(
     Create a new model configuration.
     """
     # Check if model_id already exists
-    existing = await db.execute(select(LLMModel).where(LLMModel.model_id == request.model_id))
+    existing = await db.execute(
+        select(LLMModel).where(LLMModel.model_id == request.model_id)
+    )
     if existing.scalar_one_or_none():
         raise HTTPException(
             status_code=status.HTTP_409_CONFLICT,
@@ -342,7 +358,8 @@ async def get_model(
 
     if not model:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Model '{model_id}' not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Model '{model_id}' not found",
         )
 
     return _model_to_response(model)
@@ -361,7 +378,8 @@ async def update_model(
 
     if not model:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Model '{model_id}' not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Model '{model_id}' not found",
         )
 
     # Update fields
@@ -387,7 +405,8 @@ async def delete_model(
 
     if not model:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Model '{model_id}' not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Model '{model_id}' not found",
         )
 
     await db.delete(model)
@@ -406,7 +425,8 @@ async def enable_model(
 
     if not model:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Model '{model_id}' not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Model '{model_id}' not found",
         )
 
     model.is_enabled = True
@@ -428,7 +448,8 @@ async def disable_model(
 
     if not model:
         raise HTTPException(
-            status_code=status.HTTP_404_NOT_FOUND, detail=f"Model '{model_id}' not found"
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Model '{model_id}' not found",
         )
 
     model.is_enabled = False
@@ -522,7 +543,9 @@ async def list_providers(db: AsyncSession = Depends(get_db)):
 
     # Get unique providers and their base_urls from database
     result = await db.execute(
-        select(LLMModel.provider, LLMModel.base_url).distinct().where(LLMModel.is_enabled.is_(True))
+        select(LLMModel.provider, LLMModel.base_url)
+        .distinct()
+        .where(LLMModel.is_enabled.is_(True))
     )
     db_providers = result.all()
 
@@ -540,19 +563,31 @@ async def list_providers(db: AsyncSession = Depends(get_db)):
         provider_urls["anthropic"] = settings.anthropic_api_url
 
     return [
-        ProviderStatus(name="openai", available=True, base_url=provider_urls.get("openai")),
-        ProviderStatus(name="anthropic", available=True, base_url=provider_urls.get("anthropic")),
+        ProviderStatus(
+            name="openai", available=True, base_url=provider_urls.get("openai")
+        ),
+        ProviderStatus(
+            name="anthropic", available=True, base_url=provider_urls.get("anthropic")
+        ),
         ProviderStatus(
             name="ollama", available=ollama_available, base_url=ollama_provider.base_url
         ),
         ProviderStatus(
-            name="lmstudio", available=lmstudio_available, base_url=lmstudio_provider.base_url
+            name="lmstudio",
+            available=lmstudio_available,
+            base_url=lmstudio_provider.base_url,
         ),
         ProviderStatus(name="aws_bedrock", available=True),
         ProviderStatus(name="groq", available=True, base_url=provider_urls.get("groq")),
-        ProviderStatus(name="mistral", available=True, base_url=provider_urls.get("mistral")),
-        ProviderStatus(name="google", available=True, base_url=provider_urls.get("google")),
-        ProviderStatus(name="deepseek", available=True, base_url=provider_urls.get("deepseek")),
+        ProviderStatus(
+            name="mistral", available=True, base_url=provider_urls.get("mistral")
+        ),
+        ProviderStatus(
+            name="google", available=True, base_url=provider_urls.get("google")
+        ),
+        ProviderStatus(
+            name="deepseek", available=True, base_url=provider_urls.get("deepseek")
+        ),
     ]
 
 
@@ -580,7 +615,9 @@ async def discover_ollama_models(
         model_id = f"ollama/{m.name}"
 
         # Check if exists
-        existing = await db.execute(select(LLMModel).where(LLMModel.model_id == model_id))
+        existing = await db.execute(
+            select(LLMModel).where(LLMModel.model_id == model_id)
+        )
         if existing.scalar_one_or_none():
             skipped += 1
             continue
@@ -633,7 +670,9 @@ async def discover_lmstudio_models(
         model_id = f"lmstudio/{m.id}"
 
         # Check if exists
-        existing = await db.execute(select(LLMModel).where(LLMModel.model_id == model_id))
+        existing = await db.execute(
+            select(LLMModel).where(LLMModel.model_id == model_id)
+        )
         if existing.scalar_one_or_none():
             skipped += 1
             continue

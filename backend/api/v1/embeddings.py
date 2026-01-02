@@ -73,7 +73,9 @@ Pour une version complète, utilisez `/v1/embeddings`.
 async def create_embeddings_v2(
     request: EmbeddingRequestV2,
     auth_result: AuthResult = Depends(authenticate),
-    x_organization_id: Optional[str] = Header(None, description="Organization/tenant ID"),
+    x_organization_id: Optional[str] = Header(
+        None, description="Organization/tenant ID"
+    ),
 ):
     """Create embeddings using hexagonal architecture."""
     start_time = time.time()

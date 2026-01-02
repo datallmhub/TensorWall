@@ -37,7 +37,9 @@ DEFAULT_MODELS: list[ModelInfo] = [
             ModelCapability.SYSTEM_PROMPT,
         ],
         pricing=ModelPricing(input_per_million=2.50, output_per_million=10.00),
-        limits=ModelLimits(max_context_tokens=128000, max_output_tokens=16384, max_images=10),
+        limits=ModelLimits(
+            max_context_tokens=128000, max_output_tokens=16384, max_images=10
+        ),
         tags=["flagship", "multimodal"],
     ),
     ModelInfo(
@@ -130,7 +132,9 @@ DEFAULT_MODELS: list[ModelInfo] = [
             ModelCapability.SYSTEM_PROMPT,
         ],
         pricing=ModelPricing(input_per_million=3.00, output_per_million=15.00),
-        limits=ModelLimits(max_context_tokens=200000, max_output_tokens=8192, max_images=20),
+        limits=ModelLimits(
+            max_context_tokens=200000, max_output_tokens=8192, max_images=20
+        ),
         tags=["flagship", "multimodal"],
     ),
     ModelInfo(
@@ -288,7 +292,10 @@ class InMemoryModelRegistryAdapter(ModelRegistryPort):
     ) -> ModelInfo | None:
         """Get a model by provider ID."""
         for model in self._models.values():
-            if model.provider == provider and model.provider_model_id == provider_model_id:
+            if (
+                model.provider == provider
+                and model.provider_model_id == provider_model_id
+            ):
                 return model
         return None
 

@@ -88,7 +88,9 @@ def reset_password(
         password = generate_password()
         console.print(f"[yellow]Generated password:[/yellow] {password}")
     else:
-        password = typer.prompt("New password", hide_input=True, confirmation_prompt=True)
+        password = typer.prompt(
+            "New password", hide_input=True, confirmation_prompt=True
+        )
 
     result = run_async(_reset_password(email, password))
 

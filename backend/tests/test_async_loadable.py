@@ -9,7 +9,9 @@ from backend.core.base import AsyncLoadableEntity
 class MockEntity(AsyncLoadableEntity[list[str]]):
     """Mock implementation for testing."""
 
-    def __init__(self, data_to_load: Optional[list[str]] = None, should_fail: bool = False):
+    def __init__(
+        self, data_to_load: Optional[list[str]] = None, should_fail: bool = False
+    ):
         super().__init__()
         self._data_to_load = data_to_load or ["item1", "item2"]
         self._should_fail = should_fail

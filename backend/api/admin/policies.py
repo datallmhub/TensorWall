@@ -95,7 +95,9 @@ def _to_response(policy, app_id: Optional[str] = None) -> PolicyResponse:
         else (policy.rule_type.value if policy.rule_type else "general")
     )
     # Handle action (still enum)
-    action_value = policy.action.value if hasattr(policy.action, "value") else policy.action
+    action_value = (
+        policy.action.value if hasattr(policy.action, "value") else policy.action
+    )
 
     return PolicyResponse(
         uuid=str(policy.uuid),  # ✅ UUID
@@ -326,7 +328,9 @@ async def update_policy(
                 detail=f"Invalid action: {data.action}",
             )
 
-    conditions = data.conditions.model_dump(exclude_none=True) if data.conditions else None
+    conditions = (
+        data.conditions.model_dump(exclude_none=True) if data.conditions else None
+    )
 
     # Update using internal ID (not exposed to client)
     updated_policy = await policy_repo.update(

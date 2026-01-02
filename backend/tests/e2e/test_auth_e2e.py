@@ -12,7 +12,9 @@ class TestAuthLoginE2E:
     """E2E tests for /auth/login endpoint."""
 
     @pytest.mark.asyncio
-    async def test_login_success(self, client: AsyncClient, seed_user_with_password: User):
+    async def test_login_success(
+        self, client: AsyncClient, seed_user_with_password: User
+    ):
         """Test successful login with valid credentials."""
         response = await client.post(
             "/auth/login",
@@ -46,7 +48,9 @@ class TestAuthLoginE2E:
         assert "Invalid credentials" in response.json()["detail"]
 
     @pytest.mark.asyncio
-    async def test_login_invalid_password(self, client: AsyncClient, seed_user_with_password: User):
+    async def test_login_invalid_password(
+        self, client: AsyncClient, seed_user_with_password: User
+    ):
         """Test login with wrong password."""
         response = await client.post(
             "/auth/login",
@@ -183,7 +187,9 @@ class TestAuthPasswordE2E:
         assert "Password already set" in response.json()["detail"]
 
     @pytest.mark.asyncio
-    async def test_set_password_short_password(self, client: AsyncClient, db: AsyncSession):
+    async def test_set_password_short_password(
+        self, client: AsyncClient, db: AsyncSession
+    ):
         """Test setting password that is too short."""
         # Create user without password
         user = User(
@@ -224,7 +230,9 @@ class TestApiKeyManagementE2E:
     """E2E tests for API key management endpoints."""
 
     @pytest.mark.asyncio
-    async def test_create_api_key(self, client: AsyncClient, seed_application: Application):
+    async def test_create_api_key(
+        self, client: AsyncClient, seed_application: Application
+    ):
         """Test creating a new API key."""
         response = await client.post(
             f"/admin/applications/{seed_application.uuid}/keys",
@@ -276,7 +284,10 @@ class TestApiKeyManagementE2E:
 
     @pytest.mark.asyncio
     async def test_list_api_keys(
-        self, client: AsyncClient, seed_application: Application, seed_api_key: tuple[ApiKey, str]
+        self,
+        client: AsyncClient,
+        seed_application: Application,
+        seed_api_key: tuple[ApiKey, str],
     ):
         """Test listing API keys for an application."""
         response = await client.get(f"/admin/applications/{seed_application.uuid}/keys")
@@ -314,7 +325,10 @@ class TestApiKeyManagementE2E:
 
     @pytest.mark.asyncio
     async def test_revoke_api_key(
-        self, client: AsyncClient, seed_application: Application, seed_api_key: tuple[ApiKey, str]
+        self,
+        client: AsyncClient,
+        seed_application: Application,
+        seed_api_key: tuple[ApiKey, str],
     ):
         """Test revoking (deactivating) an API key."""
         api_key, _ = seed_api_key
@@ -330,13 +344,18 @@ class TestApiKeyManagementE2E:
         self, client: AsyncClient, seed_application: Application
     ):
         """Test revoking non-existent API key."""
-        response = await client.delete(f"/admin/applications/{seed_application.uuid}/keys/99999")
+        response = await client.delete(
+            f"/admin/applications/{seed_application.uuid}/keys/99999"
+        )
 
         assert response.status_code == 404
 
     @pytest.mark.asyncio
     async def test_rotate_api_key(
-        self, client: AsyncClient, seed_application: Application, seed_api_key: tuple[ApiKey, str]
+        self,
+        client: AsyncClient,
+        seed_application: Application,
+        seed_api_key: tuple[ApiKey, str],
     ):
         """Test rotating an API key."""
         api_key, _ = seed_api_key

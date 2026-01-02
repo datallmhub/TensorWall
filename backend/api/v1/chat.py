@@ -118,8 +118,12 @@ Pour une version complète, utilisez `/v1/chat/completions`.
 async def chat_completions_v2(
     request: ChatCompletionRequestV2,
     auth_result: AuthResult = Depends(authenticate),
-    x_organization_id: Optional[str] = Header(None, description="Organization/tenant ID"),
-    x_feature_id: Optional[str] = Header(None, description="Feature/use-case identifier"),
+    x_organization_id: Optional[str] = Header(
+        None, description="Organization/tenant ID"
+    ),
+    x_feature_id: Optional[str] = Header(
+        None, description="Feature/use-case identifier"
+    ),
     x_dry_run: Optional[str] = Header(None, description="Set to 'true' for dry-run"),
 ):
     """Chat completion endpoint using hexagonal architecture."""
@@ -137,7 +141,9 @@ async def chat_completions_v2(
     )
 
     # 3. Run security analysis (OSS: always visible in response)
-    messages_for_security = [{"role": m.role, "content": m.content} for m in request.messages]
+    messages_for_security = [
+        {"role": m.role, "content": m.content} for m in request.messages
+    ]
     security_result = security_guard.full_analysis(messages_for_security)
 
     # 4. Build command
@@ -223,7 +229,9 @@ async def chat_completions_v2(
         choices=[
             ChatCompletionChoiceV2(
                 index=0,
-                message=ChatCompletionMessageV2(role="assistant", content=response.content),
+                message=ChatCompletionMessageV2(
+                    role="assistant", content=response.content
+                ),
                 finish_reason=response.finish_reason or "stop",
             )
         ],
@@ -240,7 +248,9 @@ async def chat_completions_v2(
     )
 
 
-def _handle_result_error(result: LLMRequestResult, request_id: str) -> HTTPException | None:
+def _handle_result_error(
+    result: LLMRequestResult, request_id: str
+) -> HTTPException | None:
     """Convert use case result errors to HTTP exceptions."""
     if result.outcome == RequestOutcome.DENIED_POLICY:
         return HTTPException(

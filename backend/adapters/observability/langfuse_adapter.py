@@ -31,7 +31,7 @@ Usage:
 import asyncio
 import logging
 from datetime import datetime
-from typing import Optional, Any
+from typing import Optional
 from dataclasses import dataclass
 import httpx
 
@@ -41,6 +41,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class LangfuseTrace:
     """Represents a Langfuse trace."""
+
     id: str
     name: str
     input: Optional[dict] = None
@@ -54,6 +55,7 @@ class LangfuseTrace:
 @dataclass
 class LangfuseGeneration:
     """Represents a Langfuse generation (LLM call)."""
+
     trace_id: str
     name: str
     model: str
@@ -216,8 +218,6 @@ class LangfuseAdapter:
             error: Error message if failed
             metadata: Additional metadata
         """
-        now = datetime.utcnow().isoformat() + "Z"
-
         # Create trace
         trace_event = {
             "type": "trace-create",
@@ -253,8 +253,10 @@ class LangfuseAdapter:
                     "input": input_tokens,
                     "output": output_tokens,
                     "total": input_tokens + output_tokens,
-                    "inputCost": cost_usd * (input_tokens / (input_tokens + output_tokens + 0.001)),
-                    "outputCost": cost_usd * (output_tokens / (input_tokens + output_tokens + 0.001)),
+                    "inputCost": cost_usd
+                    * (input_tokens / (input_tokens + output_tokens + 0.001)),
+                    "outputCost": cost_usd
+                    * (output_tokens / (input_tokens + output_tokens + 0.001)),
                     "totalCost": cost_usd,
                 },
                 "metadata": {

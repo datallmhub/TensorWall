@@ -157,7 +157,9 @@ class AuditRepository:
         """Count all error events (for SLO calculations)."""
         from sqlalchemy import func
 
-        query = select(func.count(AuditLog.id)).where(AuditLog.event_type == AuditEventType.ERROR)
+        query = select(func.count(AuditLog.id)).where(
+            AuditLog.event_type == AuditEventType.ERROR
+        )
 
         if from_date:
             query = query.where(AuditLog.timestamp >= from_date)
@@ -169,6 +171,8 @@ class AuditRepository:
         """Delete audit logs older than retention period. Returns count deleted."""
         cutoff = datetime.utcnow() - timedelta(days=retention_days)
 
-        result = await self.session.execute(delete(AuditLog).where(AuditLog.timestamp < cutoff))
+        result = await self.session.execute(
+            delete(AuditLog).where(AuditLog.timestamp < cutoff)
+        )
         await self.session.flush()
         return result.rowcount

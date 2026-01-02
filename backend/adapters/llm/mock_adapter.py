@@ -40,7 +40,9 @@ class MockAdapter(LLMProviderPort):
             fixed_response: Réponse fixe à retourner (optionnel)
         """
         self._latency = latency if latency is not None else self.DEFAULT_LATENCY
-        self._stream_delay = stream_delay if stream_delay is not None else self.STREAM_DELAY
+        self._stream_delay = (
+            stream_delay if stream_delay is not None else self.STREAM_DELAY
+        )
         self._fixed_response = fixed_response
 
     @property
@@ -83,7 +85,9 @@ class MockAdapter(LLMProviderPort):
             finish_reason="stop",
         )
 
-    async def chat_stream(self, request: ChatRequest, api_key: str) -> AsyncIterator[str]:
+    async def chat_stream(
+        self, request: ChatRequest, api_key: str
+    ) -> AsyncIterator[str]:
         """Stream une réponse mock mot par mot.
 
         Args:

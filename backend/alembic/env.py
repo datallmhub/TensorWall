@@ -19,9 +19,11 @@ config = context.config
 # Override sqlalchemy.url with our settings
 config.set_main_option(
     "sqlalchemy.url",
-    settings.database_url.replace("postgresql://", "postgresql+asyncpg://")
-    if settings.database_url.startswith("postgresql://")
-    else settings.database_url,
+    (
+        settings.database_url.replace("postgresql://", "postgresql+asyncpg://")
+        if settings.database_url.startswith("postgresql://")
+        else settings.database_url
+    ),
 )
 
 # Interpret the config file for Python logging

@@ -248,7 +248,9 @@ class PrometheusObservabilityAdapter(ObservabilityPort):
             avg_input_per_request=total_input / count,
             avg_output_per_request=total_output / count,
             input_output_ratio=total_input / total_output if total_output > 0 else 0,
-            cost_per_1k_tokens=(total_cost / total_tokens * 1000) if total_tokens > 0 else 0,
+            cost_per_1k_tokens=(
+                (total_cost / total_tokens * 1000) if total_tokens > 0 else 0
+            ),
         )
 
     async def detect_anomalies(
@@ -337,7 +339,11 @@ class PrometheusObservabilityAdapter(ObservabilityPort):
     ) -> list[tuple[datetime, float]]:
         """Get usage trends for a metric."""
         cutoff = datetime.now() - timedelta(hours=lookback_hours)
-        filtered = [r for r in self._requests if r["app_id"] == app_id and r["timestamp"] >= cutoff]
+        filtered = [
+            r
+            for r in self._requests
+            if r["app_id"] == app_id and r["timestamp"] >= cutoff
+        ]
 
         # Group by time bucket
         buckets: dict[str, list[dict]] = {}
@@ -406,7 +412,11 @@ class PrometheusObservabilityAdapter(ObservabilityPort):
         """Check if current values are anomalous."""
         # Get recent history for this app
         cutoff = datetime.now() - timedelta(hours=1)
-        recent = [r for r in self._requests if r["app_id"] == app_id and r["timestamp"] >= cutoff]
+        recent = [
+            r
+            for r in self._requests
+            if r["app_id"] == app_id and r["timestamp"] >= cutoff
+        ]
 
         if len(recent) < 10:
             return  # Not enough data

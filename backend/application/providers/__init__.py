@@ -1,10 +1,21 @@
-from backend.application.providers.base import LLMProvider, ChatRequest, ChatResponse, ChatMessage
+from backend.application.providers.base import (
+    LLMProvider,
+    ChatRequest,
+    ChatResponse,
+    ChatMessage,
+)
 from backend.application.providers.openai import openai_provider, OpenAIProvider
-from backend.application.providers.anthropic import anthropic_provider, AnthropicProvider
+from backend.application.providers.anthropic import (
+    anthropic_provider,
+    AnthropicProvider,
+)
 from backend.application.providers.ollama import ollama_provider, OllamaProvider
 from backend.application.providers.lmstudio import lmstudio_provider, LMStudioProvider
 from backend.application.providers.bedrock import bedrock_provider, BedrockProvider
-from backend.application.providers.azure_openai import azure_openai_provider, AzureOpenAIProvider
+from backend.application.providers.azure_openai import (
+    azure_openai_provider,
+    AzureOpenAIProvider,
+)
 from backend.application.providers.vertex import vertex_ai_provider, VertexAIProvider
 from backend.application.providers.groq import groq_provider, GroqProvider
 from backend.application.providers.mistral import mistral_provider, MistralProvider

@@ -78,18 +78,15 @@ class VertexAIProvider(LLMProvider):
         system_instruction = None
 
         for msg in messages:
-            role = msg.role if hasattr(msg, 'role') else msg.get('role')
-            content = msg.content if hasattr(msg, 'content') else msg.get('content')
+            role = msg.role if hasattr(msg, "role") else msg.get("role")
+            content = msg.content if hasattr(msg, "content") else msg.get("content")
 
             if role == "system":
                 system_instruction = {"parts": [{"text": content}]}
             else:
                 # Map OpenAI roles to Vertex AI roles
                 vertex_role = "user" if role == "user" else "model"
-                contents.append({
-                    "role": vertex_role,
-                    "parts": [{"text": content}]
-                })
+                contents.append({"role": vertex_role, "parts": [{"text": content}]})
 
         result = {"contents": contents}
         if system_instruction:
@@ -192,15 +189,21 @@ class VertexAIProvider(LLMProvider):
                             # Vertex AI streams JSON objects
                             data = json.loads(line)
                             if "candidates" in data:
-                                content = data["candidates"][0]["content"]["parts"][0].get("text", "")
+                                content = data["candidates"][0]["content"]["parts"][
+                                    0
+                                ].get("text", "")
                                 if content:
                                     # Convert to OpenAI SSE format
-                                    yield json.dumps({
-                                        "choices": [{
-                                            "delta": {"content": content},
-                                            "index": 0,
-                                        }]
-                                    })
+                                    yield json.dumps(
+                                        {
+                                            "choices": [
+                                                {
+                                                    "delta": {"content": content},
+                                                    "index": 0,
+                                                }
+                                            ]
+                                        }
+                                    )
                         except json.JSONDecodeError:
                             continue
 

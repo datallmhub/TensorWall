@@ -21,7 +21,9 @@ class RedisCacheAdapter(CachePort):
     Aucune dépendance au code legacy (cache/).
     """
 
-    def __init__(self, redis_client: redis.Redis | None = None, redis_url: str | None = None):
+    def __init__(
+        self, redis_client: redis.Redis | None = None, redis_url: str | None = None
+    ):
         """Initialise l'adapter.
 
         Args:

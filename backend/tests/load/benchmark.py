@@ -184,8 +184,12 @@ def print_results(result: BenchmarkResult, errors: list[str]):
 async def main():
     parser = argparse.ArgumentParser(description="TensorWall Benchmark")
     parser.add_argument("--url", default="http://localhost:8000", help="Base URL")
-    parser.add_argument("--requests", "-n", type=int, default=1000, help="Total requests")
-    parser.add_argument("--concurrent", "-c", type=int, default=50, help="Concurrent requests")
+    parser.add_argument(
+        "--requests", "-n", type=int, default=1000, help="Total requests"
+    )
+    parser.add_argument(
+        "--concurrent", "-c", type=int, default=50, help="Concurrent requests"
+    )
     parser.add_argument("--api-key", default=None, help="API key (required)")
     args = parser.parse_args()
 

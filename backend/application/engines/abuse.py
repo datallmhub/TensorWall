@@ -382,9 +382,9 @@ class AbuseDetector:
         content = json.dumps(messages, sort_keys=True)
         input_hash = hashlib.sha256(content.encode()).hexdigest()[:16]
 
-        full_hash = hashlib.sha256(f"{app_id}:{feature}:{model}:{input_hash}".encode()).hexdigest()[
-            :16
-        ]
+        full_hash = hashlib.sha256(
+            f"{app_id}:{feature}:{model}:{input_hash}".encode()
+        ).hexdigest()[:16]
 
         return RequestSignature(
             hash=full_hash,
@@ -436,7 +436,9 @@ class AbuseDetector:
 
         try:
             blocked_until = time.time() + seconds
-            await redis.setex(f"{self.BLOCKED_KEY}{app_id}", seconds, str(blocked_until))
+            await redis.setex(
+                f"{self.BLOCKED_KEY}{app_id}", seconds, str(blocked_until)
+            )
         except Exception as e:
             logger.warning(f"Redis error in _apply_cooldown: {e}")
 
@@ -464,7 +466,9 @@ class AbuseDetector:
                 "total_cost": float(stats.get("total_cost", 0)),
                 "last_request": stats.get("last_request"),
                 "is_blocked": bool(is_blocked),
-                "blocked_until": float(blocked_until_raw) if blocked_until_raw else None,
+                "blocked_until": (
+                    float(blocked_until_raw) if blocked_until_raw else None
+                ),
             }
         except Exception as e:
             logger.warning(f"Redis error in get_app_stats: {e}")

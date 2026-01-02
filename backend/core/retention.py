@@ -178,7 +178,9 @@ class RetentionManager:
             return text
 
         # Anonymize emails
-        text = re.sub(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b", "[EMAIL]", text)
+        text = re.sub(
+            r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b", "[EMAIL]", text
+        )
 
         # Anonymize phone numbers
         text = re.sub(r"\b\d{3}[-.]?\d{3}[-.]?\d{4}\b", "[PHONE]", text)
@@ -190,7 +192,9 @@ class RetentionManager:
         text = re.sub(r"\b\d{3}[-]?\d{2}[-]?\d{4}\b", "[SSN]", text)
 
         # Anonymize API keys and tokens
-        text = re.sub(r"\b(sk-|pk-|api_|key_|token_)[A-Za-z0-9]{20,}\b", "[API_KEY]", text)
+        text = re.sub(
+            r"\b(sk-|pk-|api_|key_|token_)[A-Za-z0-9]{20,}\b", "[API_KEY]", text
+        )
 
         return text
 

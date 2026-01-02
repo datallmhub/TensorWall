@@ -172,7 +172,9 @@ class EvaluateLLMRequestUseCase:
                     request_id=command.request_id,
                 )
                 await self._end_span(
-                    trace, TraceStep.ABUSE_CHECK.value, "blocked" if abuse_result.blocked else "ok"
+                    trace,
+                    TraceStep.ABUSE_CHECK.value,
+                    "blocked" if abuse_result.blocked else "ok",
                 )
                 if abuse_result.blocked:
                     self._record_decision_metrics(command, "deny", "abuse")
@@ -188,9 +190,11 @@ class EvaluateLLMRequestUseCase:
                         outcome=RequestOutcome.DENIED_ABUSE,
                         error_message=error_msg,
                         metadata={
-                            "abuse_type": abuse_result.abuse_type.value
-                            if abuse_result.abuse_type
-                            else None,
+                            "abuse_type": (
+                                abuse_result.abuse_type.value
+                                if abuse_result.abuse_type
+                                else None
+                            ),
                             "cooldown_seconds": abuse_result.cooldown_seconds,
                         },
                     )
@@ -253,7 +257,9 @@ class EvaluateLLMRequestUseCase:
 
             # 3. Vérifier si la policy refuse la requête
             if policy_decision.action == PolicyAction.DENY:
-                await self._log_decision(command, RequestOutcome.DENIED_POLICY, policy_decision)
+                await self._log_decision(
+                    command, RequestOutcome.DENIED_POLICY, policy_decision
+                )
                 self._record_decision_metrics(command, "deny", "policy")
                 error_msg = "; ".join(policy_decision.reasons) or "Denied by policy"
                 await self._handle_blocked_request(
@@ -285,13 +291,18 @@ class EvaluateLLMRequestUseCase:
             # 6. Vérifier le budget
             budget_status = self.budget_checker.check(budgets, estimated_cost)
             await self._end_span(
-                trace, TraceStep.BUDGET_CHECK.value, "denied" if not budget_status.allowed else "ok"
+                trace,
+                TraceStep.BUDGET_CHECK.value,
+                "denied" if not budget_status.allowed else "ok",
             )
 
             # 7. Vérifier si le budget refuse la requête
             if not budget_status.allowed:
                 await self._log_decision(
-                    command, RequestOutcome.DENIED_BUDGET, policy_decision, budget_status
+                    command,
+                    RequestOutcome.DENIED_BUDGET,
+                    policy_decision,
+                    budget_status,
                 )
                 self._record_decision_metrics(command, "deny", "budget")
                 error_msg = "; ".join(budget_status.reasons) or "Budget exceeded"
@@ -335,7 +346,11 @@ class EvaluateLLMRequestUseCase:
             is_local_provider = self.llm_provider.name in local_providers
             if not command.api_key and not is_local_provider:
                 await self._handle_blocked_request(
-                    command, trace, RequestOutcome.ERROR, "validation", "API key required"
+                    command,
+                    trace,
+                    RequestOutcome.ERROR,
+                    "validation",
+                    "API key required",
                 )
                 return LLMRequestResult(
                     request_id=command.request_id,
@@ -353,7 +368,9 @@ class EvaluateLLMRequestUseCase:
                     )  # Remove "enc:" prefix
                     await self._end_span(trace, "decrypt_api_key", "ok")
                 except Exception as e:
-                    await self._end_span(trace, "decrypt_api_key", "error", error=str(e))
+                    await self._end_span(
+                        trace, "decrypt_api_key", "error", error=str(e)
+                    )
                     await self._handle_blocked_request(
                         command,
                         trace,
@@ -370,7 +387,8 @@ class EvaluateLLMRequestUseCase:
             domain_request = DomainChatRequest(
                 model=command.model,
                 messages=[
-                    ChatMessage(role=m["role"], content=m["content"]) for m in command.messages
+                    ChatMessage(role=m["role"], content=m["content"])
+                    for m in command.messages
                 ],
                 max_tokens=command.max_tokens,
                 temperature=command.temperature,
@@ -418,8 +436,12 @@ class EvaluateLLMRequestUseCase:
 
             # 12. Complete trace
             # Use "warned" outcome if policy decision is WARN
-            trace_outcome = "warned" if policy_decision.action == PolicyAction.WARN else "allowed"
-            await self._handle_successful_request(command, trace, response, trace_outcome)
+            trace_outcome = (
+                "warned" if policy_decision.action == PolicyAction.WARN else "allowed"
+            )
+            await self._handle_successful_request(
+                command, trace, response, trace_outcome
+            )
 
             # 12a. Enregistrer les métriques d'observabilité
             actual_cost = self.budget_checker.estimate_cost(
@@ -512,7 +534,9 @@ class EvaluateLLMRequestUseCase:
                 "environment": command.environment,
                 "feature": command.feature,
                 "policy_reasons": policy_decision.reasons if policy_decision else [],
-                "budget_usage_percent": budget_status.usage_percent if budget_status else None,
+                "budget_usage_percent": (
+                    budget_status.usage_percent if budget_status else None
+                ),
             },
             input_tokens=response.input_tokens if response else None,
             output_tokens=response.output_tokens if response else None,
@@ -605,9 +629,11 @@ class EvaluateLLMRequestUseCase:
                         error_message=abuse_result.reason
                         or f"Blocked for abuse: {abuse_result.abuse_type.value if abuse_result.abuse_type else 'unknown'}",
                         metadata={
-                            "abuse_type": abuse_result.abuse_type.value
-                            if abuse_result.abuse_type
-                            else None,
+                            "abuse_type": (
+                                abuse_result.abuse_type.value
+                                if abuse_result.abuse_type
+                                else None
+                            ),
                             "cooldown_seconds": abuse_result.cooldown_seconds,
                         },
                     )
@@ -649,13 +675,16 @@ class EvaluateLLMRequestUseCase:
             policy_decision = self.policy_evaluator.evaluate(rules, policy_context)
 
             if policy_decision.action == PolicyAction.DENY:
-                await self._log_decision(command, RequestOutcome.DENIED_POLICY, policy_decision)
+                await self._log_decision(
+                    command, RequestOutcome.DENIED_POLICY, policy_decision
+                )
                 self._record_decision_metrics(command, "deny", "policy")
                 return LLMRequestResult(
                     request_id=command.request_id,
                     outcome=RequestOutcome.DENIED_POLICY,
                     policy_decision=policy_decision,
-                    error_message="; ".join(policy_decision.reasons) or "Denied by policy",
+                    error_message="; ".join(policy_decision.reasons)
+                    or "Denied by policy",
                 )
 
             budgets = await self.budget_repository.get_budgets_for_app(
@@ -675,7 +704,10 @@ class EvaluateLLMRequestUseCase:
 
             if not budget_status.allowed:
                 await self._log_decision(
-                    command, RequestOutcome.DENIED_BUDGET, policy_decision, budget_status
+                    command,
+                    RequestOutcome.DENIED_BUDGET,
+                    policy_decision,
+                    budget_status,
                 )
                 self._record_decision_metrics(command, "deny", "budget")
                 return LLMRequestResult(
@@ -700,7 +732,8 @@ class EvaluateLLMRequestUseCase:
             domain_request = DomainChatRequest(
                 model=command.model,
                 messages=[
-                    ChatMessage(role=m["role"], content=m["content"]) for m in command.messages
+                    ChatMessage(role=m["role"], content=m["content"])
+                    for m in command.messages
                 ],
                 max_tokens=command.max_tokens,
                 temperature=command.temperature,
@@ -740,7 +773,9 @@ class EvaluateLLMRequestUseCase:
         """Wrapper de streaming avec enregistrement des métriques à la fin."""
         start_time = time.time()
         try:
-            async for chunk in self.llm_provider.chat_stream(domain_request, command.api_key):
+            async for chunk in self.llm_provider.chat_stream(
+                domain_request, command.api_key
+            ):
                 yield chunk
 
             # Enregistrer les métriques après streaming
@@ -817,4 +852,6 @@ class EvaluateLLMRequestUseCase:
     ) -> None:
         """End a trace span if tracer is configured."""
         if trace and self.request_tracer:
-            await self.request_tracer.end_span(trace.trace_id, step, status, data, error)
+            await self.request_tracer.end_span(
+                trace.trace_id, step, status, data, error
+            )

@@ -145,7 +145,9 @@ class BudgetEngine:
 
         return estimate_cost_sync(model, input_tokens, output_tokens)
 
-    def _budget_key(self, app_id: str, feature: Optional[str], environment: Optional[str]) -> str:
+    def _budget_key(
+        self, app_id: str, feature: Optional[str], environment: Optional[str]
+    ) -> str:
         return f"{app_id}:{feature or '*'}:{environment or '*'}"
 
     def _check_period_reset(self, budget: BudgetLimit) -> None:
@@ -254,10 +256,14 @@ class BudgetForecaster:
         )
 
         # Estimate request cost
-        estimated_cost = self.estimate_request_cost(model, input_tokens, max_output_tokens)
+        estimated_cost = self.estimate_request_cost(
+            model, input_tokens, max_output_tokens
+        )
 
         # Check if this request would exceed budget
-        would_exceed = budget_result.current_spend_usd + estimated_cost > budget_result.limit_usd
+        would_exceed = (
+            budget_result.current_spend_usd + estimated_cost > budget_result.limit_usd
+        )
 
         # Calculate daily average from history
         history = self._history.get(f"{app_id}:{environment or '*'}", [])

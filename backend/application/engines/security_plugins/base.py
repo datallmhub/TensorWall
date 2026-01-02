@@ -12,6 +12,7 @@ from pydantic import BaseModel
 
 class RiskLevel(str, Enum):
     """Risk level classification."""
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -20,12 +21,15 @@ class RiskLevel(str, Enum):
 
 class SecurityFinding(BaseModel):
     """Individual security finding from a plugin."""
-    plugin: str              # Plugin name that detected this
-    category: str            # Category (prompt_injection, pii, secrets, custom, etc.)
-    severity: RiskLevel      # Risk severity
-    description: str         # Human-readable description
+
+    plugin: str  # Plugin name that detected this
+    category: str  # Category (prompt_injection, pii, secrets, custom, etc.)
+    severity: RiskLevel  # Risk severity
+    description: str  # Human-readable description
     pattern_matched: Optional[str] = None  # What triggered the detection
-    confidence: float = 1.0  # Confidence score (0.0 - 1.0), useful for ML-based detection
+    confidence: float = (
+        1.0  # Confidence score (0.0 - 1.0), useful for ML-based detection
+    )
     metadata: Optional[dict] = None  # Additional plugin-specific data
 
     class Config:

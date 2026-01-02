@@ -78,7 +78,9 @@ class ApiKeyRepository:
     async def get_by_id(self, id: int) -> Optional[ApiKey]:
         """Get API key by ID."""
         result = await self.session.execute(
-            select(ApiKey).options(selectinload(ApiKey.application)).where(ApiKey.id == id)
+            select(ApiKey)
+            .options(selectinload(ApiKey.application))
+            .where(ApiKey.id == id)
         )
         return result.scalar_one_or_none()
 

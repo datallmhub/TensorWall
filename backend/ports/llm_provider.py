@@ -49,7 +49,9 @@ class LLMProviderPort(ABC):
         pass
 
     @abstractmethod
-    async def chat_stream(self, request: ChatRequest, api_key: str) -> AsyncIterator[str]:
+    async def chat_stream(
+        self, request: ChatRequest, api_key: str
+    ) -> AsyncIterator[str]:
         """Envoie une requête de chat en streaming.
 
         Args:

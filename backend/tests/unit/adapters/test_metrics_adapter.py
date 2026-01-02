@@ -130,7 +130,9 @@ class TestInMemoryMetricsAdapter:
         adapter = InMemoryMetricsAdapter()
 
         adapter.record_request(
-            RequestMetrics(app_id="app-1", model="gpt-4", status="success", latency_seconds=1.0)
+            RequestMetrics(
+                app_id="app-1", model="gpt-4", status="success", latency_seconds=1.0
+            )
         )
         adapter.record_error("app-1", "error")
         adapter.request_started("app-1")
@@ -162,13 +164,19 @@ class TestInMemoryMetricsAdapter:
         adapter = InMemoryMetricsAdapter()
 
         adapter.record_request(
-            RequestMetrics(app_id="app-1", model="gpt-4", status="success", latency_seconds=1.0)
+            RequestMetrics(
+                app_id="app-1", model="gpt-4", status="success", latency_seconds=1.0
+            )
         )
         adapter.record_request(
-            RequestMetrics(app_id="app-1", model="gpt-4", status="error", latency_seconds=1.0)
+            RequestMetrics(
+                app_id="app-1", model="gpt-4", status="error", latency_seconds=1.0
+            )
         )
         adapter.record_request(
-            RequestMetrics(app_id="app-2", model="gpt-4", status="success", latency_seconds=1.0)
+            RequestMetrics(
+                app_id="app-2", model="gpt-4", status="success", latency_seconds=1.0
+            )
         )
 
         assert adapter.get_request_count(app_id="app-1") == 2
@@ -179,9 +187,15 @@ class TestInMemoryMetricsAdapter:
         """Vérifie le comptage des décisions."""
         adapter = InMemoryMetricsAdapter()
 
-        adapter.record_decision(DecisionMetrics(app_id="app-1", decision="allow", source="policy"))
-        adapter.record_decision(DecisionMetrics(app_id="app-1", decision="deny", source="budget"))
-        adapter.record_decision(DecisionMetrics(app_id="app-2", decision="deny", source="policy"))
+        adapter.record_decision(
+            DecisionMetrics(app_id="app-1", decision="allow", source="policy")
+        )
+        adapter.record_decision(
+            DecisionMetrics(app_id="app-1", decision="deny", source="budget")
+        )
+        adapter.record_decision(
+            DecisionMetrics(app_id="app-2", decision="deny", source="policy")
+        )
 
         assert adapter.get_decision_count() == 3
         assert adapter.get_decision_count(decision="deny") == 2
@@ -246,7 +260,9 @@ class TestInMemoryMetricsAdapter:
         adapter = InMemoryMetricsAdapter()
 
         adapter.record_request(
-            RequestMetrics(app_id="app-1", model="gpt-4", status="success", latency_seconds=1.0)
+            RequestMetrics(
+                app_id="app-1", model="gpt-4", status="success", latency_seconds=1.0
+            )
         )
         adapter.record_error("app-1", "timeout")
 
@@ -332,8 +348,18 @@ class TestPrometheusMetricsAdapter:
 
         adapter.record_request(metrics)
 
-        assert adapter.tokens_total.get(app_id="test-app", model="gpt-4", direction="input") == 100
-        assert adapter.tokens_total.get(app_id="test-app", model="gpt-4", direction="output") == 50
+        assert (
+            adapter.tokens_total.get(
+                app_id="test-app", model="gpt-4", direction="input"
+            )
+            == 100
+        )
+        assert (
+            adapter.tokens_total.get(
+                app_id="test-app", model="gpt-4", direction="output"
+            )
+            == 50
+        )
 
     def test_record_decision(self):
         """Vérifie que record_decision incrémente le compteur."""
@@ -347,7 +373,12 @@ class TestPrometheusMetricsAdapter:
 
         adapter.record_decision(metrics)
 
-        assert adapter.decisions_total.get(app_id="test-app", decision="deny", source="policy") == 1
+        assert (
+            adapter.decisions_total.get(
+                app_id="test-app", decision="deny", source="policy"
+            )
+            == 1
+        )
 
     def test_record_error(self):
         """Vérifie que record_error incrémente le compteur."""
@@ -380,7 +411,9 @@ class TestPrometheusMetricsAdapter:
         adapter.update_budget(metrics)
 
         assert (
-            adapter.budget_usage.get(app_id="test-app", feature="chat", environment="production")
+            adapter.budget_usage.get(
+                app_id="test-app", feature="chat", environment="production"
+            )
             == 0.75
         )
         assert (

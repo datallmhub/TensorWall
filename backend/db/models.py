@@ -117,7 +117,9 @@ class Application(Base):
 
     # Settings
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
-    allowed_providers: Mapped[list] = mapped_column(JSON, default=["openai", "anthropic"])
+    allowed_providers: Mapped[list] = mapped_column(
+        JSON, default=["openai", "anthropic"]
+    )
     allowed_models: Mapped[list] = mapped_column(JSON, default=[])  # Empty = all
 
     # Metadata
@@ -144,8 +146,12 @@ class ApiKey(Base):
     __tablename__ = "api_keys"
 
     id: Mapped[int] = mapped_column(primary_key=True)
-    key_hash: Mapped[str] = mapped_column(String(64), unique=True, index=True)  # SHA256 hash
-    key_prefix: Mapped[str] = mapped_column(String(12))  # First 8 chars for identification
+    key_hash: Mapped[str] = mapped_column(
+        String(64), unique=True, index=True
+    )  # SHA256 hash
+    key_prefix: Mapped[str] = mapped_column(
+        String(12)
+    )  # First 8 chars for identification
     name: Mapped[str] = mapped_column(String(255))  # Human-readable name
 
     # Association
@@ -192,7 +198,9 @@ class PolicyRule(Base):
     application_id: Mapped[Optional[int]] = mapped_column(
         ForeignKey("applications.id"), nullable=True
     )
-    application: Mapped[Optional["Application"]] = relationship(back_populates="policy_rules")
+    application: Mapped[Optional["Application"]] = relationship(
+        back_populates="policy_rules"
+    )
 
     # User-specific policy (optional)
     user_email: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
@@ -213,8 +221,12 @@ class PolicyRule(Base):
     # }
 
     # Decision
-    action: Mapped[PolicyAction] = mapped_column(SQLEnum(PolicyAction), default=PolicyAction.ALLOW)
-    priority: Mapped[int] = mapped_column(Integer, default=0)  # Higher = evaluated first
+    action: Mapped[PolicyAction] = mapped_column(
+        SQLEnum(PolicyAction), default=PolicyAction.ALLOW
+    )
+    priority: Mapped[int] = mapped_column(
+        Integer, default=0
+    )  # Higher = evaluated first
 
     # Status
     is_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
@@ -269,14 +281,22 @@ class Budget(Base):
     application_id: Mapped[Optional[int]] = mapped_column(
         ForeignKey("applications.id"), nullable=True
     )
-    application: Mapped[Optional["Application"]] = relationship(back_populates="budgets")
+    application: Mapped[Optional["Application"]] = relationship(
+        back_populates="budgets"
+    )
 
     # User scope (for per-user budgets)
-    user_id: Mapped[Optional[int]] = mapped_column(ForeignKey("users.id"), nullable=True)
-    user_email: Mapped[Optional[str]] = mapped_column(String(255), nullable=True, index=True)
+    user_id: Mapped[Optional[int]] = mapped_column(
+        ForeignKey("users.id"), nullable=True
+    )
+    user_email: Mapped[Optional[str]] = mapped_column(
+        String(255), nullable=True, index=True
+    )
 
     # Organization scope (for org/team budgets)
-    org_id: Mapped[Optional[str]] = mapped_column(String(100), nullable=True, index=True)
+    org_id: Mapped[Optional[str]] = mapped_column(
+        String(100), nullable=True, index=True
+    )
 
     # Additional filters
     feature: Mapped[Optional[str]] = mapped_column(
@@ -345,7 +365,9 @@ class UsageRecord(Base):
     latency_ms: Mapped[int] = mapped_column(Integer)
 
     # Timestamp
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, index=True
+    )
 
     __table_args__ = (
         Index("ix_usage_app_date", "app_id", "created_at"),
@@ -360,10 +382,14 @@ class AuditLog(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     event_type: Mapped[AuditEventType] = mapped_column(SQLEnum(AuditEventType))
-    request_id: Mapped[Optional[str]] = mapped_column(String(36), nullable=True, index=True)
+    request_id: Mapped[Optional[str]] = mapped_column(
+        String(36), nullable=True, index=True
+    )
 
     # Context
-    app_id: Mapped[Optional[str]] = mapped_column(String(100), nullable=True, index=True)
+    app_id: Mapped[Optional[str]] = mapped_column(
+        String(100), nullable=True, index=True
+    )
     feature: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     environment: Mapped[Optional[str]] = mapped_column(String(50), nullable=True)
     owner: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
@@ -388,9 +414,13 @@ class AuditLog(Base):
     extra_data: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)
 
     # Timestamp
-    timestamp: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
+    timestamp: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, index=True
+    )
 
-    __table_args__ = (Index("ix_audit_app_type_date", "app_id", "event_type", "timestamp"),)
+    __table_args__ = (
+        Index("ix_audit_app_type_date", "app_id", "event_type", "timestamp"),
+    )
 
 
 class LLMRequestTrace(Base):
@@ -416,13 +446,19 @@ class LLMRequestTrace(Base):
     )  # OpenTelemetry compat
 
     # Context - Multi-tenant & Application
-    tenant_id: Mapped[Optional[str]] = mapped_column(String(100), nullable=True, index=True)
+    tenant_id: Mapped[Optional[str]] = mapped_column(
+        String(100), nullable=True, index=True
+    )
     app_id: Mapped[str] = mapped_column(String(100), index=True)
-    feature: Mapped[Optional[str]] = mapped_column(String(255), nullable=True, index=True)
+    feature: Mapped[Optional[str]] = mapped_column(
+        String(255), nullable=True, index=True
+    )
     environment: Mapped[Environment] = mapped_column(SQLEnum(Environment), index=True)
 
     # Context - User & Session
-    user_email: Mapped[Optional[str]] = mapped_column(String(255), nullable=True, index=True)
+    user_email: Mapped[Optional[str]] = mapped_column(
+        String(255), nullable=True, index=True
+    )
     session_id: Mapped[Optional[str]] = mapped_column(String(100), nullable=True)
 
     # LLM Call Details
@@ -448,7 +484,9 @@ class LLMRequestTrace(Base):
     budget_snapshot: Mapped[Optional[dict]] = mapped_column(
         JSON, nullable=True
     )  # Budget state at request time
-    estimated_cost_avoided: Mapped[float] = mapped_column(Float, default=0.0)  # If blocked
+    estimated_cost_avoided: Mapped[float] = mapped_column(
+        Float, default=0.0
+    )  # If blocked
 
     # Performance & Status
     latency_ms: Mapped[int] = mapped_column(Integer, default=0)
@@ -456,11 +494,15 @@ class LLMRequestTrace(Base):
     error_message: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     # Timing
-    timestamp_start: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
+    timestamp_start: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, index=True
+    )
     timestamp_end: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
 
     # Extra metadata (renamed from 'metadata' to avoid SQLAlchemy reserved word)
-    extra_metadata: Mapped[Optional[dict]] = mapped_column(JSON, nullable=True)  # Flexible storage
+    extra_metadata: Mapped[Optional[dict]] = mapped_column(
+        JSON, nullable=True
+    )  # Flexible storage
 
     __table_args__ = (
         # Core queries for dashboard
@@ -468,7 +510,9 @@ class LLMRequestTrace(Base):
         Index("ix_trace_user_date", "user_email", "timestamp_start"),
         Index("ix_trace_status_date", "status", "timestamp_start"),
         # Governance queries
-        Index("ix_trace_tenant_env_date", "tenant_id", "environment", "timestamp_start"),
+        Index(
+            "ix_trace_tenant_env_date", "tenant_id", "environment", "timestamp_start"
+        ),
         Index("ix_trace_feature_decision", "feature", "decision"),
         Index("ix_trace_model_date", "model", "timestamp_start"),
     )
@@ -517,7 +561,9 @@ class Notification(Base):
     message: Mapped[str] = mapped_column(Text)
 
     # Context (optional)
-    app_id: Mapped[Optional[str]] = mapped_column(String(100), nullable=True, index=True)
+    app_id: Mapped[Optional[str]] = mapped_column(
+        String(100), nullable=True, index=True
+    )
     budget_id: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     request_id: Mapped[Optional[str]] = mapped_column(String(36), nullable=True)
 
@@ -529,7 +575,9 @@ class Notification(Base):
     dismissed: Mapped[bool] = mapped_column(Boolean, default=False)
 
     # Timestamps
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, default=datetime.utcnow, index=True
+    )
     read_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
 
     __table_args__ = (Index("ix_notifications_read_created", "read", "created_at"),)
@@ -570,8 +618,12 @@ class Organization(Base):
     slug: Mapped[str] = mapped_column(String(100), unique=True, index=True)
 
     # Status
-    status: Mapped[TenantStatus] = mapped_column(SQLEnum(TenantStatus), default=TenantStatus.ACTIVE)
-    tier: Mapped[TenantTier] = mapped_column(SQLEnum(TenantTier), default=TenantTier.FREE)
+    status: Mapped[TenantStatus] = mapped_column(
+        SQLEnum(TenantStatus), default=TenantStatus.ACTIVE
+    )
+    tier: Mapped[TenantTier] = mapped_column(
+        SQLEnum(TenantTier), default=TenantTier.FREE
+    )
 
     # Contacts
     owner_email: Mapped[str] = mapped_column(String(255))
@@ -649,14 +701,18 @@ class TenantApplication(Base):
 
     # Association
     organization_id: Mapped[int] = mapped_column(ForeignKey("organizations.id"))
-    organization: Mapped["Organization"] = relationship(back_populates="tenant_applications")
+    organization: Mapped["Organization"] = relationship(
+        back_populates="tenant_applications"
+    )
 
     # Info
     name: Mapped[str] = mapped_column(String(255))
     description: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
 
     # Environments
-    environments: Mapped[list] = mapped_column(JSON, default=["development", "production"])
+    environments: Mapped[list] = mapped_column(
+        JSON, default=["development", "production"]
+    )
 
     # Limits
     budget_limit_usd: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
@@ -720,14 +776,18 @@ class LLMModel(Base):
 
     # Provider
     provider: Mapped[ProviderType] = mapped_column(SQLEnum(ProviderType))
-    provider_model_id: Mapped[str] = mapped_column(String(255))  # ID used by the provider API
+    provider_model_id: Mapped[str] = mapped_column(
+        String(255)
+    )  # ID used by the provider API
 
     # Custom endpoint (for Azure, self-hosted, etc.)
     base_url: Mapped[Optional[str]] = mapped_column(Text, nullable=True)
     api_key_env_var: Mapped[Optional[str]] = mapped_column(
         String(100), nullable=True
     )  # e.g., "AZURE_OPENAI_KEY"
-    api_key: Mapped[Optional[str]] = mapped_column(Text, nullable=True)  # Direct API key storage
+    api_key: Mapped[Optional[str]] = mapped_column(
+        Text, nullable=True
+    )  # Direct API key storage
 
     # Capabilities
     context_length: Mapped[int] = mapped_column(Integer, default=4096)
@@ -741,7 +801,9 @@ class LLMModel(Base):
 
     # Status
     is_enabled: Mapped[bool] = mapped_column(Boolean, default=True)
-    is_default: Mapped[bool] = mapped_column(Boolean, default=False)  # Default model for new apps
+    is_default: Mapped[bool] = mapped_column(
+        Boolean, default=False
+    )  # Default model for new apps
 
     # Display order
     display_order: Mapped[int] = mapped_column(Integer, default=100)
@@ -786,7 +848,9 @@ class Feature(Base):
     )
 
     # Limits
-    max_tokens_per_request: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
+    max_tokens_per_request: Mapped[Optional[int]] = mapped_column(
+        Integer, nullable=True
+    )
     max_cost_per_request: Mapped[Optional[float]] = mapped_column(Float, nullable=True)
     daily_request_limit: Mapped[Optional[int]] = mapped_column(Integer, nullable=True)
     monthly_budget_usd: Mapped[Optional[float]] = mapped_column(Float, nullable=True)

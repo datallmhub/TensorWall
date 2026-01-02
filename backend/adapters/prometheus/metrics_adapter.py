@@ -46,7 +46,9 @@ class Counter:
         ]
         for label_key, value in self.values.items():
             if self.label_names:
-                labels_str = ",".join(f'{k}="{v}"' for k, v in zip(self.label_names, label_key))
+                labels_str = ",".join(
+                    f'{k}="{v}"' for k, v in zip(self.label_names, label_key)
+                )
                 lines.append(f"{self.name}{{{labels_str}}} {value}")
             else:
                 lines.append(f"{self.name} {value}")
@@ -90,7 +92,9 @@ class Gauge:
         ]
         for label_key, value in self.values.items():
             if self.label_names:
-                labels_str = ",".join(f'{k}="{v}"' for k, v in zip(self.label_names, label_key))
+                labels_str = ",".join(
+                    f'{k}="{v}"' for k, v in zip(self.label_names, label_key)
+                )
                 lines.append(f"{self.name}{{{labels_str}}} {value}")
             else:
                 lines.append(f"{self.name} {value}")
@@ -130,7 +134,9 @@ class Histogram:
         for label_key, values in self.observations.items():
             labels_str = ""
             if self.label_names:
-                labels_str = ",".join(f'{k}="{v}"' for k, v in zip(self.label_names, label_key))
+                labels_str = ",".join(
+                    f'{k}="{v}"' for k, v in zip(self.label_names, label_key)
+                )
 
             sorted_values = sorted(values)
             total = len(values)
@@ -139,7 +145,9 @@ class Histogram:
             for bucket in self.buckets:
                 count = sum(1 for v in sorted_values if v <= bucket)
                 if labels_str:
-                    lines.append(f'{self.name}_bucket{{{labels_str},le="{bucket}"}} {count}')
+                    lines.append(
+                        f'{self.name}_bucket{{{labels_str},le="{bucket}"}} {count}'
+                    )
                 else:
                     lines.append(f'{self.name}_bucket{{le="{bucket}"}} {count}')
 
@@ -415,7 +423,9 @@ class InMemoryMetricsAdapter(MetricsPort):
         self.active_requests.clear()
 
     # Helpers pour les tests
-    def get_request_count(self, app_id: str | None = None, status: str | None = None) -> int:
+    def get_request_count(
+        self, app_id: str | None = None, status: str | None = None
+    ) -> int:
         """Compte les requêtes avec filtres optionnels."""
         filtered = self.requests
         if app_id:
@@ -424,7 +434,9 @@ class InMemoryMetricsAdapter(MetricsPort):
             filtered = [r for r in filtered if r.status == status]
         return len(filtered)
 
-    def get_decision_count(self, decision: str | None = None, source: str | None = None) -> int:
+    def get_decision_count(
+        self, decision: str | None = None, source: str | None = None
+    ) -> int:
         """Compte les décisions avec filtres optionnels."""
         filtered = self.decisions
         if decision:

@@ -80,7 +80,9 @@ class TestRedisCacheCredentials:
 
         await self.cache.set_credentials("key-hash", creds, ttl_seconds=300)
 
-        self.mock_redis.setex.assert_called_once_with("creds:key-hash", 300, json.dumps(creds))
+        self.mock_redis.setex.assert_called_once_with(
+            "creds:key-hash", 300, json.dumps(creds)
+        )
 
     @pytest.mark.asyncio
     async def test_invalidate_credentials(self):
@@ -276,7 +278,9 @@ class TestRedisCachePolicies:
 
         await self.cache.set_policies("app-1", policies)
 
-        self.mock_redis.setex.assert_called_once_with("policy:app-1", 60, json.dumps(policies))
+        self.mock_redis.setex.assert_called_once_with(
+            "policy:app-1", 60, json.dumps(policies)
+        )
 
     @pytest.mark.asyncio
     async def test_invalidate_policies(self):
@@ -350,7 +354,9 @@ class TestGetCache:
     async def test_get_cache(self):
         """Test getting cache instance."""
         mock_redis = AsyncMock()
-        with patch("backend.adapters.cache.redis_client.get_redis", return_value=mock_redis):
+        with patch(
+            "backend.adapters.cache.redis_client.get_redis", return_value=mock_redis
+        ):
             cache = await get_cache()
 
             assert isinstance(cache, RedisCache)

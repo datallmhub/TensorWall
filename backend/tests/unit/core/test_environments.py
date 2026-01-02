@@ -154,9 +154,15 @@ class TestBudgetSettings:
 
     def test_budget_multipliers_scale_correctly(self):
         """Test that budget multipliers scale from dev to prod."""
-        dev_mult = DEFAULT_ENVIRONMENTS[Environment.DEVELOPMENT].default_budget_multiplier
-        staging_mult = DEFAULT_ENVIRONMENTS[Environment.STAGING].default_budget_multiplier
-        prod_mult = DEFAULT_ENVIRONMENTS[Environment.PRODUCTION].default_budget_multiplier
+        dev_mult = DEFAULT_ENVIRONMENTS[
+            Environment.DEVELOPMENT
+        ].default_budget_multiplier
+        staging_mult = DEFAULT_ENVIRONMENTS[
+            Environment.STAGING
+        ].default_budget_multiplier
+        prod_mult = DEFAULT_ENVIRONMENTS[
+            Environment.PRODUCTION
+        ].default_budget_multiplier
 
         # Should scale up: dev < staging < prod
         assert dev_mult < staging_mult < prod_mult

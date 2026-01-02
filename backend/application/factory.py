@@ -57,7 +57,9 @@ def get_llm_provider_for_model(model: str) -> LLMProviderPort:
 
     # LM Studio models (explicit prefix)
     if model.startswith("lmstudio/"):
-        lmstudio_url = getattr(settings, "lmstudio_api_url", "http://host.docker.internal:11434")
+        lmstudio_url = getattr(
+            settings, "lmstudio_api_url", "http://host.docker.internal:11434"
+        )
         return OllamaAdapter(base_url=lmstudio_url)
 
     # Ollama (local models like qwen, llama, mistral, etc.)

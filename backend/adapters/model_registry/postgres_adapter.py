@@ -66,7 +66,8 @@ class PostgresModelRegistryAdapter(ModelRegistryPort):
     async def _ensure_table(self, session: AsyncSession) -> None:
         """Ensure the model registry table exists."""
         await session.execute(
-            text(f"""
+            text(
+                f"""
             CREATE TABLE IF NOT EXISTS {self._table_name} (
                 model_id VARCHAR(255) PRIMARY KEY,
                 name VARCHAR(255) NOT NULL,
@@ -87,26 +88,32 @@ class PostgresModelRegistryAdapter(ModelRegistryPort):
                 updated_at TIMESTAMP DEFAULT NOW(),
                 deprecated_at TIMESTAMP
             )
-        """)
+        """
+            )
         )
         await session.commit()
 
     async def _refresh_cache(self) -> None:
         """Refresh the local cache from database."""
         now = datetime.now()
-        if self._cache_time and (now - self._cache_time).total_seconds() < self._cache_ttl:
+        if (
+            self._cache_time
+            and (now - self._cache_time).total_seconds() < self._cache_ttl
+        ):
             return
 
         async with await self._get_session() as session:
             await self._ensure_table(session)
             result = await session.execute(
-                text(f"""
+                text(
+                    f"""
                 SELECT model_id, name, provider, provider_model_id, description,
                        capabilities, input_per_million, output_per_million,
                        max_context_tokens, max_output_tokens, max_images,
                        status, tags, metadata, base_url, added_at, updated_at, deprecated_at
                 FROM {self._table_name}
-            """)
+            """
+                )
             )
 
             self._cache.clear()
@@ -198,7 +205,10 @@ class PostgresModelRegistryAdapter(ModelRegistryPort):
         await self._refresh_cache()
 
         for model in self._cache.values():
-            if model.provider == provider and model.provider_model_id == provider_model_id:
+            if (
+                model.provider == provider
+                and model.provider_model_id == provider_model_id
+            ):
                 return model
         return None
 
@@ -277,7 +287,8 @@ class PostgresModelRegistryAdapter(ModelRegistryPort):
             now = datetime.now()
 
             await session.execute(
-                text(f"""
+                text(
+                    f"""
                 INSERT INTO {self._table_name} (
                     model_id, name, provider, provider_model_id, description,
                     capabilities, input_per_million, output_per_million,
@@ -305,7 +316,8 @@ class PostgresModelRegistryAdapter(ModelRegistryPort):
                     metadata = EXCLUDED.metadata,
                     base_url = EXCLUDED.base_url,
                     updated_at = EXCLUDED.updated_at
-            """),
+            """
+                ),
                 {
                     "model_id": model.model_id,
                     "name": model.name,
@@ -379,11 +391,13 @@ class PostgresModelRegistryAdapter(ModelRegistryPort):
                 model.tags = tags
 
             await session.execute(
-                text(f"""
+                text(
+                    f"""
                 UPDATE {self._table_name}
                 SET {", ".join(updates)}
                 WHERE model_id = :model_id
-            """),
+            """
+                ),
                 params,
             )
             await session.commit()
@@ -410,14 +424,16 @@ class PostgresModelRegistryAdapter(ModelRegistryPort):
 
         async with await self._get_session() as session:
             await session.execute(
-                text(f"""
+                text(
+                    f"""
                 UPDATE {self._table_name}
                 SET status = 'deprecated',
                     deprecated_at = :deprecated_at,
                     updated_at = :updated_at,
                     metadata = :metadata
                 WHERE model_id = :model_id
-            """),
+            """
+                ),
                 {
                     "model_id": model_id,
                     "deprecated_at": now,
@@ -442,10 +458,12 @@ class PostgresModelRegistryAdapter(ModelRegistryPort):
         """Remove a model."""
         async with await self._get_session() as session:
             result = await session.execute(
-                text(f"""
+                text(
+                    f"""
                 DELETE FROM {self._table_name}
                 WHERE model_id = :model_id
-            """),
+            """
+                ),
                 {"model_id": model_id},
             )
             await session.commit()
