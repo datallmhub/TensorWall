@@ -22,7 +22,7 @@ import random
 import time
 import logging
 from dataclasses import dataclass, field
-from typing import Optional, Callable, Any
+from typing import Optional
 from enum import Enum
 
 from backend.application.providers.base import LLMProvider, ChatRequest, ChatResponse

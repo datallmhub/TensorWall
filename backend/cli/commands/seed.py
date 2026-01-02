@@ -75,7 +75,6 @@ async def _seed_development() -> dict:
 
     try:
         from sqlalchemy import select
-        from passlib.context import CryptContext
         from backend.db.session import AsyncSessionLocal
         from backend.db.models import (
             Application,
@@ -85,8 +84,6 @@ async def _seed_development() -> dict:
             Feature,
             UsageRecord,
             Organization,
-            User,
-            UserRole,
             Environment,
             BudgetPeriod,
             PolicyAction,
@@ -94,8 +91,6 @@ async def _seed_development() -> dict:
             TenantTier,
         )
         from backend.core.auth import hash_api_key
-
-        pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
         async with AsyncSessionLocal() as session:
             # Check if already seeded

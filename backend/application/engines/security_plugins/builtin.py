@@ -5,7 +5,6 @@ Default plugins that ship with TensorWall.
 """
 
 import re
-from typing import Optional
 
 from backend.application.engines.security_plugins.base import (
     SecurityPlugin,

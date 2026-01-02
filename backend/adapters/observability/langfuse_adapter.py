@@ -31,7 +31,7 @@ Usage:
 import asyncio
 import logging
 from datetime import datetime
-from typing import Optional, Any
+from typing import Optional
 from dataclasses import dataclass
 import httpx
 
@@ -216,8 +216,6 @@ class LangfuseAdapter:
             error: Error message if failed
             metadata: Additional metadata
         """
-        now = datetime.utcnow().isoformat() + "Z"
-
         # Create trace
         trace_event = {
             "type": "trace-create",

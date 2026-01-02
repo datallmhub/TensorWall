@@ -190,9 +190,8 @@ async def _check_db() -> tuple[bool, str]:
         from sqlalchemy import text
 
         async with engine.connect() as conn:
-            result = await conn.execute(text("SELECT version()"))
-            version = result.scalar()
-            return True, f"PostgreSQL connected"
+            await conn.execute(text("SELECT version()"))
+            return True, "PostgreSQL connected"
     except Exception as e:
         return False, str(e)
 
@@ -317,7 +316,6 @@ async def _create_admin(email: str, password: str) -> dict:
 
 async def _seed_data() -> dict:
     """Seed initial data."""
-    import random
     from datetime import datetime
 
     try:

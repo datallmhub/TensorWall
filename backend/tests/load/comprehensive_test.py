@@ -361,7 +361,7 @@ class TensorWallTester:
                 }
             ) as resp:
                 duration = (time.perf_counter() - start) * 1000
-                data = await resp.json()
+                await resp.json()
                 if resp.status == 200:
                     self.add_result(TestResult(
                         name="Security: Clean Prompt",
