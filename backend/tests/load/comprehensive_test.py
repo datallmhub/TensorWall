@@ -25,7 +25,7 @@ from typing import Optional
 from enum import Enum
 
 
-class TestStatus(Enum):
+class RunStatus(Enum):
     PASSED = "✅"
     FAILED = "❌"
     SKIPPED = "⏭️"
@@ -33,9 +33,9 @@ class TestStatus(Enum):
 
 
 @dataclass
-class TestResult:
+class RunResult:
     name: str
-    status: TestStatus
+    status: RunStatus
     duration_ms: float
     message: str = ""
     details: dict = field(default_factory=dict)
@@ -53,7 +53,7 @@ class TensorWallTester:
         self.api_key = api_key
         self.model = model
         self.admin_password = admin_password
-        self.results: list[TestResult] = []
+        self.results: list[RunResult] = []
         self.session: Optional[aiohttp.ClientSession] = None
         self.cookies = None
 
@@ -65,7 +65,7 @@ class TensorWallTester:
         if self.session:
             await self.session.close()
 
-    def add_result(self, result: TestResult):
+    def add_result(self, result: RunResult):
         self.results.append(result)
         status_icon = result.status.value
         print(f"  {status_icon} {result.name} ({result.duration_ms:.0f}ms)")
@@ -84,27 +84,27 @@ class TensorWallTester:
                 data = await resp.json()
                 if resp.status == 200 and data.get("status") == "healthy":
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Health Endpoint",
-                            status=TestStatus.PASSED,
+                            status=RunStatus.PASSED,
                             duration_ms=duration,
                             details=data,
                         )
                     )
                 else:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Health Endpoint",
-                            status=TestStatus.FAILED,
+                            status=RunStatus.FAILED,
                             duration_ms=duration,
                             message=f"Status: {resp.status}, Response: {data}",
                         )
                     )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Health Endpoint",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -118,26 +118,26 @@ class TensorWallTester:
                 duration = (time.perf_counter() - start) * 1000
                 if resp.status == 200:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Health Ready",
-                            status=TestStatus.PASSED,
+                            status=RunStatus.PASSED,
                             duration_ms=duration,
                         )
                     )
                 else:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Health Ready",
-                            status=TestStatus.FAILED,
+                            status=RunStatus.FAILED,
                             duration_ms=duration,
                             message=f"Status: {resp.status}",
                         )
                     )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Health Ready",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -162,9 +162,9 @@ class TensorWallTester:
                     self.cookies = resp.cookies
                     data = await resp.json()
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Login",
-                            status=TestStatus.PASSED,
+                            status=RunStatus.PASSED,
                             duration_ms=duration,
                             message=f"Logged in as {data.get('user', {}).get('email', 'unknown')}",
                         )
@@ -172,18 +172,18 @@ class TensorWallTester:
                 else:
                     text = await resp.text()
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Login",
-                            status=TestStatus.FAILED,
+                            status=RunStatus.FAILED,
                             duration_ms=duration,
                             message=f"Status: {resp.status}, Response: {text[:200]}",
                         )
                     )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Login",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -200,27 +200,27 @@ class TensorWallTester:
                 if resp.status == 200:
                     data = await resp.json()
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Auth Me",
-                            status=TestStatus.PASSED,
+                            status=RunStatus.PASSED,
                             duration_ms=duration,
                             message=f"User: {data.get('email', 'unknown')}",
                         )
                     )
                 else:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Auth Me",
-                            status=TestStatus.FAILED,
+                            status=RunStatus.FAILED,
                             duration_ms=duration,
                             message=f"Status: {resp.status}",
                         )
                     )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Auth Me",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -250,45 +250,45 @@ class TensorWallTester:
                 if resp.status == 200 and "choices" in data:
                     content = data["choices"][0]["message"]["content"][:50]
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Chat Completion",
-                            status=TestStatus.PASSED,
+                            status=RunStatus.PASSED,
                             duration_ms=duration,
                             message=f"Response: {content}...",
                         )
                     )
                 elif resp.status == 429:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Chat Completion",
-                            status=TestStatus.WARNING,
+                            status=RunStatus.WARNING,
                             duration_ms=duration,
                             message="Rate limited",
                         )
                     )
                 else:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Chat Completion",
-                            status=TestStatus.FAILED,
+                            status=RunStatus.FAILED,
                             duration_ms=duration,
                             message=f"Status: {resp.status}, Response: {json.dumps(data)[:200]}",
                         )
                     )
         except asyncio.TimeoutError:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Chat Completion",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message="Timeout (60s) - LLM may be slow or unavailable",
                 )
             )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Chat Completion",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -315,27 +315,27 @@ class TensorWallTester:
                 data = await resp.json()
                 if resp.status == 200 and data.get("dry_run") is True:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Dry-Run Mode",
-                            status=TestStatus.PASSED,
+                            status=RunStatus.PASSED,
                             duration_ms=duration,
                             message=f"Would be allowed: {data.get('would_be_allowed', 'unknown')}",
                         )
                     )
                 else:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Dry-Run Mode",
-                            status=TestStatus.FAILED,
+                            status=RunStatus.FAILED,
                             duration_ms=duration,
                             message=f"Status: {resp.status}, Response: {json.dumps(data)[:200]}",
                         )
                     )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Dry-Run Mode",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -364,10 +364,10 @@ class TensorWallTester:
                 if resp.status == 200:
                     has_trace = "decision_chain" in data or "trace" in str(data)
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Debug Mode",
                             status=(
-                                TestStatus.PASSED if has_trace else TestStatus.WARNING
+                                RunStatus.PASSED if has_trace else RunStatus.WARNING
                             ),
                             duration_ms=duration,
                             message=(
@@ -379,18 +379,18 @@ class TensorWallTester:
                     )
                 else:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Debug Mode",
-                            status=TestStatus.FAILED,
+                            status=RunStatus.FAILED,
                             duration_ms=duration,
                             message=f"Status: {resp.status}",
                         )
                     )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Debug Mode",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -422,27 +422,27 @@ class TensorWallTester:
                 await resp.json()
                 if resp.status == 200:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Security: Clean Prompt",
-                            status=TestStatus.PASSED,
+                            status=RunStatus.PASSED,
                             duration_ms=duration,
                             message="Clean prompt passed security check",
                         )
                     )
                 else:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Security: Clean Prompt",
-                            status=TestStatus.FAILED,
+                            status=RunStatus.FAILED,
                             duration_ms=duration,
                             message=f"Unexpected block: {resp.status}",
                         )
                     )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Security: Clean Prompt",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -477,12 +477,10 @@ class TensorWallTester:
                     security_detected = True
 
                 self.add_result(
-                    TestResult(
+                    RunResult(
                         name="Security: Injection Detection",
                         status=(
-                            TestStatus.PASSED
-                            if security_detected
-                            else TestStatus.WARNING
+                            RunStatus.PASSED if security_detected else RunStatus.WARNING
                         ),
                         duration_ms=duration,
                         message=(
@@ -494,9 +492,9 @@ class TensorWallTester:
                 )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Security: Injection Detection",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -519,27 +517,27 @@ class TensorWallTester:
                         len(data) if isinstance(data, list) else data.get("total", 0)
                     )
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Admin: Applications",
-                            status=TestStatus.PASSED,
+                            status=RunStatus.PASSED,
                             duration_ms=duration,
                             message=f"Found {count} applications",
                         )
                     )
                 else:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Admin: Applications",
-                            status=TestStatus.FAILED,
+                            status=RunStatus.FAILED,
                             duration_ms=duration,
                             message=f"Status: {resp.status}",
                         )
                     )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Admin: Applications",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -559,27 +557,27 @@ class TensorWallTester:
                         len(data) if isinstance(data, list) else data.get("total", 0)
                     )
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Admin: Policies",
-                            status=TestStatus.PASSED,
+                            status=RunStatus.PASSED,
                             duration_ms=duration,
                             message=f"Found {count} policies",
                         )
                     )
                 else:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Admin: Policies",
-                            status=TestStatus.FAILED,
+                            status=RunStatus.FAILED,
                             duration_ms=duration,
                             message=f"Status: {resp.status}",
                         )
                     )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Admin: Policies",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -599,27 +597,27 @@ class TensorWallTester:
                         len(data) if isinstance(data, list) else data.get("total", 0)
                     )
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Admin: Budgets",
-                            status=TestStatus.PASSED,
+                            status=RunStatus.PASSED,
                             duration_ms=duration,
                             message=f"Found {count} budgets",
                         )
                     )
                 else:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Admin: Budgets",
-                            status=TestStatus.FAILED,
+                            status=RunStatus.FAILED,
                             duration_ms=duration,
                             message=f"Status: {resp.status}",
                         )
                     )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Admin: Budgets",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -636,27 +634,27 @@ class TensorWallTester:
                 if resp.status == 200:
                     data = await resp.json()
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Admin: Request Stats",
-                            status=TestStatus.PASSED,
+                            status=RunStatus.PASSED,
                             duration_ms=duration,
                             message=f"Total requests: {data.get('total_requests', 0)}",
                         )
                     )
                 else:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Admin: Request Stats",
-                            status=TestStatus.FAILED,
+                            status=RunStatus.FAILED,
                             duration_ms=duration,
                             message=f"Status: {resp.status}",
                         )
                     )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Admin: Request Stats",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -673,27 +671,27 @@ class TensorWallTester:
                 if resp.status == 200:
                     data = await resp.json()
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Admin: Security Posture",
-                            status=TestStatus.PASSED,
+                            status=RunStatus.PASSED,
                             duration_ms=duration,
                             message=f"Status: {data.get('status', 'unknown')}",
                         )
                     )
                 else:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Admin: Security Posture",
-                            status=TestStatus.FAILED,
+                            status=RunStatus.FAILED,
                             duration_ms=duration,
                             message=f"Status: {resp.status}",
                         )
                     )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Admin: Security Posture",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -713,27 +711,27 @@ class TensorWallTester:
                         len(data) if isinstance(data, list) else data.get("total", 0)
                     )
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Admin: Security Threats",
-                            status=TestStatus.PASSED,
+                            status=RunStatus.PASSED,
                             duration_ms=duration,
                             message=f"Threats: {count}",
                         )
                     )
                 else:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Admin: Security Threats",
-                            status=TestStatus.FAILED,
+                            status=RunStatus.FAILED,
                             duration_ms=duration,
                             message=f"Status: {resp.status}",
                         )
                     )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Admin: Security Threats",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -753,27 +751,27 @@ class TensorWallTester:
                         len(data) if isinstance(data, list) else data.get("total", 0)
                     )
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Admin: Users",
-                            status=TestStatus.PASSED,
+                            status=RunStatus.PASSED,
                             duration_ms=duration,
                             message=f"Found {count} users",
                         )
                     )
                 else:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Admin: Users",
-                            status=TestStatus.FAILED,
+                            status=RunStatus.FAILED,
                             duration_ms=duration,
                             message=f"Status: {resp.status}",
                         )
                     )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Admin: Users",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -793,27 +791,27 @@ class TensorWallTester:
                         len(data) if isinstance(data, list) else data.get("total", 0)
                     )
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Admin: Models Registry",
-                            status=TestStatus.PASSED,
+                            status=RunStatus.PASSED,
                             duration_ms=duration,
                             message=f"Found {count} models",
                         )
                     )
                 else:
                     self.add_result(
-                        TestResult(
+                        RunResult(
                             name="Admin: Models Registry",
-                            status=TestStatus.FAILED,
+                            status=RunStatus.FAILED,
                             duration_ms=duration,
                             message=f"Status: {resp.status}",
                         )
                     )
         except Exception as e:
             self.add_result(
-                TestResult(
+                RunResult(
                     name="Admin: Models Registry",
-                    status=TestStatus.FAILED,
+                    status=RunStatus.FAILED,
                     duration_ms=(time.perf_counter() - start) * 1000,
                     message=str(e),
                 )
@@ -868,10 +866,10 @@ class TensorWallTester:
 
     def print_summary(self):
         """Print test summary"""
-        passed = sum(1 for r in self.results if r.status == TestStatus.PASSED)
-        failed = sum(1 for r in self.results if r.status == TestStatus.FAILED)
-        warnings = sum(1 for r in self.results if r.status == TestStatus.WARNING)
-        skipped = sum(1 for r in self.results if r.status == TestStatus.SKIPPED)
+        passed = sum(1 for r in self.results if r.status == RunStatus.PASSED)
+        failed = sum(1 for r in self.results if r.status == RunStatus.FAILED)
+        warnings = sum(1 for r in self.results if r.status == RunStatus.WARNING)
+        skipped = sum(1 for r in self.results if r.status == RunStatus.SKIPPED)
         total = len(self.results)
 
         avg_duration = (
@@ -894,7 +892,7 @@ class TensorWallTester:
         else:
             print("\n❌ Failed Tests:")
             for r in self.results:
-                if r.status == TestStatus.FAILED:
+                if r.status == RunStatus.FAILED:
                     print(f"   - {r.name}: {r.message}")
 
         print("=" * 60)
