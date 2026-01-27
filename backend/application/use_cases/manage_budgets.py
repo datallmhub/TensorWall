@@ -8,6 +8,10 @@ from dataclasses import dataclass
 from backend.domain.models import Budget, BudgetPeriod
 from backend.domain.budget import BudgetChecker, BudgetStatus
 from backend.ports.budget_repository import BudgetRepositoryPort
+from backend.application.services.budget_notification_service import (
+    BudgetNotificationService,
+)
+
 
 
 @dataclass
@@ -62,9 +66,12 @@ class ManageBudgetsUseCase:
         self,
         budget_repository: BudgetRepositoryPort,
         budget_checker: BudgetChecker,
+        notification_service: BudgetNotificationService | None = None,
     ):
         self.budget_repository = budget_repository
         self.budget_checker = budget_checker
+        self.notification_service = notification_service
+        
 
     def _to_dto(self, budget: Budget) -> BudgetDTO:
         """Convertit un Budget en DTO."""
@@ -131,7 +138,11 @@ class ManageBudgetsUseCase:
             app_id=command.app_id,
             org_id=command.org_id,
         )
-        return self.budget_checker.check(budgets, command.estimated_cost_usd)
+        status = self.budget_checker.check(budgets, command.estimated_cost_usd)
+
+        for budget in budgets:
+            self.notification_service.notify_if_needed(budget)
+        return status
 
     async def delete_budget(self, budget_id: str) -> bool:
         """Supprime un budget."""
